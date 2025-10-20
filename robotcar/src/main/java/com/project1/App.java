@@ -14,13 +14,12 @@ import java.io.IOException;
 public class App extends Application {
 
     private static Scene scene;
-
     @Override
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("GUI"), 800, 800);
         stage.setScene(scene);
         stage.show();
-    }
+    }//testing
 
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
