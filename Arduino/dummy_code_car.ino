@@ -7,7 +7,8 @@ const int BR_PWM=11, BR_DIR = 12;      // Back Right
 // test
 
 // --- Variables ---
-int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
+int motorSpeed = 100;           // Default speed for all motors (range: 0–255)
+int motorTurningSpeed = motorSpeed + 20;
 char lastMotionCmd = 'x';      // Stores the last direction command (e.g., 'f' for forward)
 
 // --- Setup Function for Each Motor ---
@@ -69,6 +70,7 @@ void loop() {
         Serial.print("Received: Setting speed to ");
         Serial.println(newSpeed);
         motorSpeed = newSpeed;
+        motorTurningSpeed = motorSpeed + 20;
 
         // Repeat last movement with new speed
         input = String(lastMotionCmd);  // Reuse the last motion command
@@ -136,40 +138,40 @@ void driveBackward() {
 }
 
 void driveRight () {
-  setMotor(FL_PWM, FL_DIR, motorSpeed, true);
-  setMotor(FR_PWM, FR_DIR, motorSpeed-20, true);
-  setMotor(BL_PWM, BL_DIR, motorSpeed, true);
-  setMotor(BR_PWM, BR_DIR, motorSpeed-20, true);
+  setMotor(FL_PWM, FL_DIR, motorTurningSpeed, true);
+  setMotor(FR_PWM, FR_DIR, motorSpeed, true);
+  setMotor(BL_PWM, BL_DIR, motorTurningSpeed, true);
+  setMotor(BR_PWM, BR_DIR, motorSpeed, true);
 }
 void driveLeft () {
-  setMotor(FL_PWM, FL_DIR, motorSpeed-20, true);
-  setMotor(FR_PWM, FR_DIR, motorSpeed, true);
-  setMotor(BL_PWM, BL_DIR, motorSpeed-20, true);
-  setMotor(BR_PWM, BR_DIR, motorSpeed, true);
+  setMotor(FL_PWM, FL_DIR, motorSpeed, true);
+  setMotor(FR_PWM, FR_DIR, motorTurningSpeed, true);
+  setMotor(BL_PWM, BL_DIR, motorSpeed, true);
+  setMotor(BR_PWM, BR_DIR, motorTurningSpeed, true);
 }
 void turnOnSpotRight () {
-  setMotor(FL_PWM, FL_DIR, motorSpeed, true);
-  setMotor(FR_PWM, FR_DIR, motorSpeed, false);
-  setMotor(BL_PWM, BL_DIR, motorSpeed, true);
-  setMotor(BR_PWM, BR_DIR, motorSpeed, false);
+  setMotor(FL_PWM, FL_DIR, motorTurningSpeed, true);
+  setMotor(FR_PWM, FR_DIR, motorTurningSpeed, false);
+  setMotor(BL_PWM, BL_DIR, motorTurningSpeed, true);
+  setMotor(BR_PWM, BR_DIR, motorTurningSpeed, false);
 }
 void turnOnSpotLeft () {
-  setMotor(FL_PWM, FL_DIR, motorSpeed, false);
-  setMotor(FR_PWM, FR_DIR, motorSpeed, true);
-  setMotor(BL_PWM, BL_DIR, motorSpeed, false);
-  setMotor(BR_PWM, BR_DIR, motorSpeed, true);
+  setMotor(FL_PWM, FL_DIR, motorTurningSpeed, false);
+  setMotor(FR_PWM, FR_DIR, motorTurningSpeed, true);
+  setMotor(BL_PWM, BL_DIR, motorTurningSpeed, false);
+  setMotor(BR_PWM, BR_DIR, motorTurningSpeed, true);
 }
 void crabWalkRight () {
-  setMotor(FL_PWM, FL_DIR, motorSpeed, true);
-  setMotor(FR_PWM, FR_DIR, motorSpeed, false);
-  setMotor(BL_PWM, BL_DIR, motorSpeed, false);
-  setMotor(BR_PWM, BR_DIR, motorSpeed, true);
+  setMotor(FL_PWM, FL_DIR, motorTurningSpeed, true);
+  setMotor(FR_PWM, FR_DIR, motorTurningSpeed, false);
+  setMotor(BL_PWM, BL_DIR, motorTurningSpeed, false);
+  setMotor(BR_PWM, BR_DIR, motorTurningSpeed, true);
 }
 void crabWalkLeft () {
-  setMotor(FL_PWM, FL_DIR, motorSpeed, false);
-  setMotor(FR_PWM, FR_DIR, motorSpeed, true);
-  setMotor(BL_PWM, BL_DIR, motorSpeed, true);
-  setMotor(BR_PWM, BR_DIR, motorSpeed, false);
+  setMotor(FL_PWM, FL_DIR, motorTurningSpeed, false);
+  setMotor(FR_PWM, FR_DIR, motorTurningSpeed, true);
+  setMotor(BL_PWM, BL_DIR, motorTurningSpeed, true);
+  setMotor(BR_PWM, BR_DIR, motorTurningSpeed, false);
 }
 
 
