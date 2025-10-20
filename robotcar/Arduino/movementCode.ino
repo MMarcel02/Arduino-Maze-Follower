@@ -98,8 +98,8 @@ void loop() {
       case 'b': driveBackward(); break;
       case 'l': driveLeft(); break;
       case 'r': driveRight(); break;
-      case 'q': turnOnSpotRight(); break;
       case 'e': turnOnSpotLeft(); break;
+      case 'q': turnOnSpotRight(); break;
       case 'c': crabWalkLeft(); break;
       case 'v': crabWalkRight(); break;
 
