@@ -1,9 +1,13 @@
 // --- Motor Pin Definitions ---
 // Assign PWM (speed) and DIR (direction) pins for each motor
 const int FL_PWM = 6,  FL_DIR = 5;     // Front Left Motor
+const int FR_PWM =9, FR_DIR=10;
+const int =A4, BL_DIR=A5;
+const int BR_PWM=11, BR_DIR=12;
+
 
 // --- Variables ---
-int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
+int motorSpeed = 50;           // Default speed for all motors (range: 0–255)
 char lastMotionCmd = 'x';      // Stores the last direction command (e.g., 'f' for forward)
 
 // --- Setup Function for Each Motor ---
@@ -27,6 +31,10 @@ void setup() {
 
   // Initialize all four motors
   setupMotor(FL_PWM, FL_DIR);
+  setupMotor(FR_PWM,FR_DIR);
+  setupMotor(BL_PWM,BL_DIR);
+  setupMotor(BR_PWM,BR_DIR);
+
   //Add your code to control the other motors.
 
   // Stop all motors initially
@@ -101,6 +109,14 @@ void stopAllMotors() {
 // Move all motors forward
 void moveForward() {
   setMotor(FL_PWM, FL_DIR, motorSpeed, true);
+  setMotor(FR_PWM, FR_DIR, motorSpeed, true);
+  setMotor(BL_PWM, BL_DIR, motorSpeed, true);
+  setMotor(BR_PWM, BR_DIR, motorSpeed, true);
+
+
+  /*const int FR_PWM =9, FR_DIR=10;
+const int =A4, BL_DIR=A5;
+const int BR_PWM=11, BR_DIR=12;*/
   //Add your code to control the other motors.
   Serial.println("Moving forward");
 }
