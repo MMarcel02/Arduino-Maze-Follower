@@ -114,10 +114,6 @@ void moveForward() {
   setMotor(BL_PWM, BL_DIR, motorSpeed, true);
   setMotor(BR_PWM, BR_DIR, motorSpeed, true);
 
-
-  /*const int FR_PWM =9, FR_DIR=10;
-const int =A4, BL_DIR=A5;
-const int BR_PWM=11, BR_DIR=12;*/
   //Add your code to control the other motors.
   Serial.println("Moving forward");
 }
