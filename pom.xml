@@ -14,6 +14,8 @@
     </properties>
 
     <dependencies>
+
+
         <!-- JavaFX Controls for macOS ARM64 -->
         <dependency>
             <groupId>org.openjfx</groupId>
