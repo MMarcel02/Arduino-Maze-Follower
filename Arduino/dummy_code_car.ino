@@ -49,7 +49,9 @@ void setup() {
 // Keeps running in a loop after setup() finishes
 void loop() {
   //moveForward();
-  driveLeft();
+  // driveLeft();
+  turnOnSpotRight();
+  
   // Check if data is available from Serial (USB) input
   if (Serial.available()) {
     // Read input string from user until newline
@@ -117,7 +119,7 @@ void moveForward() {
   setMotor(FR_PWM, FR_DIR, motorSpeed, true);
   setMotor(BL_PWM, BL_DIR, motorSpeed, true);
   setMotor(BR_PWM, BR_DIR, motorSpeed, true);
-
+}
 
 void driveBackward() {
   setMotor(FL_PWM, FL_DIR, motorSpeed, false);
@@ -126,16 +128,32 @@ void driveBackward() {
   setMotor(BR_PWM, BR_DIR, motorSpeed, false);
 }
 
-void driveLeft () {
+void driveRight () {
   setMotor(FL_PWM, FL_DIR, motorSpeed, true);
-  setMotor(FR_PWM, FR_DIR, motorSpeed-30, true);
+  setMotor(FR_PWM, FR_DIR, motorSpeed-20, true);
   setMotor(BL_PWM, BL_DIR, motorSpeed, true);
-  setMotor(BR_PWM, BR_DIR, motorSpeed-30, true);
+  setMotor(BR_PWM, BR_DIR, motorSpeed-20, true);
+}
+void driveLeft () {
+  setMotor(FL_PWM, FL_DIR, motorSpeed-20, true);
+  setMotor(FR_PWM, FR_DIR, motorSpeed, true);
+  setMotor(BL_PWM, BL_DIR, motorSpeed-20, true);
+  setMotor(BR_PWM, BR_DIR, motorSpeed, true);
+}
+void turnOnSpotRight () {
+  setMotor(FL_PWM, FL_DIR, motorSpeed, true);
+  setMotor(FR_PWM, FR_DIR, motorSpeed, false);
+  setMotor(BL_PWM, BL_DIR, motorSpeed, true);
+  setMotor(BR_PWM, BR_DIR, motorSpeed, false);
+}
+void turnOnSpotLeft () {
+  setMotor(FL_PWM, FL_DIR, motorSpeed, false);
+  setMotor(FR_PWM, FR_DIR, motorSpeed, true);
+  setMotor(BL_PWM, BL_DIR, motorSpeed, false);
+  setMotor(BR_PWM, BR_DIR, motorSpeed, true);
+}
 
-}
-  //Add your code to control the other motors.
-  Serial.println("Moving forward");
-}
+
 
 // --- Print Available Commands to the Serial Monitor ---
 void printInstructions() {
