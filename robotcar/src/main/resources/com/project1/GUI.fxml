@@ -80,7 +80,7 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="73.0" text="⬇" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="73.0" text="_" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <GridPane.margin>
                                     <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                                  </GridPane.margin>
@@ -88,7 +88,7 @@
                                     <Font size="20.0" />
                                  </font>
                               </Button>
-                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="73.0" text="⬅⬅">
+                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="73.0" text="↶">
                                  <GridPane.margin>
                                     <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                                  </GridPane.margin>
@@ -96,7 +96,7 @@
                                     <Font size="15.0" />
                                  </font>
                               </Button>
-                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="73.0" text="⬅" GridPane.rowIndex="1">
+                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="73.0" text="&lt;" GridPane.rowIndex="1">
                                  <GridPane.margin>
                                     <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                                  </GridPane.margin>
@@ -104,15 +104,15 @@
                                     <Font size="20.0" />
                                  </font>
                               </Button>
-                              <Button fx:id="upArrow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onAction="#moveForward" prefHeight="0.0" prefWidth="73.0" text="⬆" GridPane.columnIndex="1">
+                              <Button fx:id="upArrow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onAction="#moveForward" prefHeight="0.0" prefWidth="73.0" text="^" GridPane.columnIndex="1">
                                  <GridPane.margin>
                                     <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                                  </GridPane.margin>
                                  <font>
-                                    <Font size="20.0" />
+                                    <Font name="Arial" size="20.0" />
                                  </font>
                               </Button>
-                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="133.0" text="➡➡" GridPane.columnIndex="2">
+                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="133.0" text="&gt;&gt;" GridPane.columnIndex="2">
                                  <GridPane.margin>
                                     <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                                  </GridPane.margin>
@@ -120,7 +120,7 @@
                                     <Font size="15.0" />
                                  </font>
                               </Button>
-                              <Button layoutX="86.0" layoutY="62.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="73.0" text="➡" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                              <Button layoutX="86.0" layoutY="62.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="73.0" text="&gt;" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                  <GridPane.margin>
                                     <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                                  </GridPane.margin>
