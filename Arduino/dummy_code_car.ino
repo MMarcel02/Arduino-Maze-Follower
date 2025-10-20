@@ -48,9 +48,6 @@ void setup() {
 // --- Main Loop ---
 // Keeps running in a loop after setup() finishes
 void loop() {
-  //moveForward();
-  // driveLeft();
-  turnOnSpotRight();
   
   // Check if data is available from Serial (USB) input
   if (Serial.available()) {
@@ -96,6 +93,16 @@ void loop() {
         stopAllMotors();  // Stop everything
         Serial.println("Stopped.");
         break;
+      case 'b': driveBackward(); break;
+      case 'l': driveLeft(); break;
+      case 'r': driveRight(); break;
+      case 'q': turnOnSpotRight(); break;
+      case 'e': turnOnSpotLeft(); break;
+      case 'c': crabWalkLeft(); break;
+      case 'v': crabWalkRight(); break;
+
+
+
       default:
         Serial.println("Unknown command.");  // Unknown input
         printInstructions();                 // Show help again
@@ -152,7 +159,18 @@ void turnOnSpotLeft () {
   setMotor(BL_PWM, BL_DIR, motorSpeed, false);
   setMotor(BR_PWM, BR_DIR, motorSpeed, true);
 }
-
+void crabWalkRight () {
+  setMotor(FL_PWM, FL_DIR, motorSpeed, true);
+  setMotor(FR_PWM, FR_DIR, motorSpeed, false);
+  setMotor(BL_PWM, BL_DIR, motorSpeed, false);
+  setMotor(BR_PWM, BR_DIR, motorSpeed, true);
+}
+void crabWalkLeft () {
+  setMotor(FL_PWM, FL_DIR, motorSpeed, false);
+  setMotor(FR_PWM, FR_DIR, motorSpeed, true);
+  setMotor(BL_PWM, BL_DIR, motorSpeed, true);
+  setMotor(BR_PWM, BR_DIR, motorSpeed, false);
+}
 
 
 // --- Print Available Commands to the Serial Monitor ---
