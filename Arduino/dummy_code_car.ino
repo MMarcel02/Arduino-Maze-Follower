@@ -48,7 +48,8 @@ void setup() {
 // --- Main Loop ---
 // Keeps running in a loop after setup() finishes
 void loop() {
-  moveForward();
+  //moveForward();
+  driveLeft();
   // Check if data is available from Serial (USB) input
   if (Serial.available()) {
     // Read input string from user until newline
@@ -102,7 +103,10 @@ void loop() {
 }
 // --- Function to Stop All Motors ---
 void stopAllMotors() {
-  setMotor(FL_PWM, FL_DIR, 0, true);  // Speed 0 = stop
+  setMotor(FL_PWM, FL_DIR, 0, true);
+  setMotor(FR_PWM, FR_DIR, 0, true);
+  setMotor(BL_PWM, BL_DIR, 0, true);
+  setMotor(BR_PWM, BR_DIR, 0, true);  // Speed 0 = stop
   //Add your code to control the other motors.
 }
 
@@ -114,6 +118,21 @@ void moveForward() {
   setMotor(BL_PWM, BL_DIR, motorSpeed, true);
   setMotor(BR_PWM, BR_DIR, motorSpeed, true);
 
+
+void driveBackward() {
+  setMotor(FL_PWM, FL_DIR, motorSpeed, false);
+  setMotor(FR_PWM, FR_DIR, motorSpeed, false);
+  setMotor(BL_PWM, BL_DIR, motorSpeed, false);
+  setMotor(BR_PWM, BR_DIR, motorSpeed, false);
+}
+
+void driveLeft () {
+  setMotor(FL_PWM, FL_DIR, motorSpeed, true);
+  setMotor(FR_PWM, FR_DIR, motorSpeed-30, true);
+  setMotor(BL_PWM, BL_DIR, motorSpeed, true);
+  setMotor(BR_PWM, BR_DIR, motorSpeed-30, true);
+
+}
   //Add your code to control the other motors.
   Serial.println("Moving forward");
 }
