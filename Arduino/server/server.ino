@@ -1,6 +1,7 @@
 #include <WiFi101.h>
 
-// movement.ino is imported alongside server.ino, so we can use the movement functions
+// Arduino ide automatically compiles all files in the same folder, so functions in
+// movement.ino will be accessible
 
 // Feather M0 WiFi (WINC1500) pins
 const int WINC_CS  = 8, WINC_IRQ = 7, WINC_RST = 4, WINC_EN = 2;
@@ -12,32 +13,6 @@ WiFiServer server(80);
 // --------- Utility: IPAddress -> "A.B.C.D" -----
 String ipToString(const IPAddress& ip) {
   return String(ip[0]) + "." + String(ip[1]) + "." + String(ip[2]) + "." + String(ip[3]);
-}
-
-// --- Setup Function for Each Motor ---
-// Configures the direction and PWM pins for a motor
-void setupMotor(int pwm, int dir) {
-  pinMode(pwm, OUTPUT);  // Set PWM pin as output
-  pinMode(dir, OUTPUT);  // Set direction pin as output
-}
-
-// --- Function to Stop All Motors ---
-void stopAllMotors() {
-  setMotor(FL_PWM, FL_DIR, 0, true);  // Speed 0 = stop
-  //Add your code to control the other motors.
-}
-
-// --- Function to Drive a Motor ---
-// 'speed' determines how fast, 'forward' determines direction
-void setMotor(int pwm, int dir, int speed, bool forward) {
-  digitalWrite(dir, forward ? HIGH : LOW);  // Set direction
-  analogWrite(pwm, speed);                  // Set speed using PWM
-}
-
-void moveForward() {
-  setMotor(FL_PWM, FL_DIR, motorSpeed, true);
-  //Add your code to control the other motors.
-  Serial.println("Moving forward");
 }
 
 void setup() {
@@ -85,8 +60,7 @@ void serve(WiFiClient& c){
 
 void route(WiFiClient& c,const String& path,const String& q){
   if(path=="/"||path=="") { handleRoot(c); return; }
-  if(path=="/forward")    { handleForward(c); return; }
-  // sendText(c,"404\n");
+  if(path=="/forward")    { handleForward(c); return; } // here
 }
 
 void handleRoot(WiFiClient& client){
@@ -102,10 +76,14 @@ void handleRoot(WiFiClient& client){
 }
 
 void handleForward(WiFiClient& client){
-  moveForward();
-    // Minimal well-formed HTTP response
+  
+  moveForward();  // Call the movement function on the robot
+  
+    // Minimal well-formed HTTP response, modify it appropriately to the function,
+    // here it is just "Moved Forward";
   const char body[] = "Moved Forward";
 
+    // A HTTP body, this is required for a proper request, so just copy & paste this. 
   client.print("HTTP/1.1 200 OK\r\n");
   client.print("Content-Type: text/html\r\n");
   client.print("Connection: close\r\n");
