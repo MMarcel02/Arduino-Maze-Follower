@@ -35,9 +35,7 @@ void setup() {
   setupMotor(FR_PWM,FR_DIR);
   setupMotor(BL_PWM,BL_DIR);
   setupMotor(BR_PWM,BR_DIR);
-
-  //Add your code to control the other motors.
-
+  
   // Stop all motors initially
   stopAllMotors();
 
@@ -85,7 +83,7 @@ void loop() {
 
     // Save the motion command (so we can reuse it later)
     if (cmd == 'f' || cmd == 'b' || cmd == 'l' || cmd == 'r' ||
-        cmd == 'q' || cmd == 'e' || cmd == 'x') {
+        cmd == 'q' || cmd == 'e' || cmd == 'c' || cmd == 'v' || cmd == 'x') {
       lastMotionCmd = cmd;
     }
     // --- Motion Commands Switch ---
@@ -98,8 +96,8 @@ void loop() {
       case 'b': driveBackward(); break;
       case 'l': driveLeft(); break;
       case 'r': driveRight(); break;
-      case 'q': turnOnSpotRight(); break;
       case 'e': turnOnSpotLeft(); break;
+      case 'q': turnOnSpotRight(); break;
       case 'c': crabWalkLeft(); break;
       case 'v': crabWalkRight(); break;
 
