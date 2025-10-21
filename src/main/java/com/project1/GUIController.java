@@ -194,10 +194,23 @@ public class GUIController {
         speedSlider.setValue(speed);
 
         // //Slider updates our speed value
-        // speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-        //     speed = newVal.intValue();
-        //     // logToTextArea("Speed set to: " + speed);
-        // });
+        speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            // logToTextArea("Speed set to: " + speed);
+                
+            speed = (int) speedSlider.getValue();       
+            speedLabel.setText("Speed: " + speed);
+        });
+            
+        speedSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
+
+
+            if (!isChanging) {
+
+                String speedEndpoint = ArduinoEndpoints.getSpeedEndpoint(speed);
+                sendRequest(speedEndpoint); 
+            }
+        });
+
     }
 
     private void sendRequest(String endpoint) {
@@ -214,6 +227,8 @@ public class GUIController {
         }).start();
     }
 
+    
+
     private void updateSpeed(int changeInSpeed) {
         speed += changeInSpeed;
 
@@ -222,6 +237,9 @@ public class GUIController {
 
         speedSlider.setValue(speed);
         speedLabel.setText("Speed: " + speed);
+        
+        String speedEndpoint = ArduinoEndpoints.getSpeedEndpoint(speed);
+        sendRequest(speedEndpoint);
 
     }
 
