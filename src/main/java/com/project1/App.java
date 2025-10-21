@@ -16,17 +16,14 @@ public class App extends Application {
     private static Scene scene;
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("GUI"), 900, 600);
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("GUI.fxml"));
+        scene = new Scene(fxmlLoader.load(), 900, 600);
+        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
-    }//test
-
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
     }
-
+    
     public static void main(String[] args) {
         launch();
     }

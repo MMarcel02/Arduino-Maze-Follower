@@ -193,19 +193,15 @@ public class GUIController {
     public void initialize() {
         speedSlider.setValue(speed);
 
-        // //Slider updates our speed value
-        speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            // logToTextArea("Speed set to: " + speed);
-                
+        // Slider updates our speed value in the UI
+        speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {                
             speed = (int) speedSlider.getValue();       
             speedLabel.setText("Speed: " + speed);
         });
-            
+
+        // Speed is only sent to the robot once drag is released    
         speedSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
-
-
             if (!isChanging) {
-
                 String speedEndpoint = ArduinoEndpoints.getSpeedEndpoint(speed);
                 sendRequest(speedEndpoint); 
             }
