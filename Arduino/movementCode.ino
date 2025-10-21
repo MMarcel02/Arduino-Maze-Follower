@@ -1,7 +1,6 @@
 // --- Motor Pin Definitions ---
 // Assign PWM (speed) and DIR (direction) pins for each motor
 const int FL_PWM = 6,  FL_DIR = 5;     // Front Left Motor
-// test commit
 const int FR_PWM =9, FR_DIR=10;        // Front Right 
 const int BL_PWM = A4, BL_DIR = A5;    // Back Left
 const int BR_PWM=11, BR_DIR = 12;      // Back Right

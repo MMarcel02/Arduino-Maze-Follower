@@ -1,0 +1,11 @@
+<<<<<<< HEAD:robotcar/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+/home/bert/Documents/University/Gitlab/self-driving-bot/robotcar/src/main/java/com/project1/App.java
+/home/bert/Documents/University/Gitlab/self-driving-bot/robotcar/src/main/java/com/project1/GUIController.java
+/home/bert/Documents/University/Gitlab/self-driving-bot/robotcar/src/main/java/com/project1/ArduinoClient.java
+/home/bert/Documents/University/Gitlab/self-driving-bot/robotcar/src/main/java/module-info.java
+=======
+/home/marci/projects/CS Bachelor - Year 1/Project 1-1/src/main/java/com/project1/ArduinoClient.java
+/home/marci/projects/CS Bachelor - Year 1/Project 1-1/src/main/java/module-info.java
+/home/marci/projects/CS Bachelor - Year 1/Project 1-1/src/main/java/com/project1/GUIController.java
+/home/marci/projects/CS Bachelor - Year 1/Project 1-1/src/main/java/com/project1/App.java
+>>>>>>> 49f38169a70fe216f9db170f847aa4b5bdabf8ab:target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
