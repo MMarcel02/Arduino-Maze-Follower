@@ -1,13 +1,9 @@
 // --- Motor Pin Definitions ---
 // Assign PWM (speed) and DIR (direction) pins for each motor
 const int FL_PWM = 6,  FL_DIR = 5;     // Front Left Motor
-<<<<<<< HEAD
-// test comment
-=======
 const int FR_PWM =9, FR_DIR=10;        // Front Right 
 const int BL_PWM = A4, BL_DIR = A5;    // Back Left
 const int BR_PWM=11, BR_DIR = 12;      // Back Right
->>>>>>> fab6aa74b2fc7e11c769c2f1ab0334edc67964a8
 
 // --- Variables ---
 int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
