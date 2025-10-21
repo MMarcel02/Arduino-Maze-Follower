@@ -111,8 +111,8 @@
                   </AnchorPane>
                   <VBox alignment="CENTER" layoutX="31.0" layoutY="80.0" prefHeight="150.0" prefWidth="284.0" spacing="15.0">
                      <children>
-                        <Slider fx:id="speedSlider" blockIncrement="5.0" max="255.0" minorTickCount="2" prefHeight="24.0" prefWidth="245.0" showTickLabels="true" showTickMarks="true" />
-                        <Label fx:id="speedLabel" text="Speed: 0">
+                        <Slider fx:id="speedSlider" blockIncrement="5.0" max="255.0" minorTickCount="2" prefHeight="24.0" prefWidth="245.0" showTickLabels="true" showTickMarks="true" mouseTransparent="true" />
+                        <Label fx:id="speedLabel" text="Speed: 80">
                            <font>
                               <Font size="14.0" />
                            </font>

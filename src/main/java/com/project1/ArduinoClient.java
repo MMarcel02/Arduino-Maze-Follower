@@ -28,7 +28,7 @@ public class ArduinoClient {
   /// 
   ///   e.g. Send(ArduinoEndpoints.FORWARD)
   /// 
-  public HttpResponse<String> Send(String endpoint) throws Exception {
+  public HttpResponse<String> send(String endpoint) throws Exception {
     String url = IP + endpoint;
     
     HttpRequest req = HttpRequest.newBuilder()

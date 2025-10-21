@@ -11,12 +11,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
-import javafx.scene.paint.Color;
+import javafx.scene.paint.Color;    
 import javafx.scene.text.Font;
 
 public class GUIController {
 
-    private int speed;
+    private int speed = 80;
+    private ArduinoClient client = new ArduinoClient();
 
     @FXML
     private TextArea logArea;
@@ -88,12 +89,6 @@ public class GUIController {
     private Button upArrow;
 
     @FXML
-    private Font x1;
-
-    @FXML
-    private Color x2;
-
-    @FXML
     void bigDecreaseSpeed(MouseEvent event) {
         updateSpeed(-20);
     }
@@ -114,38 +109,39 @@ public class GUIController {
     }
 
     @FXML
-    void crabWalkLeft(MouseEvent event) {
-
-    }
-
-    @FXML
-    void crabWalkRight(MouseEvent event) {
-
-    }
-
-    @FXML
     void moveBackwards(MouseEvent event) {
-
+        sendRequest(ArduinoEndpoints.BACKWARD);
     }
 
     @FXML
     void moveForward(MouseEvent event) {
-
+        sendRequest(ArduinoEndpoints.FORWARD);
     }
 
     @FXML
     void rotateLeft(MouseEvent event) {
-
+        sendRequest(ArduinoEndpoints.TURN_ON_SPOT_LEFT);
     }
 
     @FXML
     void rotateRight(MouseEvent event) {
-
+        sendRequest(ArduinoEndpoints.TURN_ON_SPOT_RIGHT);
     }
 
     @FXML
-    void stopSpeed(MouseEvent event) {
+    void crabWalkLeft(MouseEvent event) {
+        sendRequest(ArduinoEndpoints.CRAB_WALK_LEFT);
+    }
 
+    @FXML
+    void crabWalkRight(MouseEvent event) {
+        sendRequest(ArduinoEndpoints.CRAB_WALK_RIGHT);
+    }
+
+
+    @FXML
+    void stopSpeed(MouseEvent event) {
+        sendRequest(ArduinoEndpoints.STOP);
     }
 
     @FXML
@@ -195,28 +191,43 @@ public class GUIController {
 
     @FXML
     public void initialize() {
-        //Slider updates our speed value
-        speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            speed = newVal.intValue();
-            speedLabel.setText("Speed: " + speed);
-            logToTextArea("Speed set to: " + speed + "\n");
-        });
+        speedSlider.setValue(speed);
+
+        // //Slider updates our speed value
+        // speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+        //     speed = newVal.intValue();
+        //     // logToTextArea("Speed set to: " + speed);
+        // });
+    }
+
+    private void sendRequest(String endpoint) {
+        logToTextArea("Sending request to " + endpoint + "...");
+
+        // We start a new thread so that our GUI doesnt freeze after we send a request
+        new Thread(() -> {
+            try {
+                client.send(endpoint);
+                logToTextArea("Request to " + endpoint + " succeeded!");
+            } catch (Exception e) {
+                logToTextArea("Request to " + endpoint + " failed! " + e.getMessage());
+            }
+        }).start();
     }
 
     private void updateSpeed(int changeInSpeed) {
-        if ((speed + changeInSpeed) <= 0) {
-            speed = 0;
-        } else if ((speed + changeInSpeed) >= 255) {
-            speed = 255;
-        } else {
-            speed += changeInSpeed;
-        }
+        speed += changeInSpeed;
+
+        if (speed <= 0) speed = 0;
+        if (speed >= 255) speed = 255;
+
         speedSlider.setValue(speed);
+        speedLabel.setText("Speed: " + speed);
+
     }
 
     private void logToTextArea(String message) {
         String timestamp = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
-        logArea.appendText("[" + timestamp + "]" + message);    
+        logArea.appendText("[" + timestamp + "] " + message + "\n");    
     }
 
 }
