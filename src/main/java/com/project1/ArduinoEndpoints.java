@@ -13,7 +13,7 @@ public final class ArduinoEndpoints {
     public static final String CRAB_WALK_LEFT     = "/crabWalkLeft";
     public static final String CRAB_WALK_RIGHT    = "/crabWalkRight";
 
-    public static String speed(int value) {
+    public static String getSpeedEndpoint(int value) {
         return "/setSpeed?s=" + value;
     }
 

@@ -57,40 +57,95 @@ void serve(WiFiClient& c){
   while(true){ String h=c.readStringUntil('\n'); if(h.length()==0||h=="\r") break; } // headers
   route(c,pth,qry);
 }
+void route(WiFiClient& c, const String& path, const String& q) {
+    if (path == "/" || path == "") { handleRoot(c); return; }
+    if (path == "/forward") { handleForward(c); return; }
+    if (path == "/backward") { handleBackward(c); return; }
+    if (path == "/turnOnSpotRight") { handleTurnOnSpotRight(c); return; }
+    if (path == "/turnOnSpotLeft") { handleTurnOnSpotLeft(c); return; }
+    if (path == "/left") { handleLeft(c); return; }
+    if (path == "/right") { handleRight(c); return; }
+    if (path == "/stop") { handleStop(c); return; }
+    if (path == "/crabWalkLeft") { handleCrabWalkLeft(c); return; }
+    if (path == "/crabWalkRight") { handleCrabWalkRight(c); return; }
 
-void route(WiFiClient& c,const String& path,const String& q){
-  if(path=="/"||path=="") { handleRoot(c); return; }
-  if(path=="/forward")    { handleForward(c); return; } // here
+    // when we change speed we pass down /setSpeed?s=(some value 0-255)
+    if (path.startsWith("/setSpeed")) {
+        //we want to extract the number after s= since thats our speed value
+        int sIndex = q.indexOf("s=");
+        if (sIndex >= 0) {
+            //here we extract it and change it from a String to and int
+            int speedValue = q.substring(sIndex + 2).toInt();
+            handleSetSpeed(c, speedValue);
+        }
+        return;
+    }
 }
 
-void handleRoot(WiFiClient& client){
-  // Minimal well-formed HTTP response
-  const char body[] = "Initial Page";
-
-  client.print("HTTP/1.1 200 OK\r\n");
-  client.print("Content-Type: text/html\r\n");
-  client.print("Connection: close\r\n");
-  client.print("Content-Length: "); client.print(sizeof(body) - 1); client.print("\r\n\r\n");
-  client.print(body);
+// Helper to send minimal HTTP response
+void sendHttpResponse(WiFiClient& client, const String& body) {
+    client.print("HTTP/1.1 200 OK\r\n");
+    client.print("Content-Type: text/html\r\n");
+    client.print("Connection: close\r\n");
+    client.print("Content-Length: "); client.print(body.length()); client.print("\r\n\r\n");
+    client.print(body);
     delay(1);
 }
 
-void handleForward(WiFiClient& client){
-  
-  moveForward();  // Call the movement function on the robot
-  
-    // Minimal well-formed HTTP response, modify it appropriately to the function,
-    // here it is just "Moved Forward";
-  const char body[] = "Moved Forward";
-
-    // A HTTP body, this is required for a proper request, so just copy & paste this. 
-  client.print("HTTP/1.1 200 OK\r\n");
-  client.print("Content-Type: text/html\r\n");
-  client.print("Connection: close\r\n");
-  client.print("Content-Length: "); client.print(sizeof(body) - 1); client.print("\r\n\r\n");
-  client.print(body);
-    delay(1);
+void handleRoot(WiFiClient& client) {
+    sendHttpResponse(client, "Initial Page");
 }
+
+void handleForward(WiFiClient& client) {
+    moveForward();
+    sendHttpResponse(client, "Moved Forward");
+}
+
+void handleBackward(WiFiClient& client) {
+    moveBackward();
+    sendHttpResponse(client, "Moved Backward");
+}
+
+void handleTurnOnSpotRight(WiFiClient& client) {
+    turnOnSpotRight();
+    sendHttpResponse(client, "Turned Right on Spot");
+}
+
+void handleTurnOnSpotLeft(WiFiClient& client) {
+    turnOnSpotLeft();
+    sendHttpResponse(client, "Turned Left on Spot");
+}
+
+void handleLeft(WiFiClient& client) {
+    moveLeft();
+    sendHttpResponse(client, "Moved Left");
+}
+
+void handleRight(WiFiClient& client) {
+    moveRight();
+    sendHttpResponse(client, "Moved Right");
+}
+
+void handleStop(WiFiClient& client) {
+    stopAllMotors();
+    sendHttpResponse(client, "Stopped");
+}
+
+void handleCrabWalkLeft(WiFiClient& client) {
+    crabWalkLeft();
+    sendHttpResponse(client, "Crab Walk Left");
+}
+
+void handleCrabWalkRight(WiFiClient& client) {
+    crabWalkRight();
+    sendHttpResponse(client, "Crab Walk Right");
+}
+
+void handleSetSpeed(WiFiClient& client, int speed) {
+    setSpeed(speed);
+    sendHttpResponse(client, "Speed set to " + String(speed));
+}
+
 
 void loop() {
   WiFiClient client = server.available();

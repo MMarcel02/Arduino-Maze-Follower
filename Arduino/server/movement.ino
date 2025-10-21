@@ -35,6 +35,11 @@ void setupAllMotors() {
   setupMotor(BR_PWM,BR_DIR);
 }
 
+void setSpeed(int newSpeed) {
+  motorSpeed = newSpeed;
+  motorTurningSpeed = motorSpeed + 20;
+}
+
 void stopAllMotors() {
   setMotor(FL_PWM, FL_DIR, 0, true);
   setMotor(FR_PWM, FR_DIR, 0, true);
@@ -49,20 +54,21 @@ void moveForward() {
   setMotor(BR_PWM, BR_DIR, motorSpeed, true);
 }
 
-void driveBackward() {
+void moveBackward() {
   setMotor(FL_PWM, FL_DIR, motorSpeed, false);
   setMotor(FR_PWM, FR_DIR, motorSpeed, false);
   setMotor(BL_PWM, BL_DIR, motorSpeed, false);
   setMotor(BR_PWM, BR_DIR, motorSpeed, false);
 }
 
-void driveRight () {
+void moveRight () {
   setMotor(FL_PWM, FL_DIR, motorTurningSpeed, true);
   setMotor(FR_PWM, FR_DIR, motorSpeed, true);
   setMotor(BL_PWM, BL_DIR, motorTurningSpeed, true);
   setMotor(BR_PWM, BR_DIR, motorSpeed, true);
 }
-void driveLeft () {
+
+void moveLeft () {
   setMotor(FL_PWM, FL_DIR, motorSpeed, true);
   setMotor(FR_PWM, FR_DIR, motorTurningSpeed, true);
   setMotor(BL_PWM, BL_DIR, motorSpeed, true);
