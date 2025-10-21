@@ -1,5 +1,5 @@
 com/project1/ArduinoEndpoints.class
-com/project1/App.class
 module-info.class
-com/project1/ArduinoClient.class
 com/project1/GUIController.class
+com/project1/App.class
+com/project1/ArduinoClient.class
