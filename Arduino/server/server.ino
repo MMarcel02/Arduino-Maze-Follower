@@ -85,8 +85,7 @@ void serve(WiFiClient& c){
 
 void route(WiFiClient& c,const String& path,const String& q){
   if(path=="/"||path=="") { handleRoot(c); return; }
-  if(path=="/forward")    { handleForward(c); return; }
-  // sendText(c,"404\n");
+  if(path=="/forward")    { handleForward(c); return; } // here
 }
 
 void handleRoot(WiFiClient& client){
@@ -102,10 +101,14 @@ void handleRoot(WiFiClient& client){
 }
 
 void handleForward(WiFiClient& client){
-  moveForward();
-    // Minimal well-formed HTTP response
+  
+  moveForward();  // Call the movement function on the robot
+  
+    // Minimal well-formed HTTP response, modify it appropriately to the function,
+    // here it is just "Moved Forward";
   const char body[] = "Moved Forward";
 
+    // A HTTP body, this is required for a proper request, so just copy & paste this. 
   client.print("HTTP/1.1 200 OK\r\n");
   client.print("Content-Type: text/html\r\n");
   client.print("Connection: close\r\n");

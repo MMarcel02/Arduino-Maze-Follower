@@ -1,5 +1,8 @@
 package com.project1;
 
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
@@ -7,12 +10,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class GUIController {
 
     private int speed;
+
+    @FXML
+    private TextArea logArea;
 
     @FXML
     private Button bigDecrement;
@@ -192,6 +199,7 @@ public class GUIController {
         speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             speed = newVal.intValue();
             speedLabel.setText("Speed: " + speed);
+            logToTextArea("Speed set to: " + speed + "\n");
         });
     }
 
@@ -204,6 +212,11 @@ public class GUIController {
             speed += changeInSpeed;
         }
         speedSlider.setValue(speed);
+    }
+
+    private void logToTextArea(String message) {
+        String timestamp = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
+        logArea.appendText("[" + timestamp + "]" + message);    
     }
 
 }
