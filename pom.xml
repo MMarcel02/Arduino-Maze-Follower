@@ -14,6 +14,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx</artifactId>
+            <version>8.9</version>
+        </dependency>
+
 
 
         <!-- JavaFX Controls for macOS ARM64 -->
@@ -62,6 +68,18 @@
                     <mainClass>com.project1.App</mainClass>
                     <addModules>javafx.controls,javafx.fxml,javafx.graphics</addModules>
                     <classifier>mac-aarch64</classifier>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.project1.Main</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
