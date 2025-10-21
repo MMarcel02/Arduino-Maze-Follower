@@ -6,7 +6,7 @@ const int BL_PWM = A4, BL_DIR = A5;    // Back Left
 const int BR_PWM=11, BR_DIR = 12;      // Back Right
 
 // --- Variables ---
-int motorSpeed = 0;           // Default speed for all motors (range: 0–255)
+int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
 int motorTurningSpeed = motorSpeed + 20;
 char lastMotionCmd = 'x';      // Stores the last direction command (e.g., 'f' for forward)
 
