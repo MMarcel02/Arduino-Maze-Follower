@@ -13,7 +13,6 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project1.GUIController">
    <children>
       <SplitPane dividerPositions="0.2505567928730512, 0.7505567928730512" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
@@ -90,7 +89,7 @@
                   <AnchorPane layoutX="80.0" layoutY="148.0" />
                   <VBox alignment="CENTER" layoutX="80.0" layoutY="73.0" prefHeight="150.0" prefWidth="284.0" spacing="10.0">
                      <children>
-                        <Slider fx:id="speedSlider" prefHeight="24.0" prefWidth="245.0" />
+                        <Slider fx:id="speedSlider" blockIncrement="5.0" max="255.0" minorTickCount="2" prefHeight="24.0" prefWidth="245.0" showTickLabels="true" showTickMarks="true" />
                         <Label fx:id="speedLabel" text="Speed: {current Speed}" />
                         <GridPane alignment="TOP_CENTER" hgap="4.0" prefHeight="63.0" prefWidth="284.0" vgap="4.0">
                            <columnConstraints>
