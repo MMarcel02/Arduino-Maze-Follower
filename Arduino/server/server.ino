@@ -61,6 +61,9 @@ void serve(WiFiClient& c){
 void route(WiFiClient& c,const String& path,const String& q){
   if(path=="/"||path=="") { handleRoot(c); return; }
   if(path=="/forward")    { handleForward(c); return; } // here
+  if(path=="/stop")       { handleStop(c); return; }
+  if(path=="/spot_right") { handleSpotRight(c); return; }
+  if(path=="/backward")   { handleBackward(c); return; }
   if(path.startsWith("/setspeed=")) { return; }
 }
 
@@ -91,6 +94,48 @@ void handleForward(WiFiClient& client){
   client.print("Content-Length: "); client.print(sizeof(body) - 1); client.print("\r\n\r\n");
   client.print(body);
     delay(1);
+}
+
+void handleStop(WiFiClient& client){
+
+    stopAllMotors();
+    const char body[] = "Stopped All Motors";
+
+    client.print("HTTP/1.1 200 OK\r\n");
+    client.print("Content-Type: text/html\r\n");
+    client.print("Connection: close\r\n");
+    client.print("Content-Length: ");
+    client.print(sizeof(body) - 1); client.print("\r\n\r\n");
+    client.print(body);
+      delay(1);
+}
+
+void handleSpotRight(WiFiClient& client){
+
+    turnOnSpotRight();
+    const char body[] = "Turning Right on Spot";
+
+    client.print("HTTP/1.1 200 OK\r\n");
+    client.print("Content-Type: text/html\r\n");
+    client.print("Connection: close\r\n");
+    client.print("Content-Length: ");
+    client.print(sizeof(body) - 1); client.print("\r\n\r\n");
+    client.print(body);
+      delay(1);
+}
+
+void handleBackward(WiFiClient& client){
+
+    driveBackward();
+    const char body[] = "Moving Backward";
+
+    client.print("HTTP/1.1 200 OK\r\n");
+    client.print("Content-Type: text/html\r\n");
+    client.print("Connection: close\r\n");
+    client.print("Content-Length: ");
+    client.print(sizeof(body) - 1); client.print("\r\n\r\n");
+    client.print(body);
+      delay(1);
 }
 
 void loop() {
