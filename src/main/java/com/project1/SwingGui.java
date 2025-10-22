@@ -24,18 +24,25 @@ public class SwingGui {
 
     public static void main(String[] args){
         createGUI();
-
     }
     
+    // Helper method that gets called every time on button listeners to send the HTTPS request
+    public static void sendCommand(JButton button, String endpoint) {
+    button.doClick();
+    lastAction=endpoint;
+    System.out.println(lastAction);
+    try {
+        arduClient.send(endpoint);
+        System.out.println(endpoint + " Succeed");
+    } catch (Exception e) { e.printStackTrace();}
+    }
+
     public static JFrame createGUI(){
     // Create an instance of JFrame
     JFrame frame = new JFrame("GUI Example");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(1000,1000);
     frame.setLocationRelativeTo(null);
-
-
-
 
     //Label for the top
     JLabel movementLabel = new JLabel("Movement Buttons",JLabel.CENTER);
@@ -48,15 +55,26 @@ public class SwingGui {
     JButton buttonRight = new JButton("Right");
     JButton crabWalkLeft= new JButton("CrabWalkLeft");
     JButton crabWalkRight= new JButton("CrabWalkRight");
+    JButton buttonSpotLeft = new JButton("SpotLeft");
+    JButton buttonSpotRight = new JButton("SpotRight");
     JPanel buttonPanel = new JPanel();
-    buttonPanel.setLayout(new GridLayout(2,3,5,5));
-    buttonPanel.add(crabWalkLeft);
+    buttonPanel.setLayout(new GridLayout(2,4,5,5));
+    buttonPanel.add(buttonSpotLeft);
     buttonPanel.add(buttonUp);
-    buttonPanel.add(crabWalkRight);
+    buttonPanel.add(buttonSpotRight);
     buttonPanel.add(buttonLeft);
     buttonPanel.add(buttonDown);
     buttonPanel.add(buttonRight);
     // Killswith button
+
+    //crabwalking panel
+    JLabel crabWalkLabel = new JLabel("Special Movements !",JLabel.CENTER);
+    crabWalkLabel.setFont(new Font ("Arial",Font.BOLD,16));
+    JPanel crabWalkPanel = new JPanel();
+    crabWalkPanel.setLayout(new GridLayout(1,2,5,5));
+    crabWalkPanel.add(crabWalkLeft);
+    crabWalkPanel.add(crabWalkRight);
+  
 
     JButton killswitch = new JButton("KillSwitch");
     killswitch.setPreferredSize(new Dimension(killswitch.getPreferredSize().width, 40));
@@ -124,8 +142,6 @@ public class SwingGui {
     });
     
     
-    
-    
     // Add the panel and the label to the main frame
     frame.setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
@@ -147,9 +163,17 @@ public class SwingGui {
     gbc.weighty = 0.0;
     frame.add(buttonPanel, gbc);
     
+
+    gbc.gridx = 0;
+    gbc.gridy = 2;
+    gbc.fill = GridBagConstraints.NONE; // Do not stretch the panel
+    gbc.anchor = GridBagConstraints.NORTH; // Center the panel
+    gbc.weighty = 0.0;
+    frame.add(crabWalkPanel, gbc);
+
     // Add the killswitch below the button panel
     gbc.gridx=0;
-    gbc.gridy=2;
+    gbc.gridy=3;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.anchor = GridBagConstraints.NORTH;
     gbc.weighty=0.0;
@@ -157,7 +181,7 @@ public class SwingGui {
     
     // Speed label
     gbc.gridx = 0;
-    gbc.gridy = 3;
+    gbc.gridy = 4;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.anchor= GridBagConstraints.NORTH;
     gbc.weightx = 1.0;
@@ -165,7 +189,7 @@ public class SwingGui {
     frame.add(speedLabel, gbc);
     
     gbc.gridx = 0;
-    gbc.gridy = 4;
+    gbc.gridy = 5;
     gbc.fill = GridBagConstraints.NONE; // Do not stretch the panel
     gbc.anchor = GridBagConstraints.NORTH; // Center the panel
     gbc.weighty = 0.0;
@@ -173,7 +197,7 @@ public class SwingGui {
     
     // Add the slider
     gbc.gridx = 0;
-    gbc.gridy = 5; // Place after speedPanel
+    gbc.gridy = 6; // Place after speedPanel
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.anchor = GridBagConstraints.NORTH;
     gbc.weighty = 0.0;
@@ -181,21 +205,19 @@ public class SwingGui {
     
     // Add the slider value label
     gbc.gridx = 0;
-    gbc.gridy = 6; // Place after the slider
+    gbc.gridy = 7; // Place after the slider
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.anchor = GridBagConstraints.NORTH;
     gbc.weighty = 0.0;
     frame.add(sliderValueLabel, gbc);
     
-    
     // Filler
     gbc.gridx = 0;
-    gbc.gridy = 7;
+    gbc.gridy = 8;
     gbc.weighty = 1.0;  // Take up all extra vertical space
     gbc.fill = GridBagConstraints.BOTH;
     frame.add(Box.createGlue(), gbc);
     
-
     // Key bindings
     InputMap inputMap = frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     ActionMap actionMap = frame.getRootPane().getActionMap();
@@ -204,68 +226,31 @@ public class SwingGui {
     actionMap.put("pressForward", new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent event) {
-            buttonUp.doClick();
-            lastAction = ArduinoEndpoints.FORWARD;
-            System.out.println(lastAction);
-            try {
-                arduClient.send(ArduinoEndpoints.FORWARD);
-                System.out.println(ArduinoEndpoints.FORWARD + " Succeed");
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-            }
+            sendCommand(buttonUp, ArduinoEndpoints.FORWARD);
+        }
     });
 
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "pressBackward");
     actionMap.put("pressBackward", new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent event) {
-            buttonDown.doClick();
-            lastAction = ArduinoEndpoints.BACKWARD;
-            System.out.println(lastAction);
-            try {
-                arduClient.send(ArduinoEndpoints.BACKWARD);
-                System.out.println(ArduinoEndpoints.BACKWARD + " Succeed");
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+            sendCommand(buttonDown, ArduinoEndpoints.BACKWARD);
         }
     });
 
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "pressLeft");
-    actionMap.put("pressLeft", new AbstractAction() {
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "pressSpotLeft");
+    actionMap.put("pressSpotLeft", new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent event) {
-            buttonLeft.doClick();
-            lastAction = ArduinoEndpoints.LEFT;
-            System.out.println(lastAction);
-            try {
-                arduClient.send(ArduinoEndpoints.LEFT);
-                System.out.println(ArduinoEndpoints.LEFT + " Succeed");
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+           sendCommand(buttonSpotLeft, ArduinoEndpoints.TURN_ON_SPOT_LEFT);
         }
-        
     });
 
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "pressRight");
-    actionMap.put("pressRight", new AbstractAction() {
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "pressSpotRight");
+    actionMap.put("pressSpotRight", new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent event) {
-            buttonRight.doClick();
-            lastAction = ArduinoEndpoints.RIGHT;
-            System.out.println(lastAction);
-            try {
-                arduClient.send(ArduinoEndpoints.RIGHT);
-                System.out.println(ArduinoEndpoints.RIGHT + " Succeed");
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+           sendCommand(buttonSpotRight, ArduinoEndpoints.TURN_ON_SPOT_RIGHT);
         }
     });
 
@@ -273,17 +258,7 @@ public class SwingGui {
     actionMap.put("pressCrabLeft", new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent event) {
-            crabWalkLeft.doClick();
-            lastAction = ArduinoEndpoints.CRAB_WALK_LEFT;
-            System.out.println(lastAction);
-            try {
-                arduClient.send(ArduinoEndpoints.CRAB_WALK_LEFT);
-                System.out.println(ArduinoEndpoints.CRAB_WALK_LEFT + " Succeed");
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-        
+            sendCommand(crabWalkLeft, ArduinoEndpoints.CRAB_WALK_LEFT);
         }
     });
 
@@ -291,16 +266,24 @@ public class SwingGui {
     actionMap.put("pressCrabRight", new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent event) {
-            crabWalkRight.doClick();
-            lastAction = ArduinoEndpoints.CRAB_WALK_RIGHT;
-            System.out.println(lastAction);
-            try {
-                arduClient.send(ArduinoEndpoints.CRAB_WALK_RIGHT);
-                System.out.println(ArduinoEndpoints.CRAB_WALK_RIGHT + " Succeed");
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+            sendCommand(crabWalkRight, ArduinoEndpoints.CRAB_WALK_RIGHT);
+        }  
+    });
+
+      inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0), "pressLeft");
+    actionMap.put("pressLeft", new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            sendCommand(buttonLeft, ArduinoEndpoints.LEFT);
+        }  
+    });
+
+
+      inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), "pressRight");
+    actionMap.put("pressRight", new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            sendCommand(buttonRight, ArduinoEndpoints.RIGHT);
         }  
     });
 
@@ -308,21 +291,10 @@ public class SwingGui {
     actionMap.put("KillSwitch", new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent event) {
-            killswitch.doClick();
-            lastAction = ArduinoEndpoints.STOP;
-            System.out.println(lastAction);
-            try {
-                arduClient.send(ArduinoEndpoints.STOP);
-                System.out.println(ArduinoEndpoints.STOP + " Succeed");
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+            sendCommand(killswitch, ArduinoEndpoints.STOP);
         }
     });
-
   frame.setVisible(true);
     return frame;
     }
-
 }
