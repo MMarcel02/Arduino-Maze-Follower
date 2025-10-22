@@ -61,6 +61,9 @@ void serve(WiFiClient& c){
 void route(WiFiClient& c,const String& path,const String& q){
   if(path=="/"||path=="") { handleRoot(c); return; }
   if(path=="/forward")    { handleForward(c); return; } // here
+  if(path=="/stop")       { handleStop(c); return; }
+  if(path=="/spot_right") { handleSpotRight(c); return; }
+  if(path=="/backward")   { handleBackward(c); return; }
   if(path.startsWith("/setspeed=")) { return; }
 }
 
