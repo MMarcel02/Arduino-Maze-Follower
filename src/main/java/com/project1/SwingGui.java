@@ -78,19 +78,28 @@ public class SwingGui {
     speedPanel.add(moreSpeedExtra);
     
     // Add a slider
-    JSlider slider = new JSlider(0, 255, 0); // min, max, initial value
+    JSlider slider = new JSlider(0, 255, 80); // min, max, initial value
     slider.setMajorTickSpacing(50);
     slider.setMinorTickSpacing(10);
     slider.setPaintTicks(true);
     slider.setPaintLabels(true);
     
     // Label to display the slider value
-    JLabel sliderValueLabel = new JLabel("0", JLabel.CENTER);
+    JLabel sliderValueLabel = new JLabel("80", JLabel.CENTER);
     sliderValueLabel.setFont(new Font("Arial", Font.BOLD, 16));
     
     slider.addChangeListener(e -> {
     int value = slider.getValue();
     sliderValueLabel.setText(String.valueOf(value));
+     if (!slider.getValueIsAdjusting()) {
+        try {
+            String endpoint = ArduinoEndpoints.getSpeedEndpoint(value);
+            arduClient.send(endpoint);
+            System.out.println("Speed set to " + value + " via " + endpoint);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
     });
     
     // Add ActionListeners to speed buttons
@@ -196,15 +205,16 @@ public class SwingGui {
         @Override
         public void actionPerformed(ActionEvent event) {
             buttonUp.doClick();
-            lastAction = "Forward";
+            lastAction = ArduinoEndpoints.FORWARD;
             System.out.println(lastAction);
             try {
-            arduClient.send("/" + lastAction);  // also add "/" here!
-            } catch (Exception ex) {
-            ex.printStackTrace();
+                arduClient.send(ArduinoEndpoints.FORWARD);
+                System.out.println(ArduinoEndpoints.FORWARD + " Succeed");
             }
-
-        }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            }
     });
 
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "pressBackward");
@@ -212,8 +222,15 @@ public class SwingGui {
         @Override
         public void actionPerformed(ActionEvent event) {
             buttonDown.doClick();
-            lastAction = "/backward";
+            lastAction = ArduinoEndpoints.BACKWARD;
             System.out.println(lastAction);
+            try {
+                arduClient.send(ArduinoEndpoints.BACKWARD);
+                System.out.println(ArduinoEndpoints.BACKWARD + " Succeed");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
     });
 
@@ -222,9 +239,17 @@ public class SwingGui {
         @Override
         public void actionPerformed(ActionEvent event) {
             buttonLeft.doClick();
-            lastAction = "pressLeft";
+            lastAction = ArduinoEndpoints.LEFT;
             System.out.println(lastAction);
+            try {
+                arduClient.send(ArduinoEndpoints.LEFT);
+                System.out.println(ArduinoEndpoints.LEFT + " Succeed");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
+        
     });
 
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "pressRight");
@@ -232,8 +257,15 @@ public class SwingGui {
         @Override
         public void actionPerformed(ActionEvent event) {
             buttonRight.doClick();
-            lastAction = "pressRight";
+            lastAction = ArduinoEndpoints.RIGHT;
             System.out.println(lastAction);
+            try {
+                arduClient.send(ArduinoEndpoints.RIGHT);
+                System.out.println(ArduinoEndpoints.RIGHT + " Succeed");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
     });
 
@@ -242,8 +274,16 @@ public class SwingGui {
         @Override
         public void actionPerformed(ActionEvent event) {
             crabWalkLeft.doClick();
-            lastAction = "pressCrabLeft";
+            lastAction = ArduinoEndpoints.CRAB_WALK_LEFT;
             System.out.println(lastAction);
+            try {
+                arduClient.send(ArduinoEndpoints.CRAB_WALK_LEFT);
+                System.out.println(ArduinoEndpoints.CRAB_WALK_LEFT + " Succeed");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        
         }
     });
 
@@ -252,9 +292,16 @@ public class SwingGui {
         @Override
         public void actionPerformed(ActionEvent event) {
             crabWalkRight.doClick();
-            lastAction = "pressCrabRight";
+            lastAction = ArduinoEndpoints.CRAB_WALK_RIGHT;
             System.out.println(lastAction);
-        }
+            try {
+                arduClient.send(ArduinoEndpoints.CRAB_WALK_RIGHT);
+                System.out.println(ArduinoEndpoints.CRAB_WALK_RIGHT + " Succeed");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }  
     });
 
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "KillSwitch");
@@ -262,8 +309,15 @@ public class SwingGui {
         @Override
         public void actionPerformed(ActionEvent event) {
             killswitch.doClick();
-            lastAction = "KillSwitch";
+            lastAction = ArduinoEndpoints.STOP;
             System.out.println(lastAction);
+            try {
+                arduClient.send(ArduinoEndpoints.STOP);
+                System.out.println(ArduinoEndpoints.STOP + " Succeed");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
     });
 
