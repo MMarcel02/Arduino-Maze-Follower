@@ -14,7 +14,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="600.0" maxWidth="900.0" minHeight="600.0" minWidth="900.0" prefHeight="600.0" prefWidth="900.0" scaleShape="false" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project1.GUIController">
+<VBox alignment="CENTER" focusTraversable="true" maxHeight="600.0" maxWidth="900.0" minHeight="600.0" minWidth="900.0" prefHeight="600.0" prefWidth="900.0" scaleShape="false" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project1.GUIController">
    <children>
       <HBox>
          <children>
@@ -156,6 +156,11 @@
                      </textFill>
                      <font>
                         <Font size="18.0" fx:id="x11" />
+                     </font>
+                  </Label>
+                  <Label fx:id="activeInputsLabel" layoutX="349.0" layoutY="43.0" maxHeight="53.0" maxWidth="218.0" prefHeight="53.0" prefWidth="218.0" text="Active: " wrapText="true">
+                     <font>
+                        <Font size="14.0" />
                      </font>
                   </Label>
                </children>

@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,9 +22,15 @@ public class App extends Application {
         scene = new Scene(fxmlLoader.load(), 900, 600);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         stage.setScene(scene);
+        GUIController controller = fxmlLoader.getController();
+        controller.setupInputHandlers(scene);
+        scene.getRoot().setFocusTraversable(true);
+        scene.getRoot().requestFocus();  // make sure it actually has focus
+
         stage.centerOnScreen();
         stage.show();
     }
+    
     
     public static void main(String[] args) {
         launch();

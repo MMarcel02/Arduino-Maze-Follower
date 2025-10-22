@@ -2,22 +2,28 @@ package com.project1;
 
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
+import java.util.Set;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
-import javafx.scene.paint.Color;    
-import javafx.scene.text.Font;
+
 
 public class GUIController {
 
     private int speed = 80;
     private ArduinoClient client = new ArduinoClient();
+    private final Set<String> activeInputs = new HashSet<>();
+
+    @FXML
+    private Label activeInputsLabel;
 
     @FXML
     private TextArea logArea;
@@ -193,10 +199,15 @@ public class GUIController {
     public void initialize() {
         speedSlider.setValue(speed);
 
+
         // Slider updates our speed value in the UI
         speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {                
             speed = (int) speedSlider.getValue();       
             speedLabel.setText("Speed: " + speed);
+            if (!speedSlider.isValueChanging()) {
+                String speedEndpoint = ArduinoEndpoints.getSpeedEndpoint(speed);
+                sendRequest(speedEndpoint);
+            }
         });
 
         // Speed is only sent to the robot once drag is released    
@@ -213,6 +224,7 @@ public class GUIController {
         logToTextArea("Sending request to " + endpoint + "...");
 
         // We start a new thread so that our GUI doesnt freeze after we send a request
+        
         new Thread(() -> {
             try {
                 client.send(endpoint);
@@ -232,10 +244,6 @@ public class GUIController {
         if (speed >= 255) speed = 255;
 
         speedSlider.setValue(speed);
-        speedLabel.setText("Speed: " + speed);
-        
-        String speedEndpoint = ArduinoEndpoints.getSpeedEndpoint(speed);
-        sendRequest(speedEndpoint);
 
     }
 
@@ -243,5 +251,74 @@ public class GUIController {
         String timestamp = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
         logArea.appendText("[" + timestamp + "] " + message + "\n");    
     }
+
+    public void setupInputHandlers(Scene scene){
+        scene.setOnKeyPressed(event -> {
+            String key = event.getCode().toString();
+            if (activeInputs.add(key)) {
+                handleMovement();
+            }
+        });
+
+        scene.setOnKeyReleased(event -> {
+            String key = event.getCode().toString();
+            activeInputs.remove(key);
+            handleMovement();
+        });
+
+    }
+
+    private void handleMovement() {
+        updateActiveInputsLabel(); 
+
+        if (activeInputs.isEmpty()) {
+            sendRequest(ArduinoEndpoints.STOP);
+            return;
+        }
+
+        boolean forward  = activeInputs.contains("W");
+        boolean backward = activeInputs.contains("S");
+        boolean left     = activeInputs.contains("A");
+        boolean right    = activeInputs.contains("D");
+        boolean shift    = activeInputs.contains("SHIFT");
+
+        String commandToSend;
+
+        if (forward && !left && !right) {
+            commandToSend = ArduinoEndpoints.FORWARD;
+        } else if (backward) {
+            commandToSend = ArduinoEndpoints.BACKWARD;
+        } else if (shift && left && !right) {
+            commandToSend = ArduinoEndpoints.CRAB_WALK_LEFT;
+        } else if (shift && right && !left) {
+            commandToSend = ArduinoEndpoints.CRAB_WALK_RIGHT;
+        } else if (forward && left) {
+            commandToSend = ArduinoEndpoints.LEFT;
+        } else if (forward && right) {
+            commandToSend = ArduinoEndpoints.RIGHT;
+        } else if (left && !right) {
+            commandToSend = ArduinoEndpoints.TURN_ON_SPOT_LEFT;
+        } else if (right && !left) {
+            commandToSend = ArduinoEndpoints.TURN_ON_SPOT_RIGHT;
+        } else {
+            commandToSend = ArduinoEndpoints.STOP;
+        }
+
+        sendRequest(commandToSend);
+    }
+
+
+
+
+    private void updateActiveInputsLabel() {
+        if (activeInputsLabel != null) {
+            if (activeInputs.isEmpty()) {
+                activeInputsLabel.setText("Active: None");
+            } else {
+                activeInputsLabel.setText("Active: " + String.join(", ", activeInputs));
+            }
+        }
+    }
+
 
 }
