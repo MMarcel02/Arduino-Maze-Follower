@@ -8,7 +8,6 @@ import java.time.Duration;
 
 public class ArduinoClient {
   public static final String IP = "http://192.168.1.1";
-  
   private HttpClient _client;
   
   // This is our constructor for the ArduinoClient method. That means when someone makes a new ArduinoClient object,
@@ -38,7 +37,7 @@ public class ArduinoClient {
     .build();
     
     // TODO: Asynchronous queue for calls.
-    System.out.println(req.toString());
+    // System.out.println(req.toString());
       
     HttpResponse<String> res = _client.send(req, HttpResponse.BodyHandlers.ofString());
     System.out.println("Body: " + res.body());
