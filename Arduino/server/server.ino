@@ -1,4 +1,3 @@
-#include <WiFi101.h>
 
 // Arduino ide automatically compiles all files in the same folder, so functions in
 // movement.ino will be accessible

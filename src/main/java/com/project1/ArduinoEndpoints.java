@@ -2,7 +2,7 @@ package com.project1;
 
 public final class ArduinoEndpoints {
 
-    // Movement commands
+    // These are the things we attach at the end of the IP address. e.g. 192.168.1.1/forward for our HTTP request in ArduinoClient
     public static final String FORWARD            = "/forward";
     public static final String BACKWARD           = "/backward";
     public static final String TURN_ON_SPOT_RIGHT = "/turnOnSpotRight";

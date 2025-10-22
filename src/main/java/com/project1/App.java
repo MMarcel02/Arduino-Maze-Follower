@@ -1,7 +1,6 @@
 // This basically informs the compiler to put it in com/project1 (you can verify this by looking in the target folder)
 // we need to compile it with maven since its a maven project, the IDE then knows to put the GUI.fxml in the same 
 // folder as these classes
-
 package com.project1;
 
 import javafx.application.Application;
