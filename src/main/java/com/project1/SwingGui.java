@@ -78,7 +78,7 @@ public class SwingGui {
     speedPanel.add(moreSpeedExtra);
     
     // Add a slider
-    JSlider slider = new JSlider(0, 255, 0); // min, max, initial value
+    JSlider slider = new JSlider(0, 255, 80); // min, max, initial value
     slider.setMajorTickSpacing(50);
     slider.setMinorTickSpacing(10);
     slider.setPaintTicks(true);
@@ -199,9 +199,10 @@ public class SwingGui {
             lastAction = "Forward";
             System.out.println(lastAction);
             try {
-            arduClient.send("/" + lastAction);  // also add "/" here!
+                
+                arduClient.send("/forward");  // also add "/" here!
             } catch (Exception ex) {
-            ex.printStackTrace();
+                ex.printStackTrace();
             }
 
         }

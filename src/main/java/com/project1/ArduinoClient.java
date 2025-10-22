@@ -31,14 +31,14 @@ public class ArduinoClient {
 
   public HttpResponse<String> send(String endpoint) throws Exception {
     String url = IP + endpoint;
-    
     HttpRequest req = HttpRequest.newBuilder()
-      .uri(URI.create(url))
-      .timeout(Duration.ofSeconds(10))
-      .GET()
-      .build();
-
+    .uri(URI.create(url))
+    .timeout(Duration.ofSeconds(10))
+    .GET()
+    .build();
+    
     // TODO: Asynchronous queue for calls.
+    System.out.println(req.toString());
       
     HttpResponse<String> res = _client.send(req, HttpResponse.BodyHandlers.ofString());
     System.out.println("Body: " + res.body());
