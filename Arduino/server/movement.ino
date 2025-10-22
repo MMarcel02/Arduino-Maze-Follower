@@ -26,9 +26,7 @@ void setupMotor(int pwm, int dir) {
 
 // --- Arduino Setup Function ---
 // Runs once when the board powers up or resets
-void setupAllMotors() {
-  Serial.begin(9600); // for logging
-    
+void setupAllMotors() {    
   setupMotor(FL_PWM, FL_DIR);
   setupMotor(FR_PWM,FR_DIR);
   setupMotor(BL_PWM,BL_DIR);

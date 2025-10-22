@@ -11,23 +11,24 @@ public class ArduinoClient {
   
   private HttpClient _client;
   
+  // This is our constructor for the ArduinoClient method. That means when someone makes a new ArduinoClient object,
+  // these will be the default 
   public ArduinoClient() {
+
+    // we will start creating our HTTP request one part at a time (thats why we use the builder)
     _client = HttpClient.newBuilder()
+
+      // for now we just make the HTTP request have a default timeout of 5 seconds, the rest we keep as default from the builder
       .connectTimeout(Duration.ofSeconds(5))
+
+      // creates a brand new HttpClient object with that 5 second default 
       .build();
   }
 
-  ///
   ///   This function sends a GET request to the arduino server at the given endpoint.
   ///   
   ///   e.g. Send("/forward") -> Sends the request, should move the robot forward.
-  ///   
-  ///   -----------------------------------------------------------------------------
-  /// 
-  ///   Use the ArduinoEndpoints class for the endpoints, don't hardcode them.
-  /// 
-  ///   e.g. Send(ArduinoEndpoints.FORWARD)
-  /// 
+
   public HttpResponse<String> send(String endpoint) throws Exception {
     String url = IP + endpoint;
     

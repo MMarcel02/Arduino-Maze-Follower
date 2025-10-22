@@ -1,27 +1,37 @@
+// This basically informs the compiler to put it in com/project1 (you can verify this by looking in the target folder)
+// we need to compile it with maven since its a maven project, the IDE then knows to put the GUI.fxml in the same 
+// folder as these classes
+
 package com.project1;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-/**
- * JavaFX App
- */
+// extends means that our App inherits all the methods from the JavaFx premade Application class
 public class App extends Application {
 
     private static Scene scene;
+
+    // override just means that we replace whatever the default start() method is in the Application class with the code below
     @Override
-    public void start(Stage stage) throws IOException {
+
+    // IOException is a java object representing input/output error, so for example if we cant load our GUI.fxml
+    // then the fxmlloader.load() will throw an IOException which is passed to its Parent (so our start() method)
+    // but then our parent passes it to their parent (the launch() method) which handles and prints out what the issue is
+    // FXMLLoader.load() → start() → JavaFX runtime (via launch()) → prints error
+
+    public void start(Stage stage) throws IOException { 
+
         // So we load our layout of our GUI (kind of like HTML in web dev)
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("GUI.fxml"));
+
         // We set our layout to be 900 * 600 pixels
         scene = new Scene(fxmlLoader.load(), 900, 600);
+
         // We load the style sheet for it (just like css in web dev)
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
@@ -41,8 +51,9 @@ public class App extends Application {
         stage.show();
     }
     
-    
     public static void main(String[] args) {
+        // launch() comes from the JavaFx Application class, it basically calls the start() method above
+        // it passes in a default stage as a parameter into the start() method
         launch();
     }
 
