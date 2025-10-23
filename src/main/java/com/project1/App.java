@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -24,6 +25,7 @@ public class App extends Application {
     // FXMLLoader.load() → start() → JavaFX runtime (via launch()) → prints error
 
     public void start(Stage stage) throws IOException { 
+        // primaryStage.initStyle(StageStyle.UNDECORATED);
 
         // So we load our layout of our GUI (kind of like HTML in web dev)
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("GUI.fxml"));
@@ -41,9 +43,9 @@ public class App extends Application {
         GUIController controller = fxmlLoader.getController();
         controller.setupInputHandlers(scene);
 
-        // This is just so that when we use the arrow keys it doesnt move focus accross the UI
-        scene.getRoot().setFocusTraversable(true);
-        scene.getRoot().requestFocus(); 
+        // // This is just so that when we use the arrow keys it doesnt move focus accross the UI
+        // scene.getRoot().setFocusTraversable(true);
+        // scene.getRoot().requestFocus(); 
 
         // When launched it should be centered on the screen
         stage.centerOnScreen();

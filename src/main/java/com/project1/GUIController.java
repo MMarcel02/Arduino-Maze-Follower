@@ -20,6 +20,8 @@ public class GUIController {
 
     private int speed = 80;
     private ArduinoClient client = new ArduinoClient();
+
+    // A HashSet is basically just an ArrayList that cant have repeated elements, so e.g. "W, W, D" is not allowed
     private final Set<String> activeInputs = new HashSet<>();
 
     @FXML
@@ -114,36 +116,6 @@ public class GUIController {
         updateSpeed(5);
     }
 
-    @FXML
-    void moveBackwards(MouseEvent event) {
-        sendRequest(ArduinoEndpoints.BACKWARD);
-    }
-
-    @FXML
-    void moveForward(MouseEvent event) {
-        sendRequest(ArduinoEndpoints.FORWARD);
-    }
-
-    @FXML
-    void rotateLeft(MouseEvent event) {
-        sendRequest(ArduinoEndpoints.TURN_ON_SPOT_LEFT);
-    }
-
-    @FXML
-    void rotateRight(MouseEvent event) {
-        sendRequest(ArduinoEndpoints.TURN_ON_SPOT_RIGHT);
-    }
-
-    @FXML
-    void crabWalkLeft(MouseEvent event) {
-        sendRequest(ArduinoEndpoints.CRAB_WALK_LEFT);
-    }
-
-    @FXML
-    void crabWalkRight(MouseEvent event) {
-        sendRequest(ArduinoEndpoints.CRAB_WALK_RIGHT);
-    }
-
 
     @FXML
     void stopSpeed(MouseEvent event) {
@@ -194,6 +166,46 @@ public class GUIController {
     void uTurn(MouseEvent event) {
 
     }
+
+    @FXML
+    void onButtonPressed(MouseEvent event) {
+        // Gives us the button that is being pressed 
+        Button source = (Button) event.getSource();
+
+        // We look up which key that button corresponds to
+        String key = mapButtonToKey(source);
+
+        // We add that key to the list of inputs 
+        if (key != null && activeInputs.add(key)) {
+
+            // We call the movement function with our new list
+            handleMovement();
+        }
+    }
+
+    @FXML
+    void onButtonReleased(MouseEvent event) {
+        // Gives us the button that is being released
+        Button source = (Button) event.getSource();
+
+        // Everything same as above but instead of adding we remove the button
+        String key = mapButtonToKey(source);
+        if (key != null && activeInputs.remove(key)) {
+            handleMovement();
+        }
+    }
+
+
+    private String mapButtonToKey(Button button) {
+        if (button == upArrow) return "W";
+        if (button == downArrow) return "S";
+        if (button == leftArrow) return "A";
+        if (button == rightArrow) return "D";
+        if (button == crabWalkLeft) return "SHIFT_A";
+        if (button == crabWalkRight) return "SHIFT_D";
+        return null;
+    }
+
 
     @FXML
     public void initialize() {
@@ -281,6 +293,9 @@ public class GUIController {
         boolean left     = activeInputs.contains("A");
         boolean right    = activeInputs.contains("D");
         boolean shift    = activeInputs.contains("SHIFT");
+        boolean shiftLeft    = activeInputs.contains("SHIFT_A");
+        boolean shiftRight    = activeInputs.contains("SHIFT_D");
+
 
         String commandToSend;
 
@@ -288,9 +303,9 @@ public class GUIController {
             commandToSend = ArduinoEndpoints.FORWARD;
         } else if (backward) {
             commandToSend = ArduinoEndpoints.BACKWARD;
-        } else if (shift && left && !right) {
+        } else if (shift && left && !right || shiftLeft) {
             commandToSend = ArduinoEndpoints.CRAB_WALK_LEFT;
-        } else if (shift && right && !left) {
+        } else if (shift && right && !left || shiftRight) {
             commandToSend = ArduinoEndpoints.CRAB_WALK_RIGHT;
         } else if (forward && left) {
             commandToSend = ArduinoEndpoints.LEFT;

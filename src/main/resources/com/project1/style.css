@@ -1,0 +1,52 @@
+* {
+    -fx-focus-traversable: false;
+}
+
+.buttonIcon {
+    -fx-fill: #DCA06D;
+    -fx-font-size: 28px;
+}
+
+.smallButtonIcon {
+    -fx-fill: #DCA06D;
+    -fx-font-size: 18px;
+}
+
+
+Label {
+    -fx-text-fill: #DCA06D;
+    -fx-font-weight: bold;
+}
+
+Button {
+    -fx-background-color: #4F1C51;
+    -fx-text-fill: #DCA06D;
+    -fx-cursor: hand;
+}
+
+VBox {
+    -fx-background-color: #210F37; 
+}
+
+Slider .track {
+    -fx-background-color: #4F1C51; 
+}
+
+Slider .thumb {
+    -fx-background-color: #DCA06D;
+}
+
+TextArea {
+    -fx-text-fill: #4F1C51;
+    -fx-focus-color: transparent; 
+    -fx-faint-focus-color: transparent;
+}
+
+TextArea .content {
+    -fx-background-color: #DCA06D;
+    -fx-focus-color: transparent; 
+    -fx-faint-focus-color: transparent;
+}
+
+
+
