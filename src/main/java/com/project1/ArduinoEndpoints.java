@@ -1,5 +1,6 @@
 package com.project1;
 
+
 public final class ArduinoEndpoints {
 
     // These are the things we attach at the end of the IP address. e.g. 192.168.1.1/forward for our HTTP request in ArduinoClient
