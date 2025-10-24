@@ -32,10 +32,13 @@ public class SwingGui {
     lastAction=endpoint;
     System.out.println(lastAction);
     try {
-        arduClient.send(endpoint);
+        HttpResponse<String> httpResponse = arduClient.send(endpoint);
+        String responseBody = httpResponse.body();
         System.out.println(endpoint + " Succeed");
-    } catch (Exception e) { e.printStackTrace();}
+        System.out.println(responseBody);
+    } catch (Exception e) {System.out.println("HTTPS, Request failed try again");}
     }
+
 
     public static JFrame createGUI(){
     // Create an instance of JFrame
@@ -47,6 +50,7 @@ public class SwingGui {
     //Label for the top
     JLabel movementLabel = new JLabel("Movement Buttons",JLabel.CENTER);
     movementLabel.setFont(new Font ("Arial",Font.BOLD,16));
+    
     
     // Create a panel of movement buttons
     JButton buttonUp = new JButton("Forward");
@@ -65,7 +69,7 @@ public class SwingGui {
     buttonPanel.add(buttonLeft);
     buttonPanel.add(buttonDown);
     buttonPanel.add(buttonRight);
-    // Killswith button
+    
 
     //crabwalking panel
     JLabel crabWalkLabel = new JLabel("Special Movements !",JLabel.CENTER);
@@ -75,6 +79,7 @@ public class SwingGui {
     crabWalkPanel.add(crabWalkLeft);
     crabWalkPanel.add(crabWalkRight);
   
+    // Killswith button
 
     JButton killswitch = new JButton("KillSwitch");
     killswitch.setPreferredSize(new Dimension(killswitch.getPreferredSize().width, 40));
@@ -83,7 +88,7 @@ public class SwingGui {
     JLabel speedLabel = new JLabel("SpeedButtons",JLabel.CENTER);
     speedLabel.setFont(new Font ("Arial",Font.BOLD,16));
     
-    // Create a panel for speed buttons
+    //Panel for speed buttons
     JButton moreSpeed = new JButton("+");
     JButton moreSpeedExtra = new JButton("++");
     JButton lessSpeed = new JButton("-");
@@ -95,14 +100,14 @@ public class SwingGui {
     speedPanel.add(moreSpeed);
     speedPanel.add(moreSpeedExtra);
     
-    // Add a slider
+    //Add a slider
     JSlider slider = new JSlider(0, 255, 80); // min, max, initial value
     slider.setMajorTickSpacing(50);
     slider.setMinorTickSpacing(10);
     slider.setPaintTicks(true);
     slider.setPaintLabels(true);
     
-    // Label to display the slider value
+    //Label to display the slider value
     JLabel sliderValueLabel = new JLabel("80", JLabel.CENTER);
     sliderValueLabel.setFont(new Font("Arial", Font.BOLD, 16));
     
@@ -120,7 +125,7 @@ public class SwingGui {
     }
     });
     
-    // Add ActionListeners to speed buttons
+    // Add ActionListeners to speed buttons that will change the value of the slider
     moreSpeed.addActionListener(e -> {
     int newValue = Math.min(slider.getValue() + 1, slider.getMaximum());
     slider.setValue(newValue);
@@ -158,16 +163,16 @@ public class SwingGui {
     // Add the button panel below the label
     gbc.gridx = 0;
     gbc.gridy = 1;
-    gbc.fill = GridBagConstraints.NONE; // Do not stretch the panel
-    gbc.anchor = GridBagConstraints.NORTH; // Center the panel
+    gbc.fill = GridBagConstraints.NONE;
+    gbc.anchor = GridBagConstraints.NORTH;
     gbc.weighty = 0.0;
     frame.add(buttonPanel, gbc);
     
 
     gbc.gridx = 0;
     gbc.gridy = 2;
-    gbc.fill = GridBagConstraints.NONE; // Do not stretch the panel
-    gbc.anchor = GridBagConstraints.NORTH; // Center the panel
+    gbc.fill = GridBagConstraints.NONE;
+    gbc.anchor = GridBagConstraints.NORTH;
     gbc.weighty = 0.0;
     frame.add(crabWalkPanel, gbc);
 
@@ -190,14 +195,14 @@ public class SwingGui {
     
     gbc.gridx = 0;
     gbc.gridy = 5;
-    gbc.fill = GridBagConstraints.NONE; // Do not stretch the panel
-    gbc.anchor = GridBagConstraints.NORTH; // Center the panel
+    gbc.fill = GridBagConstraints.NONE;
+    gbc.anchor = GridBagConstraints.NORTH;
     gbc.weighty = 0.0;
     frame.add(speedPanel, gbc);
     
     // Add the slider
     gbc.gridx = 0;
-    gbc.gridy = 6; // Place after speedPanel
+    gbc.gridy = 6;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.anchor = GridBagConstraints.NORTH;
     gbc.weighty = 0.0;
@@ -205,7 +210,7 @@ public class SwingGui {
     
     // Add the slider value label
     gbc.gridx = 0;
-    gbc.gridy = 7; // Place after the slider
+    gbc.gridy = 7;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.anchor = GridBagConstraints.NORTH;
     gbc.weighty = 0.0;
@@ -214,7 +219,7 @@ public class SwingGui {
     // Filler
     gbc.gridx = 0;
     gbc.gridy = 8;
-    gbc.weighty = 1.0;  // Take up all extra vertical space
+    gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     frame.add(Box.createGlue(), gbc);
     
