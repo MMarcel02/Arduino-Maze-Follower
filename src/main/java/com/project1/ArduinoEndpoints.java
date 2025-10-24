@@ -1,6 +1,5 @@
-package com.project1;
-
 public final class ArduinoEndpoints {
+<<<<<<< HEAD
 
     // These are the things we attach at the end of the IP address. e.g. 192.168.1.1/forward for our HTTP request in ArduinoClient
     public static final String FORWARD            = "/forward";
@@ -18,4 +17,17 @@ public final class ArduinoEndpoints {
     }
 
     private ArduinoEndpoints() {}
+=======
+    public static final String FORWARD = "/forward";
+  
+    public static final String STOP = "/stop";
+    public static final String SPOT_RIGHT = "/spot_right";
+    public static final String SPOT_LEFT = "/spot_right";
+    public static final String CRAB_RIGHT = "/crab_right";
+    public static final String CRAB_LEFT = "/crab_left";
+    public static final String BACKWARD = "/backward";
+    // test
+    // etc...
+  
+>>>>>>> origin/main
 }

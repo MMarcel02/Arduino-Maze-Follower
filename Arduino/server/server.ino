@@ -68,6 +68,7 @@ void route(WiFiClient& c, const String& path, const String& q) {
     if (path == "/crabWalkLeft") { handleCrabWalkLeft(c); return; }
     if (path == "/crabWalkRight") { handleCrabWalkRight(c); return; }
 
+<<<<<<< HEAD
     // when we change speed we pass down /setSpeed?s=(some value 0-255)
     if (path.startsWith("/setSpeed")) {
         //we want to extract the number after s= since thats our speed value
@@ -79,6 +80,18 @@ void route(WiFiClient& c, const String& path, const String& q) {
         }
         return;
     }
+=======
+void route(WiFiClient& c,const String& path,const String& q){
+  if(path=="/"||path=="") { handleRoot(c); return; }
+  if(path=="/forward")    { handleForward(c); return; } // here
+  if(path=="/stop")       { handleStop(c); return; }
+  if(path=="/spot_right") { handleSpotRight(c); return; }
+  if(path=="/spot_left") { handleSpotLeft(c); return; }
+  if(path=="/crab_right") { crabwalkRight(c); return; }
+  if(path=="/crab_left") { crabwalkLeft(c); return; }
+  if(path=="/backward")   { handleBackward(c); return; }
+  if(path.startsWith("/setspeed=")) { return; }
+>>>>>>> origin/main
 }
 
 // Helper to send minimal HTTP response
@@ -95,6 +108,7 @@ void handleRoot(WiFiClient& client) {
     sendHttpResponse(client, "Initial Page");
 }
 
+<<<<<<< HEAD
 void handleForward(WiFiClient& client) {
     moveForward();
     sendHttpResponse(client, "Moved Forward");
@@ -145,6 +159,91 @@ void handleSetSpeed(WiFiClient& client, int speed) {
     sendHttpResponse(client, "Speed set to " + String(speed));
 }
 
+=======
+void handleStop(WiFiClient& client){
+
+    stopAllMotors();
+    const char body[] = "Stopped All Motors";
+
+    client.print("HTTP/1.1 200 OK\r\n");
+    client.print("Content-Type: text/html\r\n");
+    client.print("Connection: close\r\n");
+    client.print("Content-Length: ");
+    client.print(sizeof(body) - 1); client.print("\r\n\r\n");
+    client.print(body);
+      delay(1);
+}
+
+void handleSpotRight(WiFiClient& client){
+
+    turnOnSpotRight();
+    const char body[] = "Turning Right on Spot";
+
+    client.print("HTTP/1.1 200 OK\r\n");
+    client.print("Content-Type: text/html\r\n");
+    client.print("Connection: close\r\n");
+    client.print("Content-Length: ");
+    client.print(sizeof(body) - 1); client.print("\r\n\r\n");
+    client.print(body);
+      delay(1);
+}
+
+void handleSpotLeft(WiFiClient& client){
+
+    turnOnSpotLeft();
+    const char body[] = "Turning Left on Spot";
+
+    client.print("HTTP/1.1 200 OK\r\n");
+    client.print("Content-Type: text/html\r\n");
+    client.print("Connection: close\r\n");
+    client.print("Content-Length: ");
+    client.print(sizeof(body) - 1); client.print("\r\n\r\n");
+    client.print(body);
+      delay(1);
+}
+
+void handleCrabRight(WiFiClient& client){
+
+    crabwalkRight();
+    const char body[] = "Crabwalking Right";
+
+    client.print("HTTP/1.1 200 OK\r\n");
+    client.print("Content-Type: text/html\r\n");
+    client.print("Connection: close\r\n");
+    client.print("Content-Length: ");
+    client.print(sizeof(body) - 1); client.print("\r\n\r\n");
+    client.print(body);
+      delay(1);
+}
+
+void handleCrabLeft(WiFiClient& client){
+
+    crabwalkLeft();
+    const char body[] = "Crabwalking Left";
+
+    client.print("HTTP/1.1 200 OK\r\n");
+    client.print("Content-Type: text/html\r\n");
+    client.print("Connection: close\r\n");
+    client.print("Content-Length: ");
+    client.print(sizeof(body) - 1); client.print("\r\n\r\n");
+    client.print(body);
+      delay(1);
+}
+
+void handleBackward(WiFiClient& client){
+
+    driveBackward();
+    const char body[] = "Moving Backward";
+
+    client.print("HTTP/1.1 200 OK\r\n");
+    client.print("Content-Type: text/html\r\n");
+    client.print("Connection: close\r\n");
+    client.print("Content-Length: ");
+    client.print(sizeof(body) - 1); client.print("\r\n\r\n");
+    client.print(body);
+      delay(1);
+}
+>>>>>>> origin/main
 
 void loop() {
   WiFiClient client = server.available();
