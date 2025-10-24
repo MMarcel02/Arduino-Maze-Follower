@@ -1,5 +1,7 @@
 package com.project1;
 
+// This is the alternative GUI we created using Swing Library, it can be ran standalone from this file 
+
 import java.io.*;
 import javax.swing.*;
 
