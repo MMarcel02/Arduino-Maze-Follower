@@ -53,6 +53,26 @@ public class SwingGui {
     JLabel movementLabel = new JLabel("Movement Buttons",JLabel.CENTER);
     movementLabel.setFont(new Font ("Arial",Font.BOLD,16));
     
+    // Instructions
+    String[] columnNames = {"Key / Button", "Action"};
+    Object[][] data = {
+    {"↑ Arrow", "Forward"},
+    {"↓ Arrow", "Backward"},
+    {"← Arrow", "Turn Left"},
+    {"→ Arrow", "Turn Right"},
+    {"A", "Drift Left"},
+    {"D", "Drift Right"},
+    {"C", "Crab Walk Left"},
+    {"V", "Crab Walk Right"},
+    {"ESC", "KillSwitch"}
+    };
+
+    JTable keyTable = new JTable(data, columnNames);
+    keyTable.setEnabled(false); // prevent editing
+    keyTable.setFont(new Font("Arial", Font.PLAIN, 14));
+    keyTable.setRowHeight(25);
+
+
     
     // Create a panel of movement buttons
     JButton buttonUp = new JButton("Forward");
@@ -225,6 +245,17 @@ public class SwingGui {
     gbc.fill = GridBagConstraints.BOTH;
     frame.add(Box.createGlue(), gbc);
     
+    // Put the table in a scroll pane
+    JScrollPane scrollPane = new JScrollPane(keyTable);
+
+    // Add it to the frame
+    gbc.gridx = 0;
+    gbc.gridy = 9;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.anchor = GridBagConstraints.NORTH;
+    gbc.weighty = 0.0;
+    frame.add(scrollPane, gbc);
+
     // Key bindings
     InputMap inputMap = frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     ActionMap actionMap = frame.getRootPane().getActionMap();
