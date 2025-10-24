@@ -20,7 +20,7 @@ click the run button (in top right on vs code)
         - linux (if on linux)
         - mac-aarch64 (if on M-chip mac)
         - mac (if on intel mac)
-4. Open terminal in your the root folder:
+4. Open terminal in the projects root folder:
 mvn clean javafx:run
 
 This should install our dependencies and run the Javafx GUI
