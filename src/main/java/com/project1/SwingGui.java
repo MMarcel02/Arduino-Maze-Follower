@@ -38,7 +38,7 @@ public class SwingGui {
         String responseBody = httpResponse.body();
         System.out.println(endpoint + " Succeed");
         System.out.println(responseBody);
-    } catch (Exception e) {System.out.println("HTTPS, Request failed try again");}
+    } catch (Exception e) {System.out.println("HTTP, Request failed try again");}
     }
 
 
