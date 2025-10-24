@@ -1,7 +1,9 @@
+package com.project1;
 // This basically informs the compiler to put it in com/project1 (you can verify this by looking in the target folder)
 // we need to compile it with maven since its a maven project, the IDE then knows to put the GUI.fxml in the same 
 // folder as these classes
-package com.project1;
+
+// This is our Javafx GUI (Not to be confused with the SwingGui in in the same folder)
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,15 +18,16 @@ public class App extends Application {
 
     private static Scene scene;
 
-    // override just means that we replace whatever the default start() method is in the Application class with the code below
-    @Override
-
+    
     // IOException is a java object representing input/output error, so for example if we cant load our GUI.fxml
     // then the fxmlloader.load() will throw an IOException which is passed to its Parent (so our start() method)
     // but then our parent passes it to their parent (the launch() method) which handles and prints out what the issue is
     // FXMLLoader.load() → start() → JavaFX runtime (via launch()) → prints error
-
+    
+    // override just means that we replace whatever the default start() method is in the Application class with the code below
+    @Override
     public void start(Stage stage) throws IOException { 
+        // This if if we want to start our window without the default OS close, expand, minimize buttons, but we'd need to create our own ones
         // primaryStage.initStyle(StageStyle.UNDECORATED);
 
         // So we load our layout of our GUI (kind of like HTML in web dev)

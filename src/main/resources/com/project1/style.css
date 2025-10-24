@@ -48,5 +48,14 @@ TextArea .content {
     -fx-faint-focus-color: transparent;
 }
 
+Text-area .track {
+    -fx-background-color: #4F1C51; /* light gray track */
+}
 
+/* Scrollbar thumb (the draggable part) */
+Text-area .thumb {
+    -fx-background-color: #DCA06D; /* red thumb */
+    -fx-background-insets: 0;
+    -fx-background-radius: 5px;
+}
 
