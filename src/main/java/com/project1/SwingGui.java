@@ -170,7 +170,7 @@ public class SwingGui {
     gbc.weighty = 0.0;
     frame.add(buttonPanel, gbc);
     
-
+    // Add the crabwalkPanel
     gbc.gridx = 0;
     gbc.gridy = 2;
     gbc.fill = GridBagConstraints.NONE;
@@ -194,7 +194,7 @@ public class SwingGui {
     gbc.weightx = 1.0;
     gbc.weighty = 0.0;
     frame.add(speedLabel, gbc);
-    
+    // Adding speed panel 
     gbc.gridx = 0;
     gbc.gridy = 5;
     gbc.fill = GridBagConstraints.NONE;
@@ -202,7 +202,7 @@ public class SwingGui {
     gbc.weighty = 0.0;
     frame.add(speedPanel, gbc);
     
-    // Add the slider
+    // Adding the slider
     gbc.gridx = 0;
     gbc.gridy = 6;
     gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -210,7 +210,7 @@ public class SwingGui {
     gbc.weighty = 0.0;
     frame.add(slider, gbc);
     
-    // Add the slider value label
+    // Adding the slider value label
     gbc.gridx = 0;
     gbc.gridy = 7;
     gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -218,7 +218,7 @@ public class SwingGui {
     gbc.weighty = 0.0;
     frame.add(sliderValueLabel, gbc);
     
-    // Filler
+    // Filler that takes up the rest of the space so that the panels dont overfit
     gbc.gridx = 0;
     gbc.gridy = 8;
     gbc.weighty = 1.0;
