@@ -8,7 +8,7 @@ import java.time.Duration;
 
 public class ArduinoClient {
   public static final String IP = "http://192.168.1.1";
-  private HttpClient _client;
+  private HttpClient _client; 
   
   // This is our constructor for the ArduinoClient method. That means when someone makes a new ArduinoClient object,
   // these will be the default 

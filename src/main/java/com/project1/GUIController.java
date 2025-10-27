@@ -5,15 +5,18 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
 
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.scene.input.MouseEvent;
+
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 
 public class GUIController {
@@ -23,6 +26,13 @@ public class GUIController {
 
     // A HashSet is basically just an ArrayList that cant have repeated elements, so e.g. "W, W, D" is not allowed
     private final Set<String> activeInputs = new HashSet<>();
+
+    
+    @FXML
+    private Canvas canvas;
+
+    @FXML
+    private ToggleButton emergencyStopToggle;
 
     @FXML
     private Label activeInputsLabel;
@@ -49,9 +59,6 @@ public class GUIController {
     private Button dragRace;
 
     @FXML
-    private Button emergencyStop;
-
-    @FXML
     private Button leftArrow;
 
     @FXML
@@ -65,6 +72,9 @@ public class GUIController {
 
     @FXML
     private Button reverseStraight;
+
+    @FXML
+    private Button extraSpace;
 
     @FXML
     private Button rightArrow;
@@ -128,11 +138,6 @@ public class GUIController {
     }
 
     @FXML
-    void emergencyStop(MouseEvent event) {
-
-    }
-
-    @FXML
     void parkingInBox(MouseEvent event) {
 
     }
@@ -164,6 +169,11 @@ public class GUIController {
 
     @FXML
     void uTurn(MouseEvent event) {
+
+    }
+
+    @FXML
+    void toggleEmergencyStop(MouseEvent event) {
 
     }
 

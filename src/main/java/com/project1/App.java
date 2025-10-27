@@ -33,8 +33,8 @@ public class App extends Application {
         // So we load our layout of our GUI (kind of like HTML in web dev)
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("GUI.fxml"));
 
-        // We set our layout to be 900 * 600 pixels
-        scene = new Scene(fxmlLoader.load(), 900, 600);
+        // We set our layout to be 1200 * 600 pixels
+        scene = new Scene(fxmlLoader.load(), 1200, 600);
 
         // We load the style sheet for it (just like css in web dev)
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());

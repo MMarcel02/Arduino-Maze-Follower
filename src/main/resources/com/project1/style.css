@@ -42,6 +42,23 @@ TextArea {
     -fx-faint-focus-color: transparent;
 }
 
+ToggleButton {
+    -fx-text-fill: #DCA06D;
+    -fx-background-color: #4F1C51;
+    -fx-font-weight: bold;
+}
+
+ToggleButton:selected {
+    -fx-text-fill: #4F1C51;
+    -fx-background-color: #DCA06D;
+    -fx-font-weight: bold;
+}
+
+Pane {
+    -fx-background-color: #DCA06D;
+
+}
+
 TextArea .content {
     -fx-background-color: #DCA06D;
     -fx-focus-color: transparent; 
