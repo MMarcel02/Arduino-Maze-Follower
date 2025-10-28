@@ -159,7 +159,7 @@
                         <Canvas fx:id="canvas" height="275.0" width="275.0" />
                      </children>
                   </Pane>
-                  <ToggleButton fx:id="emergencyStopToggle" layoutX="13.0" layoutY="345.0" mnemonicParsing="false" onMousePressed="#toggleEmergencyStop" prefHeight="25.0" prefWidth="275.0" selected="true" text="Emergency Stop" />
+                  <ToggleButton fx:id="emergencyStopToggle" layoutX="13.0" layoutY="345.0" mnemonicParsing="false" onAction="#toggleEmergencyStop" prefHeight="25.0" prefWidth="275.0" selected="true" text="Emergency Stop" />
                </children>
             </AnchorPane>
             <AnchorPane minWidth="275.0">

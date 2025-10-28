@@ -1,0 +1,5 @@
+# This tells git which files to ignore when making a commit
+
+
+# Ignore everything in the target/ folder
+target/

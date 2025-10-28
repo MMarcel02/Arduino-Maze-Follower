@@ -174,7 +174,7 @@ public class GUIController {
 
     @FXML
     void toggleEmergencyStop(MouseEvent event) {
-
+        emergencyStopToggle.setSelected(!emergencyStopToggle.isSelected());;
     }
 
     @FXML
