@@ -5,7 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
 
-
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -17,6 +17,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
 
 
 public class GUIController {
@@ -173,8 +174,8 @@ public class GUIController {
     }
 
     @FXML
-    void toggleEmergencyStop(MouseEvent event) {
-        emergencyStopToggle.setSelected(!emergencyStopToggle.isSelected());;
+    void toggleEmergencyStop(ActionEvent event) {
+        sendRequest(ArduinoEndpoints.TOGGLE_EMERGENCY_STOP);
     }
 
     @FXML

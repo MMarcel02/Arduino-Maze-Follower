@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.canvas.Canvas?>
@@ -73,14 +74,21 @@
                            </rowConstraints>
                            <children>
                               <Button fx:id="bigDecrement" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#bigDecreaseSpeed" prefHeight="0.0" prefWidth="73.0">
-                              </Button>
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-minus" styleClass="buttonIcon" />
+                                 </graphic></Button>
                               <Button fx:id="smallDecrement" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#smallDecreaseSpeed" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="1">
-                              </Button>
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-minus" styleClass="smallButtonIcon" />
+                                 </graphic></Button>
                               <Button fx:id="smallIncrement" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#smallIncreaseSpeed" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="2">
-                              </Button>
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-plus" styleClass="smallButtonIcon" />
+                                 </graphic></Button>
                               <Button fx:id="bigIncrement" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#bigIncreaseSpeed" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="3">
-
-                              </Button>
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-plus" styleClass="buttonIcon" />
+                                 </graphic></Button>
                            </children>
                         </GridPane>
                      </children>
@@ -102,6 +110,9 @@
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-angle-double-left" styleClass="buttonIcon" />
+                                 </graphic>
                                  
                               </Button>
                               <Button fx:id="upArrow" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="1">
@@ -109,24 +120,32 @@
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-arrow-up" styleClass="buttonIcon" />
+                                 </graphic>
                               </Button>
                               <Button fx:id="crabWalkRight" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="2">
-                                 
-                              </Button>
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-angle-double-right" styleClass="buttonIcon" />
+                                 </graphic></Button>
                               <Button fx:id="rightArrow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                                 
-                              </Button>
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-arrow-right" styleClass="buttonIcon" />
+                                 </graphic></Button>
                               <Button fx:id="downArrow" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                 
-                              </Button>
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-arrow-down" styleClass="buttonIcon" />
+                                 </graphic></Button>
                               <Button fx:id="leftArrow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0" GridPane.rowIndex="1">
-                                 
-                              </Button>
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-arrow-left" styleClass="buttonIcon" />
+                                 </graphic></Button>
                            </children>
                         </GridPane>
                         <Button fx:id="stopButton" layoutY="148.0" mnemonicParsing="false" onMousePressed="#stopSpeed" prefHeight="70.0" prefWidth="218.0">
-                          
-                        </Button>
+                           <graphic>
+                              <FontIcon iconLiteral="fas-pause" styleClass="buttonIcon" />
+                           </graphic></Button>
                      </children>
                   </AnchorPane>
                   <Label alignment="CENTER" layoutX="9.0" layoutY="334.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Logs:" textAlignment="CENTER" wrapText="false">

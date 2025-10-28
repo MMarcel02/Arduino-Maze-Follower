@@ -2,16 +2,9 @@
     -fx-focus-traversable: false;
 }
 
-.buttonIcon {
-    -fx-fill: #DCA06D;
-    -fx-font-size: 28px;
+VBox {
+    -fx-background-color: #210F37; 
 }
-
-.smallButtonIcon {
-    -fx-fill: #DCA06D;
-    -fx-font-size: 18px;
-}
-
 
 Label {
     -fx-text-fill: #DCA06D;
@@ -24,55 +17,72 @@ Button {
     -fx-cursor: hand;
 }
 
-VBox {
-    -fx-background-color: #210F37; 
+.buttonIcon {
+    -fx-fill: #DCA06D;
+    -fx-font-size: 28px;
 }
 
-Slider .track {
-    -fx-background-color: #4F1C51; 
-}
-
-Slider .thumb {
-    -fx-background-color: #DCA06D;
-}
-
-TextArea {
-    -fx-text-fill: #4F1C51;
-    -fx-focus-color: transparent; 
-    -fx-faint-focus-color: transparent;
+.smallButtonIcon {
+    -fx-fill: #DCA06D;
+    -fx-font-size: 18px;
 }
 
 ToggleButton {
     -fx-text-fill: #DCA06D;
     -fx-background-color: #4F1C51;
     -fx-font-weight: bold;
+    -fx-cursor: hand;
+
 }
 
 ToggleButton:selected {
     -fx-text-fill: #4F1C51;
     -fx-background-color: #DCA06D;
     -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+Slider .track {
+    -fx-background-color: #4F1C51; 
+    -fx-cursor: hand;
+}
+
+Slider .thumb {
+    -fx-background-color: #DCA06D;
+    -fx-cursor: hand;
 }
 
 Pane {
     -fx-background-color: #DCA06D;
+    -fx-background-radius: 4; 
+}
 
+TextArea {
+    -fx-text-fill: #4F1C51;
+    -fx-focus-color: #4F1C51;
+    -fx-faint-focus-color: #4F1C51;
+    -fx-background-color: #DCA06D;
 }
 
 TextArea .content {
     -fx-background-color: #DCA06D;
-    -fx-focus-color: transparent; 
-    -fx-faint-focus-color: transparent;
 }
 
-Text-area .track {
-    -fx-background-color: #4F1C51; /* light gray track */
+TextArea .scroll-bar {
+    -fx-background-color: #DCA06D;
+
 }
 
-/* Scrollbar thumb (the draggable part) */
-Text-area .thumb {
-    -fx-background-color: #DCA06D; /* red thumb */
-    -fx-background-insets: 0;
-    -fx-background-radius: 5px;
+TextArea .scroll-bar .thumb {
+    -fx-background-color: #4F1C51;
 }
 
+TextArea .scroll-pane .increment-button,
+TextArea .scroll-pane .decrement-button {
+    -fx-padding: 0;
+}
+
+TextArea .scroll-pane .increment-arrow,
+TextArea .scroll-pane .decrement-arrow {
+    -fx-padding: 0;
+}

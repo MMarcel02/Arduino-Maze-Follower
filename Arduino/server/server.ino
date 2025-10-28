@@ -67,6 +67,7 @@ void route(WiFiClient& c, const String& path, const String& q) {
     if (path == "/stop") { handleStop(c); return; }
     if (path == "/crabWalkLeft") { handleCrabWalkLeft(c); return; }
     if (path == "/crabWalkRight") { handleCrabWalkRight(c); return; }
+    if (path == "/toggleEmergencyStop") { handleToggleEmergencyStop(c); return; }
 
     // when we change speed we pass down /setSpeed?s=(some value 0-255)
     if (path.startsWith("/setSpeed")) {
@@ -144,6 +145,14 @@ void handleSetSpeed(WiFiClient& client, int speed) {
     setSpeed(speed);
     sendHttpResponse(client, "Speed set to " + String(speed));
 }
+
+void handleToggleEMergencyStop(WiFiClient& client) {
+    // here call your function that changes the emergency stop
+    // e.g. setEmergencyStop(!emergencyStop)
+
+    // here make sure it tells us if it sets the emergency stop to true or false
+    sendHttpResponse(client, "Emergency stop set to " + ); 
+}   
 
 
 void loop() {
