@@ -146,12 +146,12 @@ void handleSetSpeed(WiFiClient& client, int speed) {
     sendHttpResponse(client, "Speed set to " + String(speed));
 }
 
-void handleToggleEMergencyStop(WiFiClient& client) {
+void handleToggleEmergencyStop(WiFiClient& client) {
     // here call your function that changes the emergency stop
     // e.g. setEmergencyStop(!emergencyStop)
 
     // here make sure it tells us if it sets the emergency stop to true or false
-    sendHttpResponse(client, "Emergency stop set to " + ); 
+    sendHttpResponse(client, "Emergency stop set to " ); 
 }   
 
 
