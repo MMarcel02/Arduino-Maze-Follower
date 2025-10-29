@@ -1,3 +1,25 @@
+// --- Ultrasonic Sensor Pins ---
+const int trigPin = 3;
+const int echoPin = 2;
+
+float getDistanceCM() {
+  long duration;
+  float distance;
+  
+  digitalWrite(trigPin, LOW);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH, 30000);
+  distance = duration * 0.034 / 2.0;
+
+  return distance;
+}
+
+
+// ----------------------------------------------------------------------------------------------
+
 
 // Arduino ide automatically compiles all files in the same folder, so functions in
 // movement.ino will be accessible
@@ -45,6 +67,9 @@ void setup() {
 
   // Stop all motors initially
   stopAllMotors();
+
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
 }
 
 void serve(WiFiClient& c){
@@ -68,6 +93,7 @@ void route(WiFiClient& c, const String& path, const String& q) {
     if (path == "/crabWalkLeft") { handleCrabWalkLeft(c); return; }
     if (path == "/crabWalkRight") { handleCrabWalkRight(c); return; }
     if (path == "/toggleEmergencyStop") { handleToggleEmergencyStop(c); return; }
+    if (path == "/distance") { handleDistance(c); return; }
 
     // when we change speed we pass down /setSpeed?s=(some value 0-255)
     if (path.startsWith("/setSpeed")) {
@@ -153,6 +179,13 @@ void handleToggleEmergencyStop(WiFiClient& client) {
     // here make sure it tells us if it sets the emergency stop to true or false
     sendHttpResponse(client, "Emergency stop set to " ); 
 }   
+
+void handleDistance(WiFiClient& client) {
+  float dist = getDistanceCM();
+  String body = "Di stance: " + String(dist, 2) + " cm";
+  sendHttpResponse(client, body);
+}
+
 
 
 void loop() {
