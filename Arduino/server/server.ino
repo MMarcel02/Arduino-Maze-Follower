@@ -154,12 +154,27 @@ void handleToggleEmergencyStop(WiFiClient& client) {
     sendHttpResponse(client, "Emergency stop set to " ); 
 }   
 
-
-void loop() {
+void handleServer() {
   WiFiClient client = server.available();
   if (!client) return;
 
   client.setTimeout(2000); // 2s read timeout
   serve(client);
   client.stop();
+}
+
+void loop() {
+  // sanity check, don't operate on a null state
+  if (currentState == nullptr) return;
+
+  // handle the current state, and get the next state
+  RobotState* nextState = currentState->handle();
+
+  // if nextState is the same as currentState, there is no transition
+  // otherwise, call the enter and exit functions and update the currentState
+  if (nextState != currentState) {
+    currentState->exit();
+    nextState->enter();
+    currentState = nextState;
+  }
 }
