@@ -83,6 +83,11 @@ void serve(WiFiClient& c){
 }
 void route(WiFiClient& c, const String& path, const String& q) {
     if (path == "/" || path == "") { handleRoot(c); return; }
+    
+    // below are movement functions, for which we force the state
+    // to become the ManualControlState.
+    changeState(&MANUAL_CONTROL_STATE);
+    
     if (path == "/forward") { handleForward(c); return; }
     if (path == "/backward") { handleBackward(c); return; }
     if (path == "/turnOnSpotRight") { handleTurnOnSpotRight(c); return; }
@@ -182,11 +187,9 @@ void handleToggleEmergencyStop(WiFiClient& client) {
 
 void handleDistance(WiFiClient& client) {
   float dist = getDistanceCM();
-  String body = "Di stance: " + String(dist, 2) + " cm";
+  String body = "Distance: " + String(dist, 2) + " cm";
   sendHttpResponse(client, body);
 }
-
-
 
 void loop() {
   WiFiClient client = server.available();
@@ -194,5 +197,23 @@ void loop() {
 
   client.setTimeout(2000); // 2s read timeout
   serve(client);
+  
+  
+  // sanity check, don't operate on a null state
+  if (currentState == nullptr) {
+    client.stop();
+    return;
+  }
+
+  // handle the current state, and get the next state
+  RobotState* nextState = currentState->handle(client);
+
+  // if nextState is the same as currentState, there is no transition
+  // otherwise, call the enter and exit functions and update the currentState
+  if (nextState != currentState) {
+    // changeState is defined in states.ino
+    changeState(nextState);
+  }
+  
   client.stop();
 }
