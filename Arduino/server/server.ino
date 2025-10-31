@@ -17,6 +17,13 @@ float getDistanceCM() {
   return distance;
 }
 
+
+// --- IR Sensor Pins ---
+const int IR_Left_Digital = A0;
+const int IR_Left_Analog  = A1;
+const int IR_Right_Digital = A2;
+const int IR_Right_Analog  = A3;
+
 // --- Read both IR sensor ---
 String getIRoutput() {
   int leftDigital = digitalRead(IR_Left_Digital);
