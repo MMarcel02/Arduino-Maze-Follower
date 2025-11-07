@@ -2,7 +2,6 @@
 #include "hardware.h"
 #include "states.h"
 
-
 // Arduino ide automatically compiles all files in the same folder, so functions in
 // movement.ino will be accessible
 
