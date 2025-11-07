@@ -13,11 +13,19 @@ constexpr int BR_PWM = 11, BR_DIR = 12;      // Back Right
 constexpr int trigPin = 3;
 constexpr int echoPin = 2;
 
+// --- IR Sensor Pins ---
+constexpr int IR_Left_Digital = A0;
+constexpr int IR_Left_Analog  = A1;
+constexpr int IR_Right_Digital = A2;
+constexpr int IR_Right_Analog  = A3;
+
 // --- Variables ---
 extern int motorSpeed;           // Default speed for all motors (range: 0–255)
 extern int motorTurningSpeed;
 extern char lastMotionCmd;      // Stores the last direction command (e.g., 'f' for forward)
 
+// --- Read both IR sensor ---
+String getIRoutput();
 
 float getDistanceCM();
 

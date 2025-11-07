@@ -21,6 +21,18 @@ float getDistanceCM() {
   return distance;
 }
 
+// --- Read both IR sensor ---
+String getIRoutput() {
+  int leftDigital = digitalRead(IR_Left_Digital);
+  int rightDigital = digitalRead(IR_Right_Digital);
+  int LeftAnalog = analogRead(IR_Left_Analog);
+  int rightAnalog = analogRead(IR_Right_Analog);
+
+  String IRdata = "Left IR -> D: " + String(leftDigital) + " | A: " + String(leftAnalog);
+  IRdata += " || Right IR -> D: " + String(rghtDigital) + " | A: " + String(rightAnalog);
+  return IRdata;
+}
+
 // --- Function to Drive a Motor ---
 // 'speed' determines how fast, 'forward' determines direction
 void setMotor(int pwm, int dir, int speed, bool forward) {
