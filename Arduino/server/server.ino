@@ -1,44 +1,6 @@
-// --- Ultrasonic Sensor Pins ---
-const int trigPin = 3;
-const int echoPin = 2;
-
-float getDistanceCM() {
-  long duration;
-  float distance;
-  
-  digitalWrite(trigPin, LOW);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-
-  duration = pulseIn(echoPin, HIGH, 30000);
-  distance = duration * 0.034 / 2.0;
-
-  return distance;
-}
-
-
-// --- IR Sensor Pins ---
-const int IR_Left_Digital = A0;
-const int IR_Left_Analog  = A1;
-const int IR_Right_Digital = A2;
-const int IR_Right_Analog  = A3;
-
-// --- Read both IR sensor ---
-String getIRoutput() {
-  int leftDigital = digitalRead(IR_Left_Digital);
-  int rightDigital = digitalRead(IR_Right_Digital);
-  int LeftAnalog = analogRead(IR_Left_Analog);
-  int rightAnalog = analogRead(IR_Right_Analog);
-
-  String IRdata = "Left IR -> D: " + String(leftDigital) + " | A: " + String(leftAnalog);
-  IRdata += " || Right IR -> D: " + String(rghtDigital) + " | A: " + String(rightAnalog);
-  return IRdata;
-}
-
-
-// ----------------------------------------------------------------------------------------------
-
+#include <WiFi101.h>
+#include "hardware.h"
+#include "states.h"
 
 // Arduino ide automatically compiles all files in the same folder, so functions in
 // movement.ino will be accessible
@@ -105,19 +67,19 @@ void route(WiFiClient& c, const String& path, const String& q) {
     
     // below are movement functions, for which we force the state
     // to become the ManualControlState.
-    changeState(&MANUAL_CONTROL_STATE);
+    changeState(&MANUAL_CONTROL_STATE, c);
     
-    if (path == "/forward") { handleForward(c); return; }
-    if (path == "/backward") { handleBackward(c); return; }
-    if (path == "/turnOnSpotRight") { handleTurnOnSpotRight(c); return; }
-    if (path == "/turnOnSpotLeft") { handleTurnOnSpotLeft(c); return; }
-    if (path == "/left") { handleLeft(c); return; }
-    if (path == "/right") { handleRight(c); return; }
-    if (path == "/stop") { handleStop(c); return; }
-    if (path == "/crabWalkLeft") { handleCrabWalkLeft(c); return; }
-    if (path == "/crabWalkRight") { handleCrabWalkRight(c); return; }
-    if (path == "/toggleEmergencyStop") { handleToggleEmergencyStop(c); return; }
-    if (path == "/distance") { handleDistance(c); return; }
+    if (path == F("/forward")) { handleForward(c); return; }
+    if (path == F("/backward")) { handleBackward(c); return; }
+    if (path == F("/turnOnSpotRight")) { handleTurnOnSpotRight(c); return; }
+    if (path == F("/turnOnSpotLeft")) { handleTurnOnSpotLeft(c); return; }
+    if (path == F("/left")) { handleLeft(c); return; }
+    if (path == F("/right")) { handleRight(c); return; }
+    if (path == F("/stop")) { handleStop(c); return; }
+    if (path == F("/crabWalkLeft")) { handleCrabWalkLeft(c); return; }
+    if (path == F("/crabWalkRight")) { handleCrabWalkRight(c); return; }
+    if (path == F("/toggleEmergencyStop")) { handleToggleEmergencyStop(c); return; }
+    if (path == F("/distance")) { handleDistance(c); return; }
 
     // when we change speed we pass down /setSpeed?s=(some value 0-255)
     if (path.startsWith("/setSpeed")) {
@@ -134,61 +96,61 @@ void route(WiFiClient& c, const String& path, const String& q) {
 
 // Helper to send minimal HTTP response
 void sendHttpResponse(WiFiClient& client, const String& body) {
-    client.print("HTTP/1.1 200 OK\r\n");
-    client.print("Content-Type: text/html\r\n");
-    client.print("Connection: close\r\n");
-    client.print("Content-Length: "); client.print(body.length()); client.print("\r\n\r\n");
+    client.print(F("HTTP/1.1 200 OK\r\n"));
+    client.print(F("Content-Type: text/html\r\n"));
+    client.print(F("Connection: close\r\n"));
+    client.print(F("Content-Length: ")); client.print(body.length()); client.print("\r\n\r\n");
     client.print(body);
     delay(1);
 }
 
 void handleRoot(WiFiClient& client) {
-    sendHttpResponse(client, "Initial Page");
+    sendHttpResponse(client, F("Initial Page"));
 }
 
 void handleForward(WiFiClient& client) {
     moveForward();
-    sendHttpResponse(client, "Moved Forward");
+    sendHttpResponse(client, F("Moved Forward"));
 }
 
 void handleBackward(WiFiClient& client) {
     moveBackward();
-    sendHttpResponse(client, "Moved Backward");
+    sendHttpResponse(client, F("Moved Backward"));
 }
 
 void handleTurnOnSpotRight(WiFiClient& client) {
     turnOnSpotRight();
-    sendHttpResponse(client, "Turned Right on Spot");
+    sendHttpResponse(client, F("Turned Right on Spot"));
 }
 
 void handleTurnOnSpotLeft(WiFiClient& client) {
     turnOnSpotLeft();
-    sendHttpResponse(client, "Turned Left on Spot");
+    sendHttpResponse(client, F("Turned Left on Spot"));
 }
 
 void handleLeft(WiFiClient& client) {
     moveLeft();
-    sendHttpResponse(client, "Moved Left");
+    sendHttpResponse(client, F("Moved Left"));
 }
 
 void handleRight(WiFiClient& client) {
     moveRight();
-    sendHttpResponse(client, "Moved Right");
+    sendHttpResponse(client, F("Moved Right"));
 }
 
 void handleStop(WiFiClient& client) {
     stopAllMotors();
-    sendHttpResponse(client, "Stopped");
+    sendHttpResponse(client, F("Stopped"));
 }
 
 void handleCrabWalkLeft(WiFiClient& client) {
     crabWalkLeft();
-    sendHttpResponse(client, "Crab Walk Left");
+    sendHttpResponse(client, F("Crab Walk Left"));
 }
 
 void handleCrabWalkRight(WiFiClient& client) {
     crabWalkRight();
-    sendHttpResponse(client, "Crab Walk Right");
+    sendHttpResponse(client, F("Crab Walk Right"));
 }
 
 void handleSetSpeed(WiFiClient& client, int speed) {
@@ -201,7 +163,7 @@ void handleToggleEmergencyStop(WiFiClient& client) {
     // e.g. setEmergencyStop(!emergencyStop)
 
     // here make sure it tells us if it sets the emergency stop to true or false
-    sendHttpResponse(client, "Emergency stop set to " ); 
+    sendHttpResponse(client, F("Emergency stop set to ") ); 
 }   
 
 void handleDistance(WiFiClient& client) {
@@ -231,7 +193,7 @@ void loop() {
   // otherwise, call the enter and exit functions and update the currentState
   if (nextState != currentState) {
     // changeState is defined in states.ino
-    changeState(nextState);
+    changeState(nextState, client);
   }
   
   client.stop();
