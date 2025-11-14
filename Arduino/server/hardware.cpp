@@ -29,7 +29,7 @@ String getIRoutput() {
   int rightAnalog = analogRead(IR_Right_Analog);
 
   String IRdata = "Left IR -> D: " + String(leftDigital) + " | A: " + String(leftAnalog);
-  IRdata += " || Right IR -> D: " + String(rghtDigital) + " | A: " + String(rightAnalog);
+  IRdata += " || Right IR -> D: " + String(rightDigital) + " | A: " + String(rightAnalog);
   return IRdata;
 }
 
