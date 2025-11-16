@@ -18,6 +18,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.animation.KeyFrame;
@@ -279,7 +280,6 @@ public class GUIController {
         robotY = centerY;
         robotAngle = Math.toRadians(90); // Start pointing UP
 
-        positionHistory.add(new Point2D(robotX, robotY));
 
         Timeline robotPositionTimeline = new Timeline(new KeyFrame(Duration.millis(50), e -> {
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -396,7 +396,7 @@ public class GUIController {
 
         if (positionHistory.size() < 2) return;
 
-        gc.setStroke(javafx.scene.paint.Color.BLUE);
+        gc.setStroke(Color.valueOf("#4F1C51"));
         gc.setLineWidth(2);
 
         // Loop from the second point
@@ -430,7 +430,8 @@ public class GUIController {
         gc.rotate(-Math.toDegrees(robotAngle));
         
         // 3. Draw the arrow shape at (0,0) of the translated/rotated context
-        gc.setFill(javafx.scene.paint.Color.RED);
+        // Also correct (using Color.valueOf):
+        gc.setFill(Color.valueOf("#210F37"));
         gc.fillPolygon(xPoints, yPoints, 3);
         
         // 4. Restore the canvas to its original state
