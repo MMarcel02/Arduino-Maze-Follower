@@ -11,6 +11,7 @@ float getDistanceCM() {
   float distance;
   
   digitalWrite(trigPin, LOW);
+  delayMicroseconds(10);
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
