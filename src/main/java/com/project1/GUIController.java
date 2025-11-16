@@ -4,33 +4,52 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.ArrayList;
+
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.animation.KeyFrame;
+import javafx.geometry.Point2D;
+import javafx.util.Duration;
 
 
 
 public class GUIController {
 
-    private int speed = 80;
     private ArduinoClient client = new ArduinoClient();
+
+    private int speed = 80;
+
+    private static final double MAX_PIXELS_PER_SECOND = 50;
+    private static final double MAX_RADIANS_PER_SECOND = Math.PI/2.0;
+
+    private String currentEndpoint = ArduinoEndpoints.STOP;
+    private double robotX;
+    private double robotY;
+    private double robotAngle;
+    
+    private ArrayList<Point2D> positionHistory = new ArrayList<>();
 
     // A HashSet is basically just an ArrayList that cant have repeated elements, so e.g. "W, W, D" is not allowed
     private final Set<String> activeInputs = new HashSet<>();
-
+    
+    private GraphicsContext gc;
     
     @FXML
     private Canvas canvas;
+
 
     @FXML
     private ToggleButton emergencyStopToggle;
@@ -221,7 +240,26 @@ public class GUIController {
     @FXML
     public void initialize() {
         speedSlider.setValue(speed);
+        
+        gc = canvas.getGraphicsContext2D();
 
+        robotX = canvas.getWidth()/2;
+        robotY = canvas.getHeight()/2;
+        robotAngle = Math.toRadians(90);
+
+        // Starting position dot
+        gc.fillOval(robotX-1, robotY-1, 2, 2);
+
+        positionHistory.add(new Point2D(robotX, robotY));
+
+        Timeline robotPositionTimeline = new Timeline(new KeyFrame(Duration.millis(50), e -> {
+            gc.clearRect(0,0,canvas.getWidth(), canvas.getHeight());
+            updateRobotPosition(0.05);
+            drawLastLine();
+            drawArrow();
+        }));
+        robotPositionTimeline.setCycleCount(Timeline.INDEFINITE);
+        robotPositionTimeline.play();
 
         // Slider updates our speed value in the UI
         speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {                
@@ -243,17 +281,94 @@ public class GUIController {
 
     }
 
+    private void updateRobotPosition(double changeInTime) {
+        double linearVelocity = MAX_PIXELS_PER_SECOND * ((double) speed / 255.0);
+        double angularVelocity = MAX_RADIANS_PER_SECOND * ((double) speed / 255.0);
+
+    
+        switch(currentEndpoint){
+            case ArduinoEndpoints.FORWARD:  
+                robotX += linearVelocity * changeInTime * Math.cos(robotAngle);
+                robotY -= linearVelocity * changeInTime * Math.sin(robotAngle);
+                positionHistory.add(new Point2D(robotX, robotY));
+                break;
+            case ArduinoEndpoints.BACKWARD:
+                robotX -= linearVelocity * changeInTime * Math.cos(robotAngle);
+                robotY += linearVelocity * changeInTime * Math.sin(robotAngle);
+                positionHistory.add(new Point2D(robotX, robotY));
+                break;
+            case ArduinoEndpoints.RIGHT:
+                robotAngle -= angularVelocity * changeInTime;
+                robotX += linearVelocity * changeInTime * Math.cos(robotAngle);
+                robotY -= linearVelocity * changeInTime * Math.sin(robotAngle);
+                positionHistory.add(new Point2D(robotX, robotY));
+                break;
+            case ArduinoEndpoints.LEFT:
+                robotAngle += angularVelocity * changeInTime;
+                robotX += linearVelocity * changeInTime * Math.cos(robotAngle);
+                robotY -= linearVelocity * changeInTime * Math.sin(robotAngle);
+                positionHistory.add(new Point2D(robotX, robotY));
+                break;
+            case ArduinoEndpoints.TURN_ON_SPOT_RIGHT:
+                robotAngle -= angularVelocity * changeInTime;
+                break;
+            case ArduinoEndpoints.TURN_ON_SPOT_LEFT:
+                robotAngle += angularVelocity * changeInTime;
+                break;
+
+            // case ArduinoEndpoints.CRAB_WALK_RIGHT:
+            //     robotX += linearVelocity * changeInTime * Math.cos(robotAngle);
+            //     positionHistory.add(new Point2D(robotX, robotY));
+            //     break;
+            // case ArduinoEndpoints.CRAB_WALK_LEFT:
+            //     robotX -= linearVelocity * changeInTime * Math.cos(robotAngle);
+            //     positionHistory.add(new Point2D(robotX, robotY));
+            //     break;
+            default:
+                return;
+            
+        }
+
+        
+    }
+
+    private void drawLastLine() {
+        if (positionHistory.size() < 2) return;
+
+        gc.setStroke(javafx.scene.paint.Color.BLUE);
+        gc.setLineWidth(2);
+
+        // Loop from the second point
+        for (int i = 1; i < positionHistory.size(); i++) {
+            Point2D oldPos = positionHistory.get(i - 1);
+            Point2D currentPos = positionHistory.get(i);
+
+            gc.strokeLine(oldPos.getX(), oldPos.getY(), currentPos.getX(), currentPos.getY());
+        }
+        
+    }
+
+    private void drawArrow() {
+        Point2D currentPosition = positionHistory.get(positionHistory.size() -1);
+        gc.fillOval(currentPosition.getX(), currentPosition.getY(), 4, 4);
+    }
+
     private void sendRequest(String endpoint) {
         logToTextArea("Sending request to " + endpoint + "...");
-
-        // We start a new thread so that our GUI doesnt freeze after we send a request
+        currentEndpoint = endpoint;
         
+        
+        // We start a new thread so that our GUI doesnt freeze after we send a request
         new Thread(() -> {
             try {
                 client.send(endpoint);
-                logToTextArea("Request to " + endpoint + " succeeded!");
+                Platform.runLater(() -> {
+                    logToTextArea("Request to " + endpoint + " succeeded!");
+                });
             } catch (Exception e) {
-                logToTextArea("Request to " + endpoint + " failed! " + e.getMessage());
+                Platform.runLater(() -> {
+                    logToTextArea("Request to " + endpoint + " failed! " + e.getMessage());
+                });
             }
         }).start();
     }
@@ -332,9 +447,6 @@ public class GUIController {
 
         sendRequest(commandToSend);
     }
-
-
-
 
     private void updateActiveInputsLabel() {
         if (activeInputsLabel != null) {
