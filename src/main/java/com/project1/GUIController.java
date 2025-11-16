@@ -46,6 +46,8 @@ public class GUIController {
     private final Set<String> activeInputs = new HashSet<>();
     
     private GraphicsContext gc;
+    private double centerX;
+    private double centerY;
     
     @FXML
     private Canvas canvas;
@@ -59,6 +61,9 @@ public class GUIController {
 
     @FXML
     private TextArea logArea;
+
+    @FXML
+    private Button clearMapButton;
 
     @FXML
     private Button bigDecrement;
@@ -112,6 +117,15 @@ public class GUIController {
     private Label speedLabel;
 
     @FXML
+    private Label xLabel;
+
+    @FXML
+    private Label yLabel;
+
+    @FXML
+    private Label angleLabel;
+
+    @FXML
     private Slider speedSlider;
 
     @FXML
@@ -150,6 +164,19 @@ public class GUIController {
     @FXML
     void stopSpeed(MouseEvent event) {
         sendRequest(ArduinoEndpoints.STOP);
+    }
+
+    @FXML 
+    void clearMap(MouseEvent event) {
+        positionHistory = new ArrayList<>();
+                // Store center coordinates
+        centerX = canvas.getWidth() / 2.0;
+        centerY = canvas.getHeight() / 2.0;
+
+        // Robot's logical position starts at the center
+        robotX = centerX;
+        robotY = centerY;
+        robotAngle = Math.toRadians(90); // Start pointing UP
     }
 
     @FXML
@@ -243,27 +270,55 @@ public class GUIController {
         
         gc = canvas.getGraphicsContext2D();
 
-        robotX = canvas.getWidth()/2;
-        robotY = canvas.getHeight()/2;
-        robotAngle = Math.toRadians(90);
+        // Store center coordinates
+        centerX = canvas.getWidth() / 2.0;
+        centerY = canvas.getHeight() / 2.0;
 
-        // Starting position dot
-        gc.fillOval(robotX-1, robotY-1, 2, 2);
+        // Robot's logical position starts at the center
+        robotX = centerX;
+        robotY = centerY;
+        robotAngle = Math.toRadians(90); // Start pointing UP
 
         positionHistory.add(new Point2D(robotX, robotY));
 
         Timeline robotPositionTimeline = new Timeline(new KeyFrame(Duration.millis(50), e -> {
-            gc.clearRect(0,0,canvas.getWidth(), canvas.getHeight());
+            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            
+            // 1. Update the robot's logical position
             updateRobotPosition(0.05);
+
+            // 2. Save the default canvas state
+            gc.save();
+
+            // 3. Calculate the translation needed to keep the robot centered
+            double offsetX = centerX - robotX;
+            double offsetY = centerY - robotY;
+            gc.translate(offsetX, offsetY);
+            
+            // 4. Draw the path. This is now drawn in the "moved" world.
             drawLastLine();
+            
+            // 5. Restore the canvas to its original state (no translation)
+            gc.restore();
+            
+            // 6. Draw the robot at the fixed center, with rotation
             drawArrow();
+
+            xLabel.setText("X: " + (int) -offsetX);
+            yLabel.setText("Y: " + (int) offsetY);
+
+            double angleInDegrees = Math.toDegrees(robotAngle);
+            // Normalize angle to be in the range [0, 360)
+            double displayAngle = ((angleInDegrees % 360) + 360) % 360; 
+            angleLabel.setText(String.format("Angle: %.1f°", displayAngle));
         }));
+
         robotPositionTimeline.setCycleCount(Timeline.INDEFINITE);
         robotPositionTimeline.play();
 
         // Slider updates our speed value in the UI
-        speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {                
-            speed = (int) speedSlider.getValue();       
+        speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {            
+            speed = (int) speedSlider.getValue();      
             speedLabel.setText("Speed: " + speed);
             if (!speedSlider.isValueChanging()) {
                 String speedEndpoint = ArduinoEndpoints.getSpeedEndpoint(speed);
@@ -271,14 +326,13 @@ public class GUIController {
             }
         });
 
-        // Speed is only sent to the robot once drag is released    
+        // Speed is only sent to the robot once drag is released     
         speedSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
             if (!isChanging) {
                 String speedEndpoint = ArduinoEndpoints.getSpeedEndpoint(speed);
                 sendRequest(speedEndpoint); 
             }
         });
-
     }
 
     private void updateRobotPosition(double changeInTime) {
@@ -287,7 +341,7 @@ public class GUIController {
 
     
         switch(currentEndpoint){
-            case ArduinoEndpoints.FORWARD:  
+            case ArduinoEndpoints.FORWARD:    
                 robotX += linearVelocity * changeInTime * Math.cos(robotAngle);
                 robotY -= linearVelocity * changeInTime * Math.sin(robotAngle);
                 positionHistory.add(new Point2D(robotX, robotY));
@@ -333,6 +387,13 @@ public class GUIController {
     }
 
     private void drawLastLine() {
+        if (positionHistory.isEmpty()) return;
+
+        // Draw the starting dot
+        gc.setFill(javafx.scene.paint.Color.BLACK);
+        Point2D startPos = positionHistory.get(0);
+        gc.fillOval(startPos.getX() - 2, startPos.getY() - 2, 4, 4);
+
         if (positionHistory.size() < 2) return;
 
         gc.setStroke(javafx.scene.paint.Color.BLUE);
@@ -348,9 +409,32 @@ public class GUIController {
         
     }
 
+    // Mention used chatgpt for this or figure out a different way
     private void drawArrow() {
-        Point2D currentPosition = positionHistory.get(positionHistory.size() -1);
-        gc.fillOval(currentPosition.getX(), currentPosition.getY(), 4, 4);
+        // Size of the robot arrow
+        double arrowSize = 12;
+        double headSize = 8;
+
+        // Define the arrow shape (a triangle pointing right, as 0 angle is to the right)
+        double[] xPoints = { arrowSize / 2, -arrowSize / 2, -arrowSize / 2 };
+        double[] yPoints = { 0,             -headSize / 2,  headSize / 2 };
+
+        gc.save();
+        
+        // 1. Move to the center of the canvas
+        gc.translate(centerX, centerY);
+        
+        // 2. Rotate the canvas. 
+        //    Our robotAngle is CCW (0=Right, 90=Up).
+        //    JavaFX rotate() is CW. So we use the negative angle.
+        gc.rotate(-Math.toDegrees(robotAngle));
+        
+        // 3. Draw the arrow shape at (0,0) of the translated/rotated context
+        gc.setFill(javafx.scene.paint.Color.RED);
+        gc.fillPolygon(xPoints, yPoints, 3);
+        
+        // 4. Restore the canvas to its original state
+        gc.restore();
     }
 
     private void sendRequest(String endpoint) {
@@ -387,7 +471,7 @@ public class GUIController {
 
     private void logToTextArea(String message) {
         String timestamp = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
-        logArea.appendText("[" + timestamp + "] " + message + "\n");    
+        logArea.appendText("[" + timestamp + "] " + message + "\n");     
     }
 
     public void setupInputHandlers(Scene scene){
@@ -414,12 +498,12 @@ public class GUIController {
             return;
         }
 
-        boolean forward  = activeInputs.contains("W");
+        boolean forward   = activeInputs.contains("W");
         boolean backward = activeInputs.contains("S");
-        boolean left     = activeInputs.contains("A");
-        boolean right    = activeInputs.contains("D");
-        boolean shift    = activeInputs.contains("SHIFT");
-        boolean shiftLeft    = activeInputs.contains("SHIFT_A");
+        boolean left      = activeInputs.contains("A");
+        boolean right     = activeInputs.contains("D");
+        boolean shift     = activeInputs.contains("SHIFT");
+        boolean shiftLeft     = activeInputs.contains("SHIFT_A");
         boolean shiftRight    = activeInputs.contains("SHIFT_D");
 
 
@@ -457,6 +541,8 @@ public class GUIController {
             }
         }
     }
+
+
 
 
 }

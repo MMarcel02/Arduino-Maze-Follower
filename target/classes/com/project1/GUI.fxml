@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.canvas.Canvas?>
@@ -18,6 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <VBox alignment="CENTER" focusTraversable="true" maxHeight="600.0" maxWidth="1200.0" minHeight="600.0" minWidth="1200.0" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project1.GUIController">
    <children>
@@ -178,7 +178,27 @@
                         <Canvas fx:id="canvas" height="275.0" width="275.0" />
                      </children>
                   </Pane>
-                  <ToggleButton fx:id="emergencyStopToggle" layoutX="13.0" layoutY="345.0" mnemonicParsing="false" onAction="#toggleEmergencyStop" prefHeight="25.0" prefWidth="275.0" selected="true" text="Emergency Stop" />
+                  <ToggleButton fx:id="emergencyStopToggle" layoutX="13.0" layoutY="561.0" mnemonicParsing="false" onAction="#toggleEmergencyStop" prefHeight="25.0" prefWidth="275.0" selected="true" text="Emergency Stop" />
+                  <HBox layoutX="17.0" layoutY="341.0" prefHeight="34.0" prefWidth="275.0">
+                     <children>
+                        <Label maxHeight="53.0" maxWidth="218.0" prefHeight="53.0" prefWidth="60.0" text="X:" wrapText="true" fx:id="xLabel">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="yLabel" maxHeight="53.0" maxWidth="218.0" prefHeight="53.0" prefWidth="60.0" text="Y: " wrapText="true">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="angleLabel" maxHeight="53.0" maxWidth="218.0" prefHeight="34.0" prefWidth="152.0" text="Angle: " wrapText="true">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <Button fx:id="clearMapButton" layoutX="13.0" layoutY="375.0" mnemonicParsing="false" onMousePressed="#clearMap" prefHeight="25.0" prefWidth="275.0" text="Clear Map" />
                </children>
             </AnchorPane>
             <AnchorPane minWidth="275.0">
