@@ -34,7 +34,10 @@ public class GUIController {
     private int speed = 80;
 
     private static final double MAX_PIXELS_PER_SECOND = 50;
-    private static final double MAX_RADIANS_PER_SECOND = Math.PI/2.0;
+
+    // 2pi radians = 360 deg, so at max speed it rotates on the graph a full 360 degrees in 1 second
+    // this needs to be calibrated in real world to match our robot
+    private static final double MAX_RADIANS_PER_SECOND = 2*Math.PI;
 
     private String currentEndpoint = ArduinoEndpoints.STOP;
     private double robotX;
@@ -169,15 +172,14 @@ public class GUIController {
 
     @FXML 
     void clearMap(MouseEvent event) {
+        // We clear our history of points
         positionHistory = new ArrayList<>();
-                // Store center coordinates
-        centerX = canvas.getWidth() / 2.0;
-        centerY = canvas.getHeight() / 2.0;
 
-        // Robot's logical position starts at the center
-        robotX = centerX;
-        robotY = centerY;
-        robotAngle = Math.toRadians(90); // Start pointing UP
+        // Reset coordinates to 0 offset
+        robotX = canvas.getWidth() / 2.0;
+        robotY = canvas.getHeight() / 2.0;
+
+        robotAngle = Math.toRadians(90);
     }
 
     @FXML
@@ -352,55 +354,70 @@ public class GUIController {
     }
 
     private void updateRobotPosition(double changeInTime) {
+        // Convert our speed into speed of drawing on canvas
         double linearVelocity = MAX_PIXELS_PER_SECOND * ((double) speed / 255.0);
         double angularVelocity = MAX_RADIANS_PER_SECOND * ((double) speed / 255.0);
 
-    
+        // How many pixels the robot moved
+        double distanceTravelled = linearVelocity * changeInTime;
+
+        // How many radians the robot rotated
+        double angleTravelled = angularVelocity * changeInTime;
+
+        // All the movement can be split to be some change in x and some change in y
+        // This comes from the unit circle, where any point can be represented by (cos(angle), sin(angle))
+        
+        // cos(angle) tells us how horizontal it is, cos(0) = 1 (so pointing right), cos(90) = 0 (so pointing up)
+        // sin(angle) tells us how vertical it is, sin(0) = 0 (pointing right so 0 vertical movement) sin(90) = 1 (pointing up so only vertical movement)
+
+        // We can use this idea to tell us how much proportionally we should move horizontally and vertically
+
         switch(currentEndpoint){
             case ArduinoEndpoints.FORWARD:    
-                robotX += linearVelocity * changeInTime * Math.cos(robotAngle);
-                robotY -= linearVelocity * changeInTime * Math.sin(robotAngle);
+                robotX += distanceTravelled * Math.cos(robotAngle);
+
+                // We subtract here because the y axis increases as it goes down in canvas (opposite of how you think in normal math)
+                // This is because in canvas the point (0,0) is the top left corner not bottom left like in normal math
+                robotY -= distanceTravelled * Math.sin(robotAngle);
                 positionHistory.add(new Point2D(robotX, robotY));
                 break;
             case ArduinoEndpoints.BACKWARD:
-                robotX -= linearVelocity * changeInTime * Math.cos(robotAngle);
-                robotY += linearVelocity * changeInTime * Math.sin(robotAngle);
+                robotX -= distanceTravelled * Math.cos(robotAngle);
+                robotY += distanceTravelled * Math.sin(robotAngle);
                 positionHistory.add(new Point2D(robotX, robotY));
                 break;
             case ArduinoEndpoints.RIGHT:
-                robotAngle -= angularVelocity * changeInTime;
-                robotX += linearVelocity * changeInTime * Math.cos(robotAngle);
-                robotY -= linearVelocity * changeInTime * Math.sin(robotAngle);
+                robotAngle -= angleTravelled;
+                robotX += distanceTravelled * Math.cos(robotAngle);
+                robotY -= distanceTravelled * Math.sin(robotAngle);
                 positionHistory.add(new Point2D(robotX, robotY));
                 break;
             case ArduinoEndpoints.LEFT:
-                robotAngle += angularVelocity * changeInTime;
-                robotX += linearVelocity * changeInTime * Math.cos(robotAngle);
-                robotY -= linearVelocity * changeInTime * Math.sin(robotAngle);
+                robotAngle += angleTravelled;
+                robotX += distanceTravelled * Math.cos(robotAngle);
+                robotY -= distanceTravelled * Math.sin(robotAngle);
                 positionHistory.add(new Point2D(robotX, robotY));
                 break;
             case ArduinoEndpoints.TURN_ON_SPOT_RIGHT:
-                robotAngle -= angularVelocity * changeInTime;
+                robotAngle -= angleTravelled;
                 break;
             case ArduinoEndpoints.TURN_ON_SPOT_LEFT:
-                robotAngle += angularVelocity * changeInTime;
+                robotAngle += angleTravelled;
                 break;
             case ArduinoEndpoints.CRAB_WALK_RIGHT:
-                robotX += linearVelocity * changeInTime * Math.sin(robotAngle);
-                robotY += linearVelocity * changeInTime * Math.cos(robotAngle); 
+                // When crabwalking robot moves perpendicular to its angle, this swaps sin and cos for x and y as sin and cos are perpendicular to eachother 
+                robotX += distanceTravelled * Math.sin(robotAngle);
+                robotY += distanceTravelled * Math.cos(robotAngle); 
                 positionHistory.add(new Point2D(robotX, robotY));
                 break;
             case ArduinoEndpoints.CRAB_WALK_LEFT:
-                robotX -= linearVelocity * changeInTime * Math.sin(robotAngle);
-                robotY -= linearVelocity * changeInTime * Math.cos(robotAngle);
+                robotX -= distanceTravelled * Math.sin(robotAngle);
+                robotY -= distanceTravelled * Math.cos(robotAngle);
                 positionHistory.add(new Point2D(robotX, robotY));
                 break;
             default:
                 return;
-            
-        }
-
-        
+        } 
     }
 
     private void drawPath() {
@@ -423,32 +440,34 @@ public class GUIController {
         
     }
 
-    // Mention used chatgpt for this or figure out a different way
     private void drawArrow() {
-        // Size of the robot arrow
-        double arrowSize = 12;
-        double headSize = 8;
+        // Size of arrow
+        double arrowLength = 6;
+        double arrowBaseWidth = 4;
 
-        // Define the arrow shape (a triangle pointing right, as 0 angle is to the right)
-        double[] xPoints = { arrowSize / 2, -arrowSize / 2, -arrowSize / 2 };
-        double[] yPoints = { 0,             -headSize / 2,  headSize / 2 };
+        // We define the (x,y) coordinates of each of the points of the arrow
+        // Apparently default in graphics to be pointing right along x axis
+        double[] xPoints = {arrowLength, -arrowLength, -arrowLength};
+        double[] yPoints = { 0, -arrowBaseWidth, arrowBaseWidth};
 
         gc.save();
         
-        // 1. Move to the center of the canvas
+        // Moving the drawing context to the center of the canvas
         gc.translate(centerX, centerY);
         
-        // 2. Rotate the canvas. 
-        //    Our robotAngle is CCW (0=Right, 90=Up).
-        //    JavaFX rotate() is CW. So we use the negative angle.
+        // Rotating the drawing context rather than rotating the arrow so we dont need to calculate all new x and y points
+        // the angle is negative because gc uses clock-wise degrees from the x axis, so 0 is right, 90 is down
+        // but our actual math has the degrees go counter-clock-wise, so 0 is right BUT 90 is up
+        // to keep the math simpler we choose that and just correct it her
         gc.rotate(-Math.toDegrees(robotAngle));
-        
-        // 3. Draw the arrow shape at (0,0) of the translated/rotated context
-        // Also correct (using Color.valueOf):
+    
+        // Set color
         gc.setFill(Color.valueOf("#210F37"));
+
+        // Draw the arrow on the translated and rotated canvas
         gc.fillPolygon(xPoints, yPoints, 3);
         
-        // 4. Restore the canvas to its original state
+        // Bring canvas back to original state 
         gc.restore();
     }
 
