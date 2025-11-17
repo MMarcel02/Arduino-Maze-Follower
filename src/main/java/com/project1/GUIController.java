@@ -50,8 +50,8 @@ public class GUIController {
     private final Set<String> activeInputs = new HashSet<>();
     
     private GraphicsContext gc;
-    private double centerX;
-    private double centerY;
+    private double centreX;
+    private double centreY;
     
     @FXML
     private Canvas canvas;
@@ -275,13 +275,13 @@ public class GUIController {
         // This is the object used to actually draw on the canvas
         gc = canvas.getGraphicsContext2D();
 
-        // Store center coordinates of the canvas
-        centerX  = canvas.getWidth() / 2.0;
-        centerY = canvas.getHeight() / 2.0;
+        // Store centre coordinates of the canvas
+        centreX  = canvas.getWidth() / 2.0;
+        centreY = canvas.getHeight() / 2.0;
 
         // Robot starts at the centre and is pointing up (90 degrees)
-        robotX = centerX;
-        robotY = centerY;
+        robotX = centreX;
+        robotY = centreY;
         robotAngle = Math.toRadians(90);
 
         // Creates an animation that every 50 milliseconds does the following: 
@@ -297,8 +297,8 @@ public class GUIController {
             gc.save();
 
             // Calculate how much the robot has moved from the centre of the canvas
-            double offsetX = centerX - robotX;
-            double offsetY = centerY - robotY;
+            double offsetX = centreX - robotX;
+            double offsetY = centreY - robotY;
 
             // This sets the new centre of the canvas to the following coordinates (essentially moving the camera)
             // so now when the path is drawn its relative to this new centre
@@ -452,8 +452,8 @@ public class GUIController {
 
         gc.save();
         
-        // Moving the drawing context to the center of the canvas
-        gc.translate(centerX, centerY);
+        // Moving the drawing context to the centre of the canvas
+        gc.translate(centreX, centreY);
         
         // Rotating the drawing context rather than rotating the arrow so we dont need to calculate all new x and y points
         // the angle is negative because gc uses clock-wise degrees from the x axis, so 0 is right, 90 is down
