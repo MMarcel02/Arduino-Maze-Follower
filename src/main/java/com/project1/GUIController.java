@@ -267,53 +267,69 @@ public class GUIController {
 
     @FXML
     public void initialize() {
+
         speedSlider.setValue(speed);
         
+        // This is the object used to actually draw on the canvas
         gc = canvas.getGraphicsContext2D();
 
-        // Store center coordinates
-        centerX = canvas.getWidth() / 2.0;
+        // Store center coordinates of the canvas
+        centerX  = canvas.getWidth() / 2.0;
         centerY = canvas.getHeight() / 2.0;
 
-        // Robot's logical position starts at the center
+        // Robot starts at the centre and is pointing up (90 degrees)
         robotX = centerX;
         robotY = centerY;
-        robotAngle = Math.toRadians(90); // Start pointing UP
+        robotAngle = Math.toRadians(90);
 
-
+        // Creates an animation that every 50 milliseconds does the following: 
         Timeline robotPositionTimeline = new Timeline(new KeyFrame(Duration.millis(50), e -> {
+
+            // Clears the canvas
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             
-            // 1. Update the robot's logical position
+            // Use this to calculate new coordinates of the robot and add it to a list of points (pathHistory)
             updateRobotPosition(0.05);
 
-            // 2. Save the default canvas state
+            // Save the state of the canvas (how much its offset or rotated)
             gc.save();
 
-            // 3. Calculate the translation needed to keep the robot centered
+            // Calculate how much the robot has moved from the centre of the canvas
             double offsetX = centerX - robotX;
             double offsetY = centerY - robotY;
+
+            // This sets the new centre of the canvas to the following coordinates (essentially moving the camera)
+            // so now when the path is drawn its relative to this new centre
             gc.translate(offsetX, offsetY);
             
-            // 4. Draw the path. This is now drawn in the "moved" world.
-            drawLastLine();
+            // Redraws all the lines going point by point in pathHistory 
+            drawPath();
             
-            // 5. Restore the canvas to its original state (no translation)
+            // Restore canvas to how it was before the translation (so centre is actually the middle of canvas)
             gc.restore();
             
-            // 6. Draw the robot at the fixed center, with rotation
+            // Draw arrow (always in the centre of the canvas just keep the rotation)
+            // we draw it after we restore it so that is alwa
             drawArrow();
 
+            // Updates labels below the canvas with position of robot relative to the centre of the canvas
             xLabel.setText("X: " + (int) -offsetX);
             yLabel.setText("Y: " + (int) offsetY);
-
+            
+            // Angle is stored in radians but we want to display it in degrees
             double angleInDegrees = Math.toDegrees(robotAngle);
-            // Normalize angle to be in the range [0, 360)
+            // We also make sure its between 0 and 360
             double displayAngle = ((angleInDegrees % 360) + 360) % 360; 
+            // Angle given to 1 decimal point
             angleLabel.setText(String.format("Angle: %.1f°", displayAngle));
         }));
-
+        
+        // Right now the animation (that creates a new point and draws it every 50 milliseconds) goes on forever
+        // This could be an issue causing our GUI to start lagging after a lot of time has elapsed, instead we could
+        // limit it to only track the position of e.g. last 10 mins 
         robotPositionTimeline.setCycleCount(Timeline.INDEFINITE);
+
+        // This actually starts the animation (that we defined earlier) for a set number of frames (that we defined earlier), in this case indefinite
         robotPositionTimeline.play();
 
         // Slider updates our speed value in the UI
@@ -369,15 +385,16 @@ public class GUIController {
             case ArduinoEndpoints.TURN_ON_SPOT_LEFT:
                 robotAngle += angularVelocity * changeInTime;
                 break;
-
-            // case ArduinoEndpoints.CRAB_WALK_RIGHT:
-            //     robotX += linearVelocity * changeInTime * Math.cos(robotAngle);
-            //     positionHistory.add(new Point2D(robotX, robotY));
-            //     break;
-            // case ArduinoEndpoints.CRAB_WALK_LEFT:
-            //     robotX -= linearVelocity * changeInTime * Math.cos(robotAngle);
-            //     positionHistory.add(new Point2D(robotX, robotY));
-            //     break;
+            case ArduinoEndpoints.CRAB_WALK_RIGHT:
+                robotX += linearVelocity * changeInTime * Math.sin(robotAngle);
+                robotY += linearVelocity * changeInTime * Math.cos(robotAngle); 
+                positionHistory.add(new Point2D(robotX, robotY));
+                break;
+            case ArduinoEndpoints.CRAB_WALK_LEFT:
+                robotX -= linearVelocity * changeInTime * Math.sin(robotAngle);
+                robotY -= linearVelocity * changeInTime * Math.cos(robotAngle);
+                positionHistory.add(new Point2D(robotX, robotY));
+                break;
             default:
                 return;
             
@@ -386,20 +403,17 @@ public class GUIController {
         
     }
 
-    private void drawLastLine() {
+    private void drawPath() {
         if (positionHistory.isEmpty()) return;
 
         // Draw the starting dot
-        gc.setFill(javafx.scene.paint.Color.BLACK);
         Point2D startPos = positionHistory.get(0);
         gc.fillOval(startPos.getX() - 2, startPos.getY() - 2, 4, 4);
-
-        if (positionHistory.size() < 2) return;
 
         gc.setStroke(Color.valueOf("#4F1C51"));
         gc.setLineWidth(2);
 
-        // Loop from the second point
+        // Loop from the second point drawing a line between each point
         for (int i = 1; i < positionHistory.size(); i++) {
             Point2D oldPos = positionHistory.get(i - 1);
             Point2D currentPos = positionHistory.get(i);
@@ -438,10 +452,10 @@ public class GUIController {
         gc.restore();
     }
 
+
     private void sendRequest(String endpoint) {
         logToTextArea("Sending request to " + endpoint + "...");
         currentEndpoint = endpoint;
-        
         
         // We start a new thread so that our GUI doesnt freeze after we send a request
         new Thread(() -> {
