@@ -1,5 +1,11 @@
+// Ultrasound declarations
+
 const int trigPin = 0;
 const int echoPin = 1; 
+
+float duration, distance;  
+
+// End of Ultrasound declarations
 
 // IR sensor declarations
 
@@ -16,22 +22,30 @@ const int BLACK_TAPE_THRESHOLD = 500;
 
 // End of IR sensor declarations
 
-float duration, distance;  
 
 void setup() {  
+
+  // ULtrasound setup
 	pinMode(trigPin, OUTPUT);  
 	pinMode(echoPin, INPUT);  
 	Serial.begin(9600);  
 
-	//ir sensor setup
+  // End of Ultrasound setup
+
+	// IR sensors setup
 
 	// Initialize serial communication to print sensor values
   Serial.begin(9600);
   Serial.println("IR Sensor Line Detection Initialized.");
+
+  // End of IR sensors setup
 }  
 
 
 void loop() {  
+
+  // Ultrasound loop
+
 	digitalWrite(trigPin, LOW);  
 	delayMicroseconds(2);  
 	digitalWrite(trigPin, HIGH);  
@@ -48,7 +62,9 @@ void loop() {
 	Serial.println(distance);  
 	delay(100); //delay between readings
 
-	// IR Sensors
+  // End of ultrasound loop
+
+	// IR Sensors loop
 
 	  // 1. Read the raw analog values from both sensors (0 to 1023)
   int leftReading = analogRead(LEFT_SENSOR_PIN);
@@ -85,5 +101,7 @@ void loop() {
   
   delay(100); //delay between readings
   }
+
+  // End of IR sensor loop
 }  
 
