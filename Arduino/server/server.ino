@@ -1,23 +1,30 @@
 
-// Arduino ide automatically compiles all files in the same folder, so functions in
-// movement.ino will be accessible
+/* First Note on the program compilation :
+ Arduino ide automatically compiles all files in the same folder, so functions and global variables in
+ movement.ino will be accessible
+*/
 
-// Feather M0 WiFi (WINC1500) pins
-const int WINC_CS  = 8, WINC_IRQ = 7, WINC_RST = 4, WINC_EN = 2;
-
+// Constant variables for the name and the pass of our Wifi access point
 const char ssid[] = "FeatherAP";
 const char pass[] = "test1234";     // >= 8 chars for WPA2
+
+/* Create a Wifiserver object from the Wifi library and will use port 80 */
 WiFiServer server(80);
 
-// --------- Utility: IPAddress -> "A.B.C.D" -----
+/* Helper function that converts IP to readable format, it takes as argument an object of IPAddress type that is provided in wifilib
+The IPAddress object contains the IP like an array so we use ip[i] to access all four numbers and then return it as one string*/
+//added to wifi file
 String ipToString(const IPAddress& ip) {
   return String(ip[0]) + "." + String(ip[1]) + "." + String(ip[2]) + "." + String(ip[3]);
 }
 
+// Setup runs only once on boot and reset.
 void setup() {
+  // Starting the serial communication over USB in a certain rate (This will print our Serial.println messages to our serial monitor)  
   Serial.begin(115200);
   // DO NOT block on while(!Serial); we want it to run even without a PC attached
 
+  // Telling the wifilib which pins to use
   WiFi.setPins(WINC_CS, WINC_IRQ, WINC_RST, WINC_EN);
 
   if (WiFi.status() == WL_NO_SHIELD) {
@@ -38,10 +45,11 @@ void setup() {
 
   Serial.print("AP IP: "); Serial.println(ipToString(WiFi.localIP())); // usually 192.168.1.1
   server.begin();
+  
+// Worked up to here
 
     // Initialize all four motors
   setupAllMotors();
-  //Add your code to control the other motors.
 
   // Stop all motors initially
   stopAllMotors();
