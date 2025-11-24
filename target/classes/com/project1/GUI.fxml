@@ -44,11 +44,30 @@
                             </HBox>
 
 
-                            <VBox spacing="5">
+                             <VBox spacing="5">
                                 <children>
-                                    <Label text="IR Left:"/>
-                                    <Label text="IR Right:"/>
-                                    <Label text="Ultrasound:"/>
+
+                                    <HBox spacing="5">
+                                        <children>
+                                            <Label text="IR Left:"/>
+                                            <Label fx:id="irLeftLabel" text="-" />
+                                        </children>
+                                    </HBox>
+
+                                    <HBox spacing="5">
+                                        <children>
+                                            <Label text="IR Right:"/>
+                                            <Label fx:id="irRightLabel" text="-" />
+                                        </children>
+                                    </HBox>
+
+                                    <HBox spacing="5">
+                                        <children>
+                                            <Label text="Ultrasound:"/>
+                                            <Label fx:id="distanceLabel" text="-" />
+                                        </children>
+                                    </HBox>
+
                                 </children>
                             </VBox>
 
