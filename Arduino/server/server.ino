@@ -88,6 +88,7 @@ void route(WiFiClient& c, const String& path, const String& q) {
     if (path == F("/crabWalkRight")) { handleCrabWalkRight(c); return; }
     if (path == F("/toggleEmergencyStop")) { handleToggleEmergencyStop(c); return; }
     if (path == F("/distance")) { handleDistance(c); return; }
+    if (path == F("/stats")) {handleStats(c)}
 
     // when we change speed we pass down /setSpeed?s=(some value 0-255)
     if (path.startsWith("/setSpeed")) {
@@ -182,6 +183,21 @@ void handleToggleEmergencyStop(WiFiClient& client) {
 void handleDistance(WiFiClient& client) {
   float dist = getDistanceCM();
   String body = "Distance: " + String(dist, 2) + " cm";
+  sendHttpResponse(client, body);
+}
+
+void handleStats(WiFiClient& client) {
+  int leftD = digitalRead(IR_Left_Digital);
+  int rightD = digitalRead(Ir_Right_Digital);
+  int leftA = analogRead(IR_Left_Analog);
+  int rightA = analogRead(IR_Right_Analog);
+  float dist = getDistanceCM();
+
+  String body ="";
+  body += "Left: D=" + String(leftD) + " A=" + String(leftA) + " \n";
+  body += "Right: D=" + String(rightD) + "A=" + String(rightA) + "\n";
+  body += "Ultrasound: " + String(disk, 2) + "\n";
+
   sendHttpResponse(client, body);
 }
 
