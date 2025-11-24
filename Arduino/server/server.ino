@@ -5,7 +5,7 @@
 */
 
 // Constant variables for the name and the pass of our Wifi access point
-const char ssid[] = "FeatherAP";
+const char ssid[] = "Τeam36";
 const char pass[] = "test1234";     // >= 8 chars for WPA2
 
 /* Create a Wifiserver object from the Wifi library and will use port 80 */
