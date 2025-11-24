@@ -11,6 +11,7 @@ void setup() {
   startWifiAp();
   setupAllMotors();
   stopAllMotors();
+  setUltraSoundPins();
 }
 
 void loop() {
