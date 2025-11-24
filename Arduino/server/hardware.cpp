@@ -5,6 +5,7 @@
 int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
 int motorTurningSpeed = motorSpeed - 20;
 char lastMotionCmd = 'x';      // Stores the last direction command (e.g., 'f' for forward)
+bool leftLine = false , rightLine = false; // Stores the current state of each sensor
 
 float getDistanceCM() {
   long duration;
@@ -32,6 +33,17 @@ String getIRoutput() {
   String IRdata = "Left IR -> D: " + String(leftDigital) + " | A: " + String(leftAnalog);
   IRdata += " || Right IR -> D: " + String(rightDigital) + " | A: " + String(rightAnalog);
   return IRdata;
+}
+
+// --- Function to repeatedly update the sensors ---
+void updateLineSensors (){
+    int leftDigital = digitalRead(IR_Left_Digital);
+    int rightDigital = digitalRead(IR_Right_Digital);
+
+    // LOW means black 
+    // The variables become true if the sensor is on the line
+    leftLine = (leftDigital == LOW);
+    rightLine = (rightDigital == LOW);
 }
 
 // --- Function to Drive a Motor ---

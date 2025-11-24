@@ -23,6 +23,8 @@ constexpr int IR_Right_Analog  = A3;
 extern int motorSpeed;           // Default speed for all motors (range: 0–255)
 extern int motorTurningSpeed;
 extern char lastMotionCmd;      // Stores the last direction command (e.g., 'f' for forward)
+extern bool leftLine;
+extern bool rightLine;  // Stores the current state of each sensor
 
 // --- Read both IR sensor ---
 String getIRoutput();
@@ -42,3 +44,5 @@ void turnOnSpotRight();
 void turnOnSpotLeft();
 void crabWalkRight();
 void crabWalkLeft();
+
+void updateLineSensors();
