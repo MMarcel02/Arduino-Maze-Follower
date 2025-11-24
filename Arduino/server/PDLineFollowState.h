@@ -2,7 +2,7 @@
 
 #include "RobotState.h"
 
-class PDLineFollowingState : public RobotState {
+class PDLineFollowState : public RobotState {
   public:
     double sensitivity = 0.5;
     double dampening = 2.0;
