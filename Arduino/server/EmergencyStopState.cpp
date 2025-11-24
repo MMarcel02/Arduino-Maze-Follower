@@ -1,5 +1,6 @@
 #include "EmergencyStopState.h"
 #include "hardware.h"
+#include "states.h"
 
 void EmergencyStopState::enter(WiFiClient& client) {
     // Notifications can be sent here if required

@@ -3,7 +3,7 @@
 #include "hardware.h"
 
 void ManualControlState::enter(WiFiClient& client) {
-  client.print("Entered manual control state");
+  
 }
 
 RobotState* ManualControlState::handle(WiFiClient& client) {

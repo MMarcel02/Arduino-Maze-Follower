@@ -27,7 +27,7 @@ float getDistanceCM() {
 String getIRoutput() {
   int leftDigital = digitalRead(IR_Left_Digital);
   int rightDigital = digitalRead(IR_Right_Digital);
-  int LeftAnalog = analogRead(IR_Left_Analog);
+  int leftAnalog = analogRead(IR_Left_Analog);
   int rightAnalog = analogRead(IR_Right_Analog);
 
   String IRdata = "Left IR -> D: " + String(leftDigital) + " | A: " + String(leftAnalog);

@@ -208,6 +208,10 @@ public class GUIController {
 
 
     private String mapButtonToKey(Button button) {
+
+    // Converts GUI button presses into the same virtual keys used for keyboard input
+    // so both systems share the same movement logic
+
         if (button == upArrow) return "W";
         if (button == downArrow) return "S";
         if (button == leftArrow) return "A";
@@ -225,6 +229,10 @@ public class GUIController {
 
         // Slider updates our speed value in the UI
         speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {                
+        
+        // Listener runs every time the slider values change (even while dragging)
+        // we update the speed label live, but we send the speed to the robot only when dragging stops    
+
             speed = (int) speedSlider.getValue();       
             speedLabel.setText("Speed: " + speed);
             if (!speedSlider.isValueChanging()) {
@@ -233,7 +241,9 @@ public class GUIController {
             }
         });
 
-        // Speed is only sent to the robot once drag is released    
+        // Listener fires when dragging starts or stops
+        // Speed is only sent to the robot once drag is released, to avoid spamming requests  
+
         speedSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
             if (!isChanging) {
                 String speedEndpoint = ArduinoEndpoints.getSpeedEndpoint(speed);
@@ -261,6 +271,10 @@ public class GUIController {
     
 
     private void updateSpeed(int changeInSpeed) {
+
+    // Changing the internal speed value 
+    // & clamping them to 0 & 255
+
         speed += changeInSpeed;
 
         if (speed <= 0) speed = 0;
@@ -276,8 +290,16 @@ public class GUIController {
     }
 
     public void setupInputHandlers(Scene scene){
+
+    // Key events are attached at Scene level so movements work 
+    // no matter which UI element has keyboard focus
+
         scene.setOnKeyPressed(event -> {
             String key = event.getCode().toString();
+
+    // add returns true only if the key was not already active
+    // so it prevents duplicate movement triggers
+
             if (activeInputs.add(key)) {
                 handleMovement();
             }
@@ -294,10 +316,16 @@ public class GUIController {
     private void handleMovement() {
         updateActiveInputsLabel(); 
 
+
+    // if no inputs are active, the robot stops to prevent drifting
+
         if (activeInputs.isEmpty()) {
             sendRequest(ArduinoEndpoints.STOP);
             return;
         }
+
+
+    // Checks which movement keys are currently active
 
         boolean forward  = activeInputs.contains("W");
         boolean backward = activeInputs.contains("S");
@@ -310,11 +338,14 @@ public class GUIController {
 
         String commandToSend;
 
+    // Order matters because some take priority over others
+    // so, it determines which movement command to send based on the combination
+
         if (forward && !left && !right) {
             commandToSend = ArduinoEndpoints.FORWARD;
         } else if (backward) {
             commandToSend = ArduinoEndpoints.BACKWARD;
-        } else if (shift && left && !right || shiftLeft) {
+        } else if (shift && left && !right || shiftLeft) {  // Crab walk is triggered by SHIFT + direction
             commandToSend = ArduinoEndpoints.CRAB_WALK_LEFT;
         } else if (shift && right && !left || shiftRight) {
             commandToSend = ArduinoEndpoints.CRAB_WALK_RIGHT;
@@ -337,6 +368,9 @@ public class GUIController {
 
 
     private void updateActiveInputsLabel() {
+
+    // Updates the label showing which inputs are active
+
         if (activeInputsLabel != null) {
             if (activeInputs.isEmpty()) {
                 activeInputsLabel.setText("Active: None");
