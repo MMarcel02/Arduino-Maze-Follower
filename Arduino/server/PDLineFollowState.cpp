@@ -12,11 +12,13 @@ RobotState* PDLineFollowState::handle(WiFiClient& client) {
   
   double correction = sensitivity * dir + dampening * (dir - previousDir);
   
-  int leftSpeed   = (int)(1 - correction) * motorSpeed;
-  int rightSpeed  = (int)(1 + correction) * motorSpeed;
+  int leftSpeed   = (int)((1 - correction) * motorSpeed);
+  int rightSpeed  = (int)((1 + correction) * motorSpeed);
   
   setMotor(FL_PWM, FL_DIR, leftSpeed);
   setMotor(FR_PWM, FR_DIR, rightSpeed);
   setMotor(BR_PWM, BR_DIR, rightSpeed); 
   setMotor(BL_PWM, BL_DIR, leftSpeed);
+  
+  previousDir = dir;
 }
