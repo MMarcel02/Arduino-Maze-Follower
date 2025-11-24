@@ -70,6 +70,9 @@ void serve(WiFiClient& c){
 void route(WiFiClient& c, const String& path, const String& q) {
     if (path == "/" || path == "") { handleRoot(c); return; }
     
+    if (path == F("/linefollowPD")) { handleChangeState(c, &PD_LINE_FOLLOW_STATE, "PD Line Follow State"); return; }
+    if (path == F("/linefollowBangBang")) { handleChangeState(c, &LINE_FOLLOW_STATE, "Bang Bang Line Follow State"); return; }
+    
     // below are movement functions, for which we force the state
     // to become the ManualControlState.
     changeState(&MANUAL_CONTROL_STATE, c);
@@ -107,6 +110,11 @@ void sendHttpResponse(WiFiClient& client, const String& body) {
     client.print(F("Content-Length: ")); client.print(body.length()); client.print("\r\n\r\n");
     client.print(body);
     delay(1);
+}
+
+void handleChangeState(WiFiClient& client, RobotState* state, const String& stateName) {
+  changeState(state, client);
+  sendHttpResponse(client, "Changed state to: " + stateName);
 }
 
 void handleRoot(WiFiClient& client) {

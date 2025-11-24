@@ -29,7 +29,7 @@ void bangLineFollow (bool leftLine, bool rightLine){
 
 void LineFollowState::enter(WiFiClient& client) {
   
-    client.print("Entered line following state");
+    // client.print("Entered line following state");
 
 }
 

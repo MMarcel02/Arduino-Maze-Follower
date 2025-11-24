@@ -32,6 +32,7 @@ String getIRoutput();
 float getDistanceCM();
 
 void setMotor(int pwm, int dir, int speed, bool forward);
+void setMotor(int pwm, int speed);
 void setupMotor(int pwm, int dir);
 void setupAllMotors();
 void setSpeed(int newSpeed);

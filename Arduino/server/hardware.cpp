@@ -53,6 +53,13 @@ void setMotor(int pwm, int dir, int speed, bool forward) {
   analogWrite(pwm, speed);                  // Set speed using PWM
 }
 
+// --- Function to drive a Motor ---
+// this overload allows for negative speed to decide direction
+void setMotor(int pwm, int dir, int speed) {
+  digitalWrite(dir, (speed >= 0) ? HIGH : LOW);
+  analogWrite(pwm, abs(speed));
+}
+
 // --- Setup Function for Each Motor ---
 // Configures the direction and PWM pins for a motor
 void setupMotor(int pwm, int dir) {
