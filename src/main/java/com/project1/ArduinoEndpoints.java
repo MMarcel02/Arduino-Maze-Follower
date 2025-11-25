@@ -14,10 +14,25 @@ public final class ArduinoEndpoints {
     public static final String CRAB_WALK_LEFT     = "/crabWalkLeft";
     public static final String CRAB_WALK_RIGHT    = "/crabWalkRight";
     public static final String TOGGLE_EMERGENCY_STOP    = "/toggleEmergencyStop";
+    public static final String TOGGLE_LINE_FOLLOWING    = "/toggleLineFollowing";
+
 
     public static String getSpeedEndpoint(int value) {
         return "/setSpeed?s=" + value;
     }
+
+    public static String getEmergencyStopDistanceEndpoint(int value) {
+        return "/setEmergencyStopDistance?s=" + value;
+    }
+
+    public static String getSensitivityEndpoint(double value) {
+        return "/setSensitivity?s=" + value;
+    }
+
+    public static String getDampeningEndpoint(double value) {
+        return "/setDampening?s=" + value;
+    }
+
 
     private ArduinoEndpoints() {}
 }

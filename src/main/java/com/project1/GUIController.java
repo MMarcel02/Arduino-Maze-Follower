@@ -1,5 +1,6 @@
 package com.project1;
 
+import java.net.http.HttpResponse;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
@@ -25,19 +26,27 @@ import javafx.animation.KeyFrame;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 
 
 public class GUIController {
 
     private ArduinoClient client = new ArduinoClient();
+    private ArduinoTCPClient tcpClient;
 
     private int speed = 80;
+    private double sensitivity = 5;
+    private double dampening = 1;
+    private double angleMultiplier = 0.37;
 
-    private static final double MAX_PIXELS_PER_SECOND = 50;
+    private final double MAX_PIXELS_PER_SECOND = 50;
 
     // 2pi radians = 360 deg, so at max speed it rotates on the graph a full 360 degrees in 1 second
     // this needs to be calibrated in real world to match our robot
-    private static final double MAX_RADIANS_PER_SECOND = 2*Math.PI;
+    private final double MAX_RADIANS_PER_SECOND = 2*Math.PI;
 
     private String currentEndpoint = ArduinoEndpoints.STOP;
     private double robotX;
@@ -61,7 +70,19 @@ public class GUIController {
     private ToggleButton emergencyStopToggle;
 
     @FXML
+    private ToggleButton lineFollowToggle;
+
+    @FXML
     private Label activeInputsLabel;
+
+    @FXML
+    private Label irLeft;
+
+    @FXML
+    private Label irRight;
+
+    @FXML
+    private Label ultraSonic;
 
     @FXML
     private TextArea logArea;
@@ -131,6 +152,18 @@ public class GUIController {
 
     @FXML
     private Slider speedSlider;
+
+    @FXML
+    private Slider canvasRotationSlider;
+
+    @FXML
+    private Slider emergencyStopSlider;
+
+    @FXML
+    private Slider sensitivitySlider;
+
+    @FXML
+    private Slider dampeningSlider;
 
     @FXML
     private Button stopButton;
@@ -228,6 +261,11 @@ public class GUIController {
     }
 
     @FXML
+    void toggleLineFollowing(ActionEvent event) {
+        sendRequest(ArduinoEndpoints.TOGGLE_LINE_FOLLOWING);
+    }
+
+    @FXML
     void onButtonPressed(MouseEvent event) {
         // Gives us the button that is being pressed 
         Button source = (Button) event.getSource();
@@ -257,6 +295,10 @@ public class GUIController {
 
 
     private String mapButtonToKey(Button button) {
+
+    // Converts GUI button presses into the same virtual keys used for keyboard input
+    // so both systems share the same movement logic
+
         if (button == upArrow) return "W";
         if (button == downArrow) return "S";
         if (button == leftArrow) return "A";
@@ -269,8 +311,81 @@ public class GUIController {
 
     @FXML
     public void initialize() {
+        // Slider updates our speed value in the UI
+        speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {                
+        // Listener runs every time the slider values change (even while dragging)
+        // we update the speed label live, but we send the speed to the robot only when dragging stops    
+            speed = (int) speedSlider.getValue();       
+            speedLabel.setText("Speed: " + speed);
+            if (!speedSlider.isValueChanging()) {
+                String speedEndpoint = ArduinoEndpoints.getSpeedEndpoint(speed);
+                sendRequest(speedEndpoint);
+            }
 
-        speedSlider.setValue(speed);
+        });
+
+        // Listener fires when dragging starts or stops
+        // Speed is only sent to the robot once drag is released, to avoid spamming requests  
+        speedSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
+            if (!isChanging) {
+                String speedEndpoint = ArduinoEndpoints.getSpeedEndpoint(speed);
+                sendRequest(speedEndpoint); 
+            }
+        });
+
+        canvasRotationSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            angleMultiplier = canvasRotationSlider.getValue();  
+        });
+
+        emergencyStopSlider.valueProperty().addListener((obs, oldVal, newVal) -> {                
+            if (!emergencyStopSlider.isValueChanging()) {
+                int distance = (int) emergencyStopSlider.getValue();
+                sendRequest(ArduinoEndpoints.getEmergencyStopDistanceEndpoint(distance)); 
+            }
+
+        });
+
+        emergencyStopSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
+            if (!isChanging) {
+                int distance = (int) emergencyStopSlider.getValue();
+                sendRequest(ArduinoEndpoints.getEmergencyStopDistanceEndpoint(distance)); 
+            }
+        });
+
+        sensitivitySlider.valueProperty().addListener((obs, oldVal, newVal) -> {                
+            sensitivity = Math.round(sensitivitySlider.getValue() * 10) / 10.0;
+            if (!sensitivitySlider.isValueChanging()) {
+                sendRequest(ArduinoEndpoints.getSensitivityEndpoint(sensitivity)); 
+            }
+        });
+
+        sensitivitySlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
+            if (!isChanging) {
+                sendRequest(ArduinoEndpoints.getSensitivityEndpoint(sensitivity)); 
+            }
+        });
+
+        dampeningSlider.valueProperty().addListener((obs, oldVal, newVal) -> {                
+            dampening = Math.round(dampeningSlider.getValue() * 10) / 10.0;
+            if (!dampeningSlider.isValueChanging()) {
+                sendRequest(ArduinoEndpoints.getDampeningEndpoint(dampening)); 
+            }
+        });
+
+        dampeningSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
+            if (!isChanging) {
+                sendRequest(ArduinoEndpoints.getDampeningEndpoint(dampening)); 
+            }
+        });
+
+
+        tcpClient = new ArduinoTCPClient(data -> {
+            Platform.runLater(() -> {
+                updateSensorLabels(data);
+            });
+        });
+
+        tcpClient.connect();
         
         // This is the object used to actually draw on the canvas
         gc = canvas.getGraphicsContext2D();
@@ -333,30 +448,12 @@ public class GUIController {
 
         // This actually starts the animation (that we defined earlier) for a set number of frames (that we defined earlier), in this case indefinite
         robotPositionTimeline.play();
-
-        // Slider updates our speed value in the UI
-        speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {            
-            speed = (int) speedSlider.getValue();      
-            speedLabel.setText("Speed: " + speed);
-            if (!speedSlider.isValueChanging()) {
-                String speedEndpoint = ArduinoEndpoints.getSpeedEndpoint(speed);
-                sendRequest(speedEndpoint);
-            }
-        });
-
-        // Speed is only sent to the robot once drag is released     
-        speedSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
-            if (!isChanging) {
-                String speedEndpoint = ArduinoEndpoints.getSpeedEndpoint(speed);
-                sendRequest(speedEndpoint); 
-            }
-        });
     }
 
     private void updateRobotPosition(double changeInTime) {
         // Convert our speed into speed of drawing on canvas
         double linearVelocity = MAX_PIXELS_PER_SECOND * ((double) speed / 255.0);
-        double angularVelocity = MAX_RADIANS_PER_SECOND * ((double) speed / 255.0);
+        double angularVelocity = angleMultiplier * MAX_RADIANS_PER_SECOND * ((double) speed / 255.0);
 
         // How many pixels the robot moved
         double distanceTravelled = linearVelocity * changeInTime;
@@ -437,7 +534,6 @@ public class GUIController {
 
             gc.strokeLine(oldPos.getX(), oldPos.getY(), currentPos.getX(), currentPos.getY());
         }
-        
     }
 
     private void drawArrow() {
@@ -479,9 +575,10 @@ public class GUIController {
         // We start a new thread so that our GUI doesnt freeze after we send a request
         new Thread(() -> {
             try {
-                client.send(endpoint);
+                HttpResponse<String> response = client.send(endpoint);
                 Platform.runLater(() -> {
-                    logToTextArea("Request to " + endpoint + " succeeded!");
+                    logToTextArea(response.body());
+                    
                 });
             } catch (Exception e) {
                 Platform.runLater(() -> {
@@ -494,6 +591,10 @@ public class GUIController {
     
 
     private void updateSpeed(int changeInSpeed) {
+
+    // Changing the internal speed value 
+    // & clamping them to 0 & 255
+
         speed += changeInSpeed;
 
         if (speed <= 0) speed = 0;
@@ -509,8 +610,16 @@ public class GUIController {
     }
 
     public void setupInputHandlers(Scene scene){
+
+    // Key events are attached at Scene level so movements work 
+    // no matter which UI element has keyboard focus
+
         scene.setOnKeyPressed(event -> {
             String key = event.getCode().toString();
+
+    // add returns true only if the key was not already active
+    // so it prevents duplicate movement triggers
+
             if (activeInputs.add(key)) {
                 handleMovement();
             }
@@ -527,12 +636,18 @@ public class GUIController {
     private void handleMovement() {
         updateActiveInputsLabel(); 
 
+
+    // if no inputs are active, the robot stops to prevent drifting
+
         if (activeInputs.isEmpty()) {
             sendRequest(ArduinoEndpoints.STOP);
             return;
         }
 
-        boolean forward   = activeInputs.contains("W");
+
+    // Checks which movement keys are currently active
+
+        boolean forward  = activeInputs.contains("W");
         boolean backward = activeInputs.contains("S");
         boolean left      = activeInputs.contains("A");
         boolean right     = activeInputs.contains("D");
@@ -543,14 +658,11 @@ public class GUIController {
 
         String commandToSend;
 
+    // Order matters because some take priority over others
+    // so, it determines which movement command to send based on the combination
+
         if (forward && !left && !right) {
             commandToSend = ArduinoEndpoints.FORWARD;
-        } else if (backward) {
-            commandToSend = ArduinoEndpoints.BACKWARD;
-        } else if (shift && left && !right || shiftLeft) {
-            commandToSend = ArduinoEndpoints.CRAB_WALK_LEFT;
-        } else if (shift && right && !left || shiftRight) {
-            commandToSend = ArduinoEndpoints.CRAB_WALK_RIGHT;
         } else if (forward && left) {
             commandToSend = ArduinoEndpoints.LEFT;
         } else if (forward && right) {
@@ -559,6 +671,12 @@ public class GUIController {
             commandToSend = ArduinoEndpoints.TURN_ON_SPOT_LEFT;
         } else if (right && !left) {
             commandToSend = ArduinoEndpoints.TURN_ON_SPOT_RIGHT;
+        } else if (backward) {
+            commandToSend = ArduinoEndpoints.BACKWARD;
+        } else if (shift && left && !right || shiftLeft) { 
+            commandToSend = ArduinoEndpoints.CRAB_WALK_LEFT;
+        } else if (shift && right && !left || shiftRight) {
+            commandToSend = ArduinoEndpoints.CRAB_WALK_RIGHT;
         } else {
             commandToSend = ArduinoEndpoints.STOP;
         }
@@ -567,6 +685,9 @@ public class GUIController {
     }
 
     private void updateActiveInputsLabel() {
+
+    // Updates the label showing which inputs are active
+
         if (activeInputsLabel != null) {
             if (activeInputs.isEmpty()) {
                 activeInputsLabel.setText("Active: None");
@@ -576,7 +697,42 @@ public class GUIController {
         }
     }
 
+    public void shutdown() {
+        if (tcpClient != null) {
+            tcpClient.disconnect();
+        }
+    }
 
 
+    private void updateSensorLabels(String sensorData) {
+        // Since TCP can be lossy we need to check if we actually got the data
+        if (sensorData == null || sensorData.isEmpty()) {
+            return;
+        }
+        
+        String[] parts = sensorData.split(",");
+        if (parts.length == 3) {
 
+            ultraSonic.setText("Ultrasonic: " + parseDistance(parts[0]));
+            irLeft.setText("IR Left: " + parseToColour(parts[1]));
+            irRight.setText("IR Right: " + parseToColour(parts[2]));
+        }
+    }
+
+    private String parseDistance(String dist) {
+        if (dist.equals("0.00")) {
+            return "Out Of Range";
+        } else {
+            return dist + " cm";
+        }
+    }
+
+    private String parseToColour(String str) {
+        if (str.equals("1")) {
+            return "BLACK";
+        } else {
+            return "WHITE";
+        }
+    }
 }
+

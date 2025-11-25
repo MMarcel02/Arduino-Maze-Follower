@@ -35,12 +35,8 @@ public class ArduinoClient {
     .timeout(Duration.ofSeconds(10))
     .GET()
     .build();
-    
-    // TODO: Asynchronous queue for calls.
-    // System.out.println(req.toString());
       
     HttpResponse<String> res = _client.send(req, HttpResponse.BodyHandlers.ofString());
-    System.out.println("Body: " + res.body());
     
     return res;
   }

@@ -1,37 +1,14 @@
-#include <Arduino.h>
-#include "hardware.h"
+// --- Motor Pin Definitions ---
+// Assign PWM (speed) and DIR (direction) pins for each motor
+const int FL_PWM = 6,  FL_DIR = 5;     // Front Left Motor
+const int FR_PWM =9, FR_DIR=10;        // Front Right 
+const int BL_PWM = A4, BL_DIR = A5;    // Back Left
+const int BR_PWM=11, BR_DIR = 12;      // Back Right
 
 // --- Variables ---
 int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
 int motorTurningSpeed = motorSpeed - 20;
 char lastMotionCmd = 'x';      // Stores the last direction command (e.g., 'f' for forward)
-
-float getDistanceCM() {
-  long duration;
-  float distance;
-  
-  digitalWrite(trigPin, LOW);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-
-  duration = pulseIn(echoPin, HIGH, 30000);
-  distance = duration * 0.034 / 2.0;
-
-  return distance;
-}
-
-// --- Read both IR sensor ---
-String getIRoutput() {
-  int leftDigital = digitalRead(IR_Left_Digital);
-  int rightDigital = digitalRead(IR_Right_Digital);
-  int LeftAnalog = analogRead(IR_Left_Analog);
-  int rightAnalog = analogRead(IR_Right_Analog);
-
-  String IRdata = "Left IR -> D: " + String(leftDigital) + " | A: " + String(leftAnalog);
-  IRdata += " || Right IR -> D: " + String(rghtDigital) + " | A: " + String(rightAnalog);
-  return IRdata;
-}
 
 // --- Function to Drive a Motor ---
 // 'speed' determines how fast, 'forward' determines direction
