@@ -263,17 +263,17 @@ void handleSensors(WiFiClient& client) {
 
 
 void loop() {
-  // String test = buildSensorMessage();
   // We check for a http connection (one everytime we send a command e.g. /forward)
   WiFiClient httpClient = httpServer.available();
   if (httpClient) {
-      httpClient.setTimeout(50); 
+      httpClient.setTimeout(100); 
       serve(httpClient);
       httpClient.stop();
   }
 
+
+  // If we're not connected to the old streamingClient we make sure we disconnect
   if (streamingClient && !streamingClient.connected()) {
-      Serial.println("Client disconnected, freeing socket...");
       streamingClient.stop();
   }
 
@@ -294,9 +294,16 @@ void loop() {
     unsigned long currentMillis = millis();
     // We check if 100ms has elapsed yet, if it has we send a packet with data
     if (currentMillis - lastSensorTime >= SENSOR_INTERVAL) {
-      lastSensorTime = currentMillis;
+      // Updates the IR and UltraSonic values
+      readUltrasonicSensor();
+      readIRSensors();
+
+      // Creates String with data separated by commas
       String sensorData = buildSensorMessage();
+
+      // Sends the data all at once as a tcp packet
       streamingClient.println(sensorData);
+      lastSensorTime = currentMillis;
     }
   }
 

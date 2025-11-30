@@ -1,20 +1,14 @@
 // Ultrasound pins
-
 const int trigPin = 0;
 const int echoPin = 1; 
 
 float duration, distance;  
 int leftReading, rightReading;
 
-
 // IR sensor pins (using analogue values to be more accurate)
 // Analog pins dont need to be setup with pinMode()
 const int LEFT_SENSOR_PIN = A0; 
 const int RIGHT_SENSOR_PIN = A2; 
-
-
-//Found in testing that when its 150 - 400 that when it is on black
-const int BLACK_TAPE_THRESHOLD = 150; 
 
 void setupUltraSonicSensor () {
 	pinMode(trigPin, OUTPUT);  
@@ -26,7 +20,7 @@ void setupIRSensors () {
 	pinMode(RIGHT_SENSOR_PIN, INPUT);  
 }
 
-float readUltrasonicSensor() {
+void readUltrasonicSensor() {
   digitalWrite(trigPin, LOW);  
 	delayMicroseconds(2);  
 	digitalWrite(trigPin, HIGH);  
@@ -36,22 +30,19 @@ float readUltrasonicSensor() {
   duration = pulseIn(echoPin, HIGH, 5000);  
 
   distance = (duration*.0343)/2; 
-  return distance;
 }
 
 void checkEmergencyStop() {
+  // we check for more than 0.00 because sometimes it displays 0.00 if it times out
   if (0.00 < distance && distance < emergencyStopDistance) {
     stopAllMotors();
     currentState = STOPPED;
   }
 }
 
-String readIRSensors() {
-	// IR Sensors loop
+void readIRSensors() {
   leftReading = digitalRead(LEFT_SENSOR_PIN);
   rightReading = digitalRead(RIGHT_SENSOR_PIN);
-
-  return String(leftReading) + "," + String(rightReading);
 }
 
 bool checkLeftIRSensor() {
@@ -65,6 +56,6 @@ bool checkRightIRSensor() {
 
 
 String buildSensorMessage() {
-  return String(readUltrasonicSensor(), 2) + "," + readIRSensors();
+  return String(distance, 2) + "," + String(leftReading) + "," + String(rightReading);;
 }
 
