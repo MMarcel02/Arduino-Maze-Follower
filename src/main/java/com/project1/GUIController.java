@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 public class GUIController {
 
-    private ArduinoClient client = new ArduinoClient();
+    private ArduinoHTTPClient client = new ArduinoHTTPClient();
     private ArduinoTCPClient tcpClient;
 
     private int speed = 80;

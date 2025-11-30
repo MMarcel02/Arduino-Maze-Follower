@@ -29,10 +29,6 @@ bool followingLine = false;
 
 int emergencyStopDistance = 20;
 
-// For PDL algorithm
-double sensitivity = 5.0;
-double dampening = 1.0;
-
 // enum assigns numbers to these words (less mistakes than using strings (typos) and easier and faster to compare numbers) 
 enum RobotState {
   STOPPED, // Compiler assigns this = 0
@@ -45,4 +41,10 @@ enum RobotState {
 // Default at start
 RobotState currentState = STOPPED;
 
+// For PDL algorithm
+double sensitivity = 5.0;
+double dampening = 1.0;
+
+// Time it keeps turning after it stopped seeing a line
+int lineMemoryLatency = 150;
 

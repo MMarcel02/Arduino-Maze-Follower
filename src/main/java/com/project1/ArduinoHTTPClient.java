@@ -6,13 +6,13 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-public class ArduinoClient {
+public class ArduinoHTTPClient {
   public static final String IP = "http://192.168.1.1";
   private HttpClient _client; 
   
   // This is our constructor for the ArduinoClient method. That means when someone makes a new ArduinoClient object,
   // these will be the default 
-  public ArduinoClient() {
+  public ArduinoHTTPClient() {
 
     // we will start creating our HTTP request one part at a time (thats why we use the builder)
     _client = HttpClient.newBuilder()

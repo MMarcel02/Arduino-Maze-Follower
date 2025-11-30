@@ -1,29 +1,41 @@
 int previousDir = 0;
 
+unsigned long lastLeftSeeTime = 0;
+unsigned long lastRightSeeTime = 0;
+
 void pdLineFollow () {
   readIRSensors();
-  bool leftLine = checkLeftIRSensor();
+
+  bool leftLine = checkLeftIRSensor()
   bool rightLine = checkRightIRSensor();
+  
+  unsigned long currentTime = millis();
+
+  if(leftLine)  lastLeftSeeTime = currentTime;
+  if (rightLine) lastRightSeeTime = currentTime;
+
+  // We make it still turn for a bit after it stopped seeing the line
+  bool stickyLeft = (currentTime - lastLeftSeeTime < lineMemoryLatency);
+  bool stickyRight = (currentTime - lastRightSeeTime < lineMemoryLatency);
   
   int dir = 0;
 
-  // -1 to turn left, +1 right
-  if (leftLine && rightLine) dir = previousDir;
-  if(leftLine)  dir -= 1;
-  if(rightLine) dir += 1;
+  // If it still has both in its memory then we are probably on a curve or zigzagging
+  if (stickyLeft && stickyRight) dir = previousDir;
+  else if (stickyLeft)  dir -= 1;
+  else if (stickyRight) dir += 1;
   
   double correction = sensitivity * dir + dampening * (dir - previousDir);
   
+  previousDir = dir;
+
   int leftSpeed   = (int)((1 + correction) * motorSpeed);
   int rightSpeed  = (int)((1 - correction) * motorSpeed);
-  
 
   setSmartMotor(FL_PWM, FL_DIR, leftSpeed);
   setSmartMotor(FR_PWM, FR_DIR, rightSpeed);
   setSmartMotor(BL_PWM, BL_DIR, leftSpeed);
   setSmartMotor(BR_PWM, BR_DIR, rightSpeed);
-  
-  previousDir = dir;
 }
 
 void setSmartMotor(int pwmPin, int dirPin, int speedVal) {
@@ -32,12 +44,12 @@ void setSmartMotor(int pwmPin, int dirPin, int speedVal) {
   // If speed is negative, we need to go BACKWARD
   if (speedVal < 0) {
       forward = false;
-      speedVal = -speedVal; // Make positive for analogWrite
+      speedVal = -speedVal;
   }
   
-  // Clamp speed to max 255
-  if (speedVal > 255) speedVal = 255;
+  // Max speed of motor during line following
+  if (speedVal > 150) speedVal = 150;
 
-  // Call your original setMotor function
+  // Pass values to the motor
   setMotor(pwmPin, dirPin, speedVal, forward);
 }

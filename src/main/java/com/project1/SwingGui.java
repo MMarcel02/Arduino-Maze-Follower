@@ -21,7 +21,7 @@ import java.net.http.HttpResponse;
 public class SwingGui {
 
     private static String lastAction= "";
-    public static ArduinoClient arduClient = new ArduinoClient();
+    public static ArduinoHTTPClient arduClient = new ArduinoHTTPClient();
 
 
     public static void main(String[] args){
