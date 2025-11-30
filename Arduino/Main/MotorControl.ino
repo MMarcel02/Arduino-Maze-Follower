@@ -1,31 +1,21 @@
-// --- Motor Pin Definitions ---
-// Assign PWM (speed) and DIR (direction) pins for each motor
-const int FL_PWM = 6,  FL_DIR = 5;     // Front Left Motor
-const int FR_PWM =9, FR_DIR=10;        // Front Right 
-const int BL_PWM = A4, BL_DIR = A5;    // Back Left
-const int BR_PWM=11, BR_DIR = 12;      // Back Right
 
 // --- Variables ---
 int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
 int motorTurningSpeed = motorSpeed - 20;
-char lastMotionCmd = 'x';      // Stores the last direction command (e.g., 'f' for forward)
 
 // --- Function to Drive a Motor ---
-// 'speed' determines how fast, 'forward' determines direction
 void setMotor(int pwm, int dir, int speed, bool forward) {
   digitalWrite(dir, forward ? HIGH : LOW);  // Set direction
   analogWrite(pwm, speed);                  // Set speed using PWM
 }
 
 // --- Setup Function for Each Motor ---
-// Configures the direction and PWM pins for a motor
 void setupMotor(int pwm, int dir) {
-  pinMode(pwm, OUTPUT);  // Set PWM pin as output
+  pinMode(pwm, OUTPUT);  // Set PWM pin as output (for speed)
   pinMode(dir, OUTPUT);  // Set direction pin as output
 }
 
 // --- Arduino Setup Function ---
-// Runs once when the board powers up or resets
 void setupAllMotors() {    
   setupMotor(FL_PWM, FL_DIR);
   setupMotor(FR_PWM,FR_DIR);

@@ -1,44 +1,35 @@
-#include <WiFi101.h>
 
-// Arduino ide automatically compiles all files in the same folder, so functions in
-// movement.ino will be accessible
-
-// Feather M0 WiFi (WINC1500) pins
-const int WINC_CS  = 8, WINC_IRQ = 7, WINC_RST = 4, WINC_EN = 2;
-
-const char ssid[] = "Team 36";
-const char pass[] = "Team36Rules";     // >= 8 chars for WPA2
+WiFiClient streamingClient;
 
 // Use this one for commands (e.g. /forward)
 WiFiServer httpServer(80);
 // Use this for data (e.g. Ultrasonic)
 WiFiServer tcpServer(8080);
 
-WiFiClient streamingClient;
+// Interval (in ms) which determines how often we send sensor data
+const int SENSOR_SEND_INTERVAL = 100;
+// Timer variable which we cross check with SENSOR_SEND_INTERVAL
+unsigned long lastSensorSendTime = 0;
 
-// Timer variable so we can check if 100 ms has elapsed yet with SENSOR_INTERVAL
-unsigned long lastSensorTime = 0;
-// Send sensor data every 100 ms
-const int SENSOR_INTERVAL = 100;
+// Interval (in ms) which determines how often we read ultrasonic sensor
+const int ULTRASONIC_READ_INTERVAL = 60;
+// Timer variable which we cross check with SENSOR_SEND_INTERVAL
+unsigned long lastUltrasonicReadTime = 0;
 
-bool emergencyStop = true;
-int emergencyStopDistance = 20;
-bool followingLine = false;
+void setupWifiPins() {
+  WiFi.setPins(WINC_CS, WINC_IRQ, WINC_RST, WINC_EN);
+}
 
-double sensitivity = 5.0;
-double dampening = 1.0;
+// Check to see if theres a hardware issue with the wifi chip
+void wifiSafetyCheck() {
+  // WL_NO_SHIELD is a specific error meaning that it cant find the chip
+  if (WiFi.status() == WL_NO_SHIELD) {
+    Serial.println("WiFi shield not present");
 
-// enum assigns numbers to these words
-// less mistakes than using strings (typos) and easier and faster to compare numbers
-enum RobotState {
-  STOPPED, // Compiler assigns this = 0
-  FORWARD, // Compiler assigns this = 1
-  LEFT,
-  RIGHT,
-  OTHER
-};
-
-RobotState currentState = STOPPED;
+    // Creates infinte loop that stops the robot from doing anything else
+    while (true); 
+  }
+}
 
 // Helper to get string instead of 0 or 1
 String boolToString(bool value) {
@@ -49,59 +40,58 @@ String boolToString(bool value) {
   }
 }
 
-// --------- Utility: IPAddress -> "A.B.C.D" -----
+/* Helper function that converts IP to readable format, it takes as argument an object of IPAddress type that is provided in wifilib
+The IPAddress object contains the IP like an array so we use ip[i] to access all four numbers and then return it as one string*/
 String ipToString(const IPAddress& ip) {
   return String(ip[0]) + "." + String(ip[1]) + "." + String(ip[2]) + "." + String(ip[3]);
 }
 
-void setup() {
-  Serial.begin(115200);
-  // DO NOT block on while(!Serial); we want it to run even without a PC attached
-  setupUltraSonicSensor();
-  setupIRSensors();
-
-  Serial.println("IR Sensor Line Detection Initialized.");
-
-
-  WiFi.setPins(WINC_CS, WINC_IRQ, WINC_RST, WINC_EN);
-
-  if (WiFi.status() == WL_NO_SHIELD) {
-    Serial.println("WINC1500 not detected"); while (1) {}
-  }
-
-  Serial.print("FW: "); Serial.println(WiFi.firmwareVersion());
-
-  Serial.println("Starting AP…");
-  int s = WiFi.beginAP(ssid, pass, 6);            // WPA2, ch 6
-  if (s != WL_AP_LISTENING) {
-    Serial.print("WPA2 AP failed ("); Serial.print(s); Serial.println("). Trying OPEN…");
-    s = WiFi.beginAP(ssid, 6);                    // OPEN AP fallback
-    if (s != WL_AP_LISTENING) { Serial.println("AP failed"); while (1) {} }
-  }
-
-  delay(8000); // let AP + DHCP come up
-
-  Serial.print("AP IP: "); Serial.println(ipToString(WiFi.localIP())); // usually 192.168.1.1
-  httpServer.begin();
-  tcpServer.begin();
-
-
-  // Initialize all four motors
-  setupAllMotors();
-
-  // Stop all motors initially
-  stopAllMotors();
+/* Function to start the wifi ap */
+// Serial used for debugging over USB
+void startWifiAp(){
+    Serial.print("The Wifi Module's firmware is: "); 
+    Serial.println(WiFi.firmwareVersion());
+    Serial.println("Starting AP…");
+    // Initialize the AP using Wifi.beginAP, it returns ints but they have been mapped to strings
+    int s = WiFi.beginAP(ssid, pass, 6);  // Channel 6
+    if (s != WL_AP_LISTENING) {
+    Serial.print("WPA2 AP failed ("); 
+    Serial.print(s); Serial.println("). Trying OPEN…");
+    s = WiFi.beginAP(ssid, 6); // OPEN AP fallback
+    if (s != WL_AP_LISTENING) { Serial.println("AP failed"); while (1) {} } // freeze if fail
+    }
+    delay(8000); // let AP + DHCP come up
+    Serial.print("AP IP: "); Serial.println(ipToString(WiFi.localIP())); // usually 192.168.1.1
+    // This tells the wifiserver objects to begin listening, http on port 80 and tcp on port 8080
+    httpServer.begin();
+    tcpServer.begin();
+    Serial.print("Server succesfully setup!");
 }
 
-void serve(WiFiClient& c){
-  c.setTimeout(1500);
-  String rl=c.readStringUntil('\n');        // "GET /path?query HTTP/1.1"
-  int sp1=rl.indexOf(' '), sp2=rl.indexOf(' ',sp1+1);
-  String uri=(sp1>0&&sp2>sp1)?rl.substring(sp1+1,sp2):"/";
-  int q=uri.indexOf('?'); String pth=(q>=0)?uri.substring(0,q):uri; String qry=(q>=0)?uri.substring(q+1):"";
-  while(true){ String h=c.readStringUntil('\n'); if(h.length()==0||h=="\r") break; } // headers
-  route(c,pth,qry);
-}
+// Function that gets the http requests sent to the robot
+// serve function accepts as arg a WiFiClient object from the wifilib it represent a specific device connected to our server 
+void serve(WiFiClient& c) {
+  String rl = c.readStringUntil('\n'); // stop reading after new line character to keep only the get command, not the metadata
+  // Robot only cares about the /command part of our http get request
+  int sp1 = rl.indexOf(' '); // get the index of the first " " you encounter in the string of request
+  int sp2 = rl.indexOf(' ',sp1+1); // get the index of " " after the first one
+  // Why do we do this ?
+  // The HTTP request is GET /forward HTTP/1.1 we want to keep only the /forward of this string
+  // The following is using ternary operator a way of expressing an if else statement in c
+  String uri = (sp1>0 && sp2>sp1)?rl.substring(sp1+1,sp2):"/"; //complex c statement if then else return "/"
+  // Finding the question mark
+  int q = uri.indexOf('?');
+  // Separating the command from the data
+  String pth = (q>=0)? uri.substring(0,q):uri; // get just the path or if only paths exists index would be -1 so again only the path
+  // Getting the query data
+  String qry = (q>=0)?uri.substring(q+1):"";
+  while(true) {
+    String h=c.readStringUntil('\n');
+    if (h.length() == 0 || h == "\r") break;}
+    route(c,pth,qry);
+  }
+
+
 void route(WiFiClient& c, const String& path, const String& q) {
     if (path == "/" || path == "") { handleRoot(c); return; }
     if (path == "/forward") { handleForward(c); return; }
@@ -256,27 +246,35 @@ void handleToggleLineFollowing(WiFiClient& client) {
     sendHttpResponse(client, ("Line following set to " + boolToString(followingLine))); 
 }   
 
-void handleSensors(WiFiClient& client) {
-  String body = buildSensorMessage();
-  sendHttpResponse(client, body);
+void updateSensors() {
+  // Read IR every cycle (for proper line following)
+  readIRSensors();
+
+  // We need to wait for the previous Ultrasonic waves to clear the area before reading again to get cleaner data
+  unsigned long currentMillis = millis();
+  // We check if 60ms has elapsed yet, if it has we send a packet with data
+  if (currentMillis - lastUltrasonicReadTime >= ULTRASONIC_READ_INTERVAL) {
+    readUltrasonicSensor();
+    lastUltrasonicReadTime = currentMillis;
+  }
 }
 
-
-void loop() {
-  // We check for a http connection (one everytime we send a command e.g. /forward)
-  WiFiClient httpClient = httpServer.available();
+// We check for a http connection (one everytime we send a command e.g. /forward)
+void handleHTTPCommands() {
+  WiFiClient httpClient = httpServer.available();  
   if (httpClient) {
-      httpClient.setTimeout(100); 
-      serve(httpClient);
-      httpClient.stop();
+    httpClient.setTimeout(100); 
+    serve(httpClient);
+    httpClient.stop();
   }
+}
 
-
+void handleTCPData() {
   // If we're not connected to the old streamingClient we make sure we disconnect
   if (streamingClient && !streamingClient.connected()) {
       streamingClient.stop();
   }
-
+  
   // Here we check if we have a new tcpServer to connect
   // If we do we overwrite the current streamingClient
   // This is so we can reconnect if we restart our program while connected, or the connection drops
@@ -288,26 +286,27 @@ void loop() {
     streamingClient = tcpClient;
     streamingClient.flush();
   }
-
+  
   if (streamingClient && streamingClient.connected()) {
     // 32 bit, so would take about 50 days to run out of space
     unsigned long currentMillis = millis();
     // We check if 100ms has elapsed yet, if it has we send a packet with data
-    if (currentMillis - lastSensorTime >= SENSOR_INTERVAL) {
-      // Updates the IR and UltraSonic values
-      readUltrasonicSensor();
-      readIRSensors();
+    if (currentMillis - lastSensorSendTime >= SENSOR_SEND_INTERVAL) {
 
+  
       // Creates String with data separated by commas
       String sensorData = buildSensorMessage();
-
+  
       // Sends the data all at once as a tcp packet
       streamingClient.println(sensorData);
-      lastSensorTime = currentMillis;
+      lastSensorSendTime = currentMillis;
     }
   }
+}
 
-  if (emergencyStop && (currentState == FORWARD || currentState == LEFT || currentState == RIGHT)) { 
+void manageRobotState() {
+  // Should only stop IF we're trying to move generally forward, otherwise it will block when we try to reverse or rotate
+  if (emergencyStop && (currentState == FORWARD)) { 
     checkEmergencyStop();
   } else if (followingLine) {
     pdLineFollow();
