@@ -153,55 +153,46 @@ void handleRoot(WiFiClient& client) {
 }
 
 void handleForward(WiFiClient& client) {
-    currentState = FORWARD;
     moveForward();
     sendHttpResponse(client, "Moved Forward");
 }
 
 void handleBackward(WiFiClient& client) {
-    currentState = OTHER;
     moveBackward();
     sendHttpResponse(client, "Moved Backward");
 }
 
 void handleTurnOnSpotRight(WiFiClient& client) {
-    currentState = OTHER;
     turnOnSpotRight();
     sendHttpResponse(client, "Turned Right on Spot");
 }
 
 void handleTurnOnSpotLeft(WiFiClient& client) {
-    currentState = OTHER;
     turnOnSpotLeft();
     sendHttpResponse(client, "Turned Left on Spot");
 }
 
 void handleLeft(WiFiClient& client) {
-    currentState = LEFT;
     moveLeft();
     sendHttpResponse(client, "Moved Left");
 }
 
 void handleRight(WiFiClient& client) {
-    currentState = RIGHT;
     moveRight();
     sendHttpResponse(client, "Moved Right");
 }
 
 void handleStop(WiFiClient& client) {
-    currentState = STOPPED;
     stopAllMotors();
     sendHttpResponse(client, "Stopped");
 }
 
 void handleCrabWalkLeft(WiFiClient& client) {
-    currentState = OTHER;
     crabWalkLeft();
     sendHttpResponse(client, "Crab Walk Left");
 }
 
 void handleCrabWalkRight(WiFiClient& client) {
-    currentState = OTHER;
     crabWalkRight();
     sendHttpResponse(client, "Crab Walk Right");
 }
@@ -234,7 +225,6 @@ void handleToggleEmergencyStop(WiFiClient& client) {
 void handleToggleLineFollowing(WiFiClient& client) {
     followingLine = !followingLine;
     if (!followingLine) {
-      currentState = STOPPED;
       stopAllMotors();
       sendHttpResponse(client, ("Line following set to " + boolToString(followingLine))); 
     }
@@ -277,10 +267,10 @@ void handleTCPData() {
 
   
       // Creates String with data separated by commas
-      String sensorData = buildSensorMessage();
-  
+      String tcpPacket = buildSensorMessage() + "," + String(currentState);
+      
       // Sends the data all at once as a tcp packet
-      streamingClient.println(sensorData);
+      streamingClient.println(tcpPacket);
       lastSensorSendTime = currentMillis;
     }
   }
@@ -291,6 +281,6 @@ void manageRobotState() {
   if (emergencyStop && (currentState == FORWARD)) { 
     checkEmergencyStop();
   } else if (followingLine) {
-    pdLineFollow();
+    bangLineFollow();
   }
 }

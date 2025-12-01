@@ -8,6 +8,9 @@ public class RobotModel {
     private double sensitivity = 5.0;
     private double dampening = 1.0;
     private int emergencyStopDistance = 20;
+    private RobotState state = RobotState.STOPPED;
+
+
 
     public int getSpeed() { return speed; }
     public void setSpeed(int speed) {
@@ -28,4 +31,9 @@ public class RobotModel {
 
     public int getEmergencyStopDistance() { return emergencyStopDistance; }
     public void setEmergencyStopDistance(int emergencyStopDistance) { this.emergencyStopDistance = emergencyStopDistance; }
+
+    public void setState(RobotState state) {
+        this.state = state;
+    }
+    public RobotState getState() {return state;}
 }

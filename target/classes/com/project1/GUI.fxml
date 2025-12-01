@@ -245,6 +245,14 @@
                         <Insets />
                      </VBox.margin>
                   </Label>
+                  <Label fx:id="currentStateLabel" prefHeight="17.0" prefWidth="243.0" text="Current State: ">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
                   <Label text="Emergency stop distance">
                      <font>
                         <Font size="14.0" />

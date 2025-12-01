@@ -33,7 +33,7 @@ public class GUIController {
     
     @FXML private Canvas canvas;
     @FXML private TextArea logArea;
-    @FXML private Label activeInputsLabel, speedLabel, xLabel, yLabel, angleLabel;
+    @FXML private Label activeInputsLabel, speedLabel, xLabel, yLabel, angleLabel, currentStateLabel;
     @FXML private Label irLeft, irRight, ultraSonic;
     @FXML private Slider speedSlider, canvasRotationSlider, emergencyStopSlider, sensitivitySlider, dampeningSlider;
     @FXML private Button clearMapButton, solveMaze, lostRobot, dragRace;
@@ -128,37 +128,19 @@ public class GUIController {
     @FXML
     public void initialize() {
         robotController = new RobotController(httpClient, this::logToTextArea, robotModel);
-        mapController = new MapController(canvas, robotModel, robotController);
+        mapController = new MapController(canvas, robotModel);
 
         setupSliders();
         
         tcpClient = new ArduinoTCPClient(data -> {
             Platform.runLater(() -> {
-                updateSensorLabels(data);
+                updateLabels(data, robotModel);
             });
         });
+
         tcpClient.connect();
 
-        // Animation that updates the UI
-        startLabelUpdater();
     }
-
-    private void startLabelUpdater() {
-        Timeline guiLoop = new javafx.animation.Timeline(
-            new javafx.animation.KeyFrame(javafx.util.Duration.millis(50), e -> {
-
-                double displayX = (mapController.getX() - canvas.getWidth()/2);
-                double displayY = -(mapController.getY() - canvas.getHeight()/2);
-                
-                xLabel.setText("X: " + (int)displayX);
-                yLabel.setText("Y: " + (int)displayY);
-                angleLabel.setText(String.format("Angle: %.1f°", mapController.getAngleDegrees()));
-            })
-        );
-        guiLoop.setCycleCount(javafx.animation.Timeline.INDEFINITE);
-        guiLoop.play();
-    }
-
     
     private void setupSliders() {
 
@@ -287,19 +269,41 @@ public class GUIController {
         speedSlider.setValue(robotModel.getSpeed());
     }
 
-    private void updateSensorLabels(String sensorData) {
+    private void updateLabels(String tcpData, RobotModel model) {
         // Since TCP can be lossy we need to check if we actually got the data
-        if (sensorData == null || sensorData.isEmpty()) {
+        if (tcpData == null || tcpData.isEmpty()) {
             return;
         }
-        
-        String[] parts = sensorData.split(",");
-        if (parts.length == 3) {
 
+        
+        String[] parts = tcpData.split(",");
+        if (parts.length == 4) {
+            
             ultraSonic.setText("Ultrasonic: " + parseDistance(parts[0]));
             irLeft.setText("IR Left: " + parseToColour(parts[1]));
             irRight.setText("IR Right: " + parseToColour(parts[2]));
+            parseState(parts[3], model);
+            currentStateLabel.setText("Current State: ");
         }
+
+        double displayX = (mapController.getX() - canvas.getWidth()/2);
+        double displayY = -(mapController.getY() - canvas.getHeight()/2);
+        
+        xLabel.setText("X: " + (int)displayX);
+        yLabel.setText("Y: " + (int)displayY);
+        angleLabel.setText(String.format("Angle: %.1f°", mapController.getAngleDegrees()));
+    }
+
+    private void parseState(String stateEnum, RobotModel model) {
+        int index = Integer.parseInt(stateEnum);
+
+        if (index < 0 || index >= RobotState.values().length) {
+            System.out.println("Invalid state received: " + stateEnum);
+            return;
+        }
+
+        RobotState newState = RobotState.values()[index];
+        model.setState(newState);
     }
 
     private String parseDistance(String dist) {

@@ -29,6 +29,7 @@ void setSpeed(int newSpeed) {
 }
 
 void stopAllMotors() {
+  currentState = STOPPED;
   setMotor(FL_PWM, FL_DIR, 0, true);
   setMotor(FR_PWM, FR_DIR, 0, true);
   setMotor(BL_PWM, BL_DIR, 0, true);
@@ -36,6 +37,7 @@ void stopAllMotors() {
 }
 
 void moveForward() {
+  currentState = FORWARD;
   setMotor(FL_PWM, FL_DIR, motorSpeed, true);
   setMotor(FR_PWM, FR_DIR, motorSpeed, true);
   setMotor(BL_PWM, BL_DIR, motorSpeed, true);
@@ -43,6 +45,7 @@ void moveForward() {
 }
 
 void moveBackward() {
+  currentState = BACKWARD;
   setMotor(FL_PWM, FL_DIR, motorSpeed, false);
   setMotor(FR_PWM, FR_DIR, motorSpeed, false);
   setMotor(BL_PWM, BL_DIR, motorSpeed, false);
@@ -50,6 +53,7 @@ void moveBackward() {
 }
 
 void moveRight () {
+  currentState = RIGHT;
   setMotor(FL_PWM, FL_DIR, motorSpeed, true);
   setMotor(FR_PWM, FR_DIR, motorTurningSpeed, true);
   setMotor(BL_PWM, BL_DIR, motorSpeed, true);
@@ -57,30 +61,35 @@ void moveRight () {
 }
 
 void moveLeft () {
+  currentState = LEFT;
   setMotor(FL_PWM, FL_DIR, motorTurningSpeed, true);
   setMotor(FR_PWM, FR_DIR, motorSpeed, true);
   setMotor(BL_PWM, BL_DIR, motorTurningSpeed, true);
   setMotor(BR_PWM, BR_DIR, motorSpeed, true);
 }
 void turnOnSpotRight () {
+  currentState = TURN_SPOT_RIGHT;
   setMotor(FL_PWM, FL_DIR, motorSpeed, true);
   setMotor(FR_PWM, FR_DIR, motorSpeed, false);
   setMotor(BL_PWM, BL_DIR, motorSpeed, true);
   setMotor(BR_PWM, BR_DIR, motorSpeed, false);
 }
 void turnOnSpotLeft () {
+  currentState = TURN_SPOT_LEFT;
   setMotor(FL_PWM, FL_DIR, motorSpeed, false);
   setMotor(FR_PWM, FR_DIR, motorSpeed, true);
   setMotor(BL_PWM, BL_DIR, motorSpeed, false);
   setMotor(BR_PWM, BR_DIR, motorSpeed, true);
 }
 void crabWalkRight () {
+  currentState = CW_RIGHT;
   setMotor(FL_PWM, FL_DIR, motorSpeed, true);
   setMotor(FR_PWM, FR_DIR, motorSpeed, false);
   setMotor(BL_PWM, BL_DIR, motorSpeed, false);
   setMotor(BR_PWM, BR_DIR, motorSpeed, true);
 }
 void crabWalkLeft () {
+  currentState = CW_LEFT;
   setMotor(FL_PWM, FL_DIR, motorSpeed, false);
   setMotor(FR_PWM, FR_DIR, motorSpeed, true);
   setMotor(BL_PWM, BL_DIR, motorSpeed, true);

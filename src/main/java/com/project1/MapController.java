@@ -9,12 +9,12 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import java.util.ArrayList;
 
+
 public class MapController {
 
     private final Canvas canvas;
     private final GraphicsContext gc;
     private final RobotModel robotModel;
-    private final RobotController robotController;
 
     private final double MAX_PIXELS_PER_SECOND = 50;
     private final double MAX_RADIANS_PER_SECOND = 2 * Math.PI;
@@ -28,10 +28,9 @@ public class MapController {
     private ArrayList<Point2D> positionHistory = new ArrayList<>();
     private Timeline animationLoop;
 
-    public MapController(Canvas canvas, RobotModel model, RobotController controller) {
+    public MapController(Canvas canvas, RobotModel model) {
         this.canvas = canvas;
         this.robotModel = model;
-        this.robotController = controller;
         this.centreX = canvas.getWidth() / 2.0;
         this.centreY = canvas.getHeight() / 2.0;
         this.gc = canvas.getGraphicsContext2D(); // This is the object used to actually draw on the canvas
@@ -88,7 +87,7 @@ public class MapController {
 
     private void updateRobotPosition(double changeInTime) {
         int speed = robotModel.getSpeed();
-        String action = robotController.getCurrentEndpoint();
+        RobotState action = robotModel.getState();
 
         double linearVelocity = MAX_PIXELS_PER_SECOND * (speed / 255.0);
         double angularVelocity = angleMultiplier * MAX_RADIANS_PER_SECOND * (speed / 255.0);
@@ -106,48 +105,57 @@ public class MapController {
         // We can use this idea to tell us how much proportionally we should move horizontally and vertically
 
         switch (action) {
-            case ArduinoEndpoints.FORWARD:
+            case FORWARD:
                 robotX += dist * Math.cos(robotAngle);
-                // We subtract here because the y axis increases as it goes down in canvas (opposite of how you think in normal math)
-                // This is because in canvas the point (0,0) is the top left corner not bottom left like in normal math
-                robotY -= dist * Math.sin(robotAngle); 
+                robotY -= dist * Math.sin(robotAngle);
                 positionHistory.add(new Point2D(robotX, robotY));
                 break;
-            case ArduinoEndpoints.BACKWARD:
+
+            case BACKWARD:
                 robotX -= dist * Math.cos(robotAngle);
                 robotY += dist * Math.sin(robotAngle);
                 positionHistory.add(new Point2D(robotX, robotY));
                 break;
-            case ArduinoEndpoints.LEFT:
+
+            case LEFT:
                 robotAngle += angle;
                 robotX += dist * Math.cos(robotAngle);
                 robotY -= dist * Math.sin(robotAngle);
                 positionHistory.add(new Point2D(robotX, robotY));
                 break;
-            case ArduinoEndpoints.RIGHT:
+
+            case RIGHT:
                 robotAngle -= angle;
                 robotX += dist * Math.cos(robotAngle);
                 robotY -= dist * Math.sin(robotAngle);
                 positionHistory.add(new Point2D(robotX, robotY));
                 break;
-            case ArduinoEndpoints.TURN_ON_SPOT_LEFT:
+
+            case TURN_SPOT_LEFT:
                 robotAngle += angle;
                 break;
-            case ArduinoEndpoints.TURN_ON_SPOT_RIGHT:
+
+            case TURN_SPOT_RIGHT:
                 robotAngle -= angle;
                 break;
-            case ArduinoEndpoints.CRAB_WALK_LEFT:
-                // When crabwalking robot moves perpendicular to its angle, this swaps sin and cos for x and y as sin and cos are perpendicular to eachother 
+
+            case CW_LEFT:
                 robotX -= dist * Math.sin(robotAngle);
                 robotY -= dist * Math.cos(robotAngle);
                 positionHistory.add(new Point2D(robotX, robotY));
                 break;
-            case ArduinoEndpoints.CRAB_WALK_RIGHT:
+
+            case CW_RIGHT:
                 robotX += dist * Math.sin(robotAngle);
                 robotY += dist * Math.cos(robotAngle);
                 positionHistory.add(new Point2D(robotX, robotY));
                 break;
+
+            case STOPPED: break;
+            default:
+                break;
         }
+
     }
 
     private void drawPath() {

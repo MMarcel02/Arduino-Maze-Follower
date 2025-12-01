@@ -33,9 +33,13 @@ int emergencyStopDistance = 20;
 enum RobotState {
   STOPPED, // Compiler assigns this = 0
   FORWARD, // Compiler assigns this = 1
+  BACKWARD,
   LEFT,
   RIGHT,
-  OTHER
+  TURN_SPOT_LEFT,
+  TURN_SPOT_RIGHT,
+  CW_LEFT,
+  CW_RIGHT
 };
 
 // Default at start
