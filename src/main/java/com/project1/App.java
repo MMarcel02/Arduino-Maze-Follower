@@ -9,7 +9,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -17,6 +16,7 @@ import java.io.IOException;
 public class App extends Application {
 
     private static Scene scene;
+    private GUIController controller;
 
     
     // IOException is a java object representing input/output error, so for example if we cant load our GUI.fxml
@@ -34,7 +34,7 @@ public class App extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("GUI.fxml"));
 
         // We set our layout to be 1200 * 600 pixels
-        scene = new Scene(fxmlLoader.load(), 1200, 600);
+        scene = new Scene(fxmlLoader.load(), 1500, 600);
 
         // We load the style sheet for it (just like css in web dev)
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
@@ -43,7 +43,7 @@ public class App extends Application {
         stage.setScene(scene);
 
         // We create the controller so that we can read key inputs
-        GUIController controller = fxmlLoader.getController();
+        controller = fxmlLoader.getController();
         controller.setupInputHandlers(scene);
 
         // // This is just so that when we use the arrow keys it doesnt move focus accross the UI
@@ -53,6 +53,16 @@ public class App extends Application {
         // When launched it should be centered on the screen
         stage.centerOnScreen();
         stage.show();
+    }
+
+    // 
+    @Override
+    public void stop() throws Exception {
+        if (controller != null) {
+            System.out.println("Stopping TCP server");
+            controller.shutdown();
+        }
+        super.stop();
     }
     
     public static void main(String[] args) {

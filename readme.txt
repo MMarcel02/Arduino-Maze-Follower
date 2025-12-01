@@ -1,13 +1,5 @@
 # RobotCar - 
 
-To properly see our efforts its best to try both GUIs as they differ quite a lot from eachother.
-
-### Swing GUI
-For the Swing GUI version, simply need to click on the SwingGui.java file inside src\main\java\com\project1 and
-click the run button (in top right on vs code)
-
----
-
 ### JavaFX GUI
 
 ### Run with Maven

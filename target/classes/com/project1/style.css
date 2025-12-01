@@ -13,8 +13,14 @@ Label {
 
 Button {
     -fx-background-color: #4F1C51;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
     -fx-text-fill: #DCA06D;
     -fx-cursor: hand;
+}
+
+Button:hover {
+    -fx-font-size: 14px;
 }
 
 .buttonIcon {
@@ -32,12 +38,15 @@ ToggleButton {
     -fx-background-color: #4F1C51;
     -fx-font-weight: bold;
     -fx-cursor: hand;
+    -fx-font-size: 14px;
+
 
 }
 
 ToggleButton:selected {
     -fx-text-fill: #4F1C51;
     -fx-background-color: #DCA06D;
+    -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-cursor: hand;
 }
