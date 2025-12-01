@@ -11,11 +11,6 @@ const int SENSOR_SEND_INTERVAL = 100;
 // Timer variable which we cross check with SENSOR_SEND_INTERVAL
 unsigned long lastSensorSendTime = 0;
 
-// Interval (in ms) which determines how often we read ultrasonic sensor
-const int ULTRASONIC_READ_INTERVAL = 60;
-// Timer variable which we cross check with SENSOR_SEND_INTERVAL
-unsigned long lastUltrasonicReadTime = 0;
-
 void setupWifiPins() {
   WiFi.setPins(WINC_CS, WINC_IRQ, WINC_RST, WINC_EN);
 }
@@ -245,19 +240,6 @@ void handleToggleLineFollowing(WiFiClient& client) {
     }
     sendHttpResponse(client, ("Line following set to " + boolToString(followingLine))); 
 }   
-
-void updateSensors() {
-  // Read IR every cycle (for proper line following)
-  readIRSensors();
-
-  // We need to wait for the previous Ultrasonic waves to clear the area before reading again to get cleaner data
-  unsigned long currentMillis = millis();
-  // We check if 60ms has elapsed yet, if it has we send a packet with data
-  if (currentMillis - lastUltrasonicReadTime >= ULTRASONIC_READ_INTERVAL) {
-    readUltrasonicSensor();
-    lastUltrasonicReadTime = currentMillis;
-  }
-}
 
 // We check for a http connection (one everytime we send a command e.g. /forward)
 void handleHTTPCommands() {
