@@ -222,7 +222,7 @@
                         <Insets top="15.0" />
                      </VBox.margin>
                   </Label>
-                  <Slider fx:id="canvasRotationSlider" blockIncrement="0.01" majorTickUnit="0.5" max="1.0" minorTickCount="0" prefHeight="33.0" prefWidth="275.0" showTickLabels="true" value="0.37">
+                  <Slider fx:id="canvasRotationSlider" blockIncrement="0.01" majorTickUnit="0.5" max="5.0" minorTickCount="0" prefHeight="33.0" prefWidth="275.0" showTickLabels="true" value="0.37">
                      <VBox.margin>
                         <Insets top="5.0" />
                      </VBox.margin>

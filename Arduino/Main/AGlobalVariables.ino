@@ -52,3 +52,11 @@ double dampening = 1.0;
 // Time it keeps turning after it stopped seeing a line
 int lineMemoryLatency = 150;
 
+
+// Ultrasonic
+float duration, distance;  
+
+// IR
+int leftReading, rightReading;
+
+
