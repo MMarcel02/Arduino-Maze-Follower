@@ -292,5 +292,7 @@ void manageRobotState() {
     checkEmergencyStop();
   } else if (followingLine) {
     pdLineFollow();
+    // or stopTurnLineFollow();
+    // to test the stop turn line following please
   }
 }
