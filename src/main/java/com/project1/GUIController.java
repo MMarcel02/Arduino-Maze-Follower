@@ -282,8 +282,7 @@ public class GUIController {
             ultraSonic.setText("Ultrasonic: " + parseDistance(parts[0]));
             irLeft.setText("IR Left: " + parseToColour(parts[1]));
             irRight.setText("IR Right: " + parseToColour(parts[2]));
-            parseState(parts[3], model);
-            currentStateLabel.setText("Current State: ");
+            currentStateLabel.setText("Current State: " + parseState(parts[3], model));
         }
 
         double displayX = (mapController.getX() - canvas.getWidth()/2);
@@ -294,16 +293,30 @@ public class GUIController {
         angleLabel.setText(String.format("Angle: %.1f°", mapController.getAngleDegrees()));
     }
 
-    private void parseState(String stateEnum, RobotModel model) {
-        int index = Integer.parseInt(stateEnum);
+    private String parseState(String stateEnum, RobotModel model) {
+        int state = Integer.parseInt(stateEnum);
 
-        if (index < 0 || index >= RobotState.values().length) {
+        if (state < 0 || state >= RobotState.values().length) {
             System.out.println("Invalid state received: " + stateEnum);
-            return;
+            return "";
         }
 
-        RobotState newState = RobotState.values()[index];
+        RobotState newState = RobotState.values()[state];
         model.setState(newState);
+        
+        switch (state) {
+            case 0: return "STOPPED";
+            case 1: return "FORWARD";
+            case 2: return "BACKWARD";
+            case 3: return "LEFT";
+            case 4: return "RIGHT";
+            case 5: return "TURN_SPOT_LEFT";
+            case 6: return "TURN_SPOT_RIGHT";
+            case 7: return "CW_LEFT";
+            case 8: return "CW_RIGHT";
+            default: return "UNKNOWN";
+        }
+    
     }
 
     private String parseDistance(String dist) {

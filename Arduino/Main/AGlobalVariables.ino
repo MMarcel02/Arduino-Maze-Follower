@@ -45,6 +45,13 @@ enum RobotState {
 // Default at start
 RobotState currentState = STOPPED;
 
+
+// --- Variables ---
+int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
+int motorTurningSpeed = motorSpeed - 20;
+// Motor speed passed down from GUI
+int motorSpeedOutsideLineFollow = motorSpeed;
+
 // For PDL algorithm
 double sensitivity = 5.0;
 double dampening = 1.0;
@@ -52,11 +59,9 @@ double dampening = 1.0;
 // Time it keeps turning after it stopped seeing a line
 int lineMemoryLatency = 150;
 
-
 // Ultrasonic
 float duration, distance;  
 
 // IR
 int leftReading, rightReading;
-
 

@@ -278,9 +278,11 @@ void handleTCPData() {
 
 void manageRobotState() {
   // Should only stop IF we're trying to move generally forward, otherwise it will block when we try to reverse or rotate
-  if (emergencyStop && (currentState == FORWARD)) { 
+  if (emergencyStop) { 
     checkEmergencyStop();
-  } else if (followingLine) {
+  } 
+  
+  if (followingLine) {
     bangLineFollow();
   }
 }
