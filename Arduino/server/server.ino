@@ -1,3 +1,4 @@
+#include <SPI.h>
 #include <WiFi101.h>
 #include "hardware.h"
 #include "states.h"
@@ -8,7 +9,7 @@
 // Feather M0 WiFi (WINC1500) pins
 const int WINC_CS  = 8, WINC_IRQ = 7, WINC_RST = 4, WINC_EN = 2;
 
-const char ssid[] = "FeatherAP";
+const char ssid[] = "come to 301 free weed";
 const char pass[] = "test1234";     // >= 8 chars for WPA2
 WiFiServer server(80);
 
@@ -18,10 +19,14 @@ String ipToString(const IPAddress& ip) {
 }
 
 void setup() {
+  WiFi.setPins(WINC_CS, WINC_IRQ, WINC_RST, WINC_EN);
+  
   Serial.begin(115200);
   // DO NOT block on while(!Serial); we want it to run even without a PC attached
 
-  WiFi.setPins(WINC_CS, WINC_IRQ, WINC_RST, WINC_EN);
+  // by default the local IP address of will be 192.168.1.1
+  // you can override it with the following:
+  // WiFi.config(IPAddress(10, 0, 0, 1));
 
   if (WiFi.status() == WL_NO_SHIELD) {
     Serial.println("WINC1500 not detected"); while (1) {}
@@ -49,8 +54,8 @@ void setup() {
   // Stop all motors initially
   stopAllMotors();
 
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
+  //pinMode(trigPin, OUTPUT);
+  //pinMode(echoPin, INPUT);
 }
 
 void serve(WiFiClient& c){
@@ -64,6 +69,9 @@ void serve(WiFiClient& c){
 }
 void route(WiFiClient& c, const String& path, const String& q) {
     if (path == "/" || path == "") { handleRoot(c); return; }
+    
+    if (path == F("/linefollowPD")) { handleChangeState(c, &PD_LINE_FOLLOW_STATE, "PD Line Follow State"); return; }
+    if (path == F("/linefollowBangBang")) { handleChangeState(c, &LINE_FOLLOW_STATE, "Bang Bang Line Follow State"); return; }
     
     // below are movement functions, for which we force the state
     // to become the ManualControlState.
@@ -102,6 +110,11 @@ void sendHttpResponse(WiFiClient& client, const String& body) {
     client.print(F("Content-Length: ")); client.print(body.length()); client.print("\r\n\r\n");
     client.print(body);
     delay(1);
+}
+
+void handleChangeState(WiFiClient& client, RobotState* state, const String& stateName) {
+  changeState(state, client);
+  sendHttpResponse(client, "Changed state to: " + stateName);
 }
 
 void handleRoot(WiFiClient& client) {
@@ -175,6 +188,7 @@ void handleDistance(WiFiClient& client) {
 void loop() {
   WiFiClient client = server.available();
   if (!client) return;
+  Serial.print(client);
 
   client.setTimeout(2000); // 2s read timeout
   serve(client);

@@ -52,6 +52,11 @@ public class SwingGui {
     //Label for the top
     JLabel movementLabel = new JLabel("Movement Buttons",JLabel.CENTER);
     movementLabel.setFont(new Font ("Arial",Font.BOLD,16));
+
+    // label for distance
+    JLabel distanceLabel = new JLabel("Distance: -- cm", JLabel.CENTER);
+    distanceLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
     
     // Instructions
     String[] columnNames = {"Key / Button", "Action"};
@@ -255,6 +260,26 @@ public class SwingGui {
     gbc.anchor = GridBagConstraints.NORTH;
     gbc.weighty = 0.0;
     frame.add(scrollPane, gbc);
+
+    distanceLabel.setText("Distance: -- cm");
+    distanceLabel.setHorizontalAlignment(JLabel.CENTER);
+    distanceLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+    // Position the distance label
+    gbc.gridx = 0;
+    gbc.gridy = 10;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    frame.add(distanceLabel, gbc);
+
+    new javax.swing.Timer(500, e -> {
+    try {
+        HttpResponse<String> res = arduClient.send("/distance");
+        String body = res.body();   // such as "distance: 5cm"
+        distanceLabel.setText(body);
+    } catch (Exception ex) {
+        distanceLabel.setText("Distance: ERROR");
+    }
+    }).start();
 
     // Key bindings
     InputMap inputMap = frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);

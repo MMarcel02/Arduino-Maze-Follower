@@ -5,12 +5,14 @@
 int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
 int motorTurningSpeed = motorSpeed - 20;
 char lastMotionCmd = 'x';      // Stores the last direction command (e.g., 'f' for forward)
+bool leftLine = false , rightLine = false; // Stores the current state of each sensor
 
 float getDistanceCM() {
   long duration;
   float distance;
   
   digitalWrite(trigPin, LOW);
+  delayMicroseconds(10);
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
@@ -33,11 +35,29 @@ String getIRoutput() {
   return IRdata;
 }
 
+// --- Function to repeatedly update the sensors ---
+void updateLineSensors (){
+    int leftDigital = digitalRead(IR_Left_Digital);
+    int rightDigital = digitalRead(IR_Right_Digital);
+
+    // LOW means black 
+    // The variables become true if the sensor is on the line
+    leftLine = (leftDigital == LOW);
+    rightLine = (rightDigital == LOW);
+}
+
 // --- Function to Drive a Motor ---
 // 'speed' determines how fast, 'forward' determines direction
 void setMotor(int pwm, int dir, int speed, bool forward) {
   digitalWrite(dir, forward ? HIGH : LOW);  // Set direction
   analogWrite(pwm, speed);                  // Set speed using PWM
+}
+
+// --- Function to drive a Motor ---
+// this overload allows for negative speed to decide direction
+void setMotor(int pwm, int dir, int speed) {
+  digitalWrite(dir, (speed >= 0) ? HIGH : LOW);
+  analogWrite(pwm, abs(speed));
 }
 
 // --- Setup Function for Each Motor ---
