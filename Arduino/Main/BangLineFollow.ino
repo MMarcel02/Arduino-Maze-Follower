@@ -12,19 +12,15 @@ void bangLineFollow() {
     //Left Turn
     else if (leftReading == 1 && rightReading == 0) {
         setSpeed(250);
-        while (rightReading == 0 && leftReading == 1) { 
-             turnOnSpotLeft();
-             readIRSensors();
-        }
+        turnOnSpotLeft();
+        
         previousDir = -1;
     }
     //Right Turn
     else if (leftReading == 0 && rightReading == 1){
         setSpeed(250); 
-        while (leftReading == 0 && rightReading == 1) { 
-             turnOnSpotRight();
-             readIRSensors();
-        }
+        turnOnSpotRight();
+        
         previousDir = 1;
     }
 
