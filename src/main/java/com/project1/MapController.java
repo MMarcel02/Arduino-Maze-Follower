@@ -14,7 +14,7 @@ public class MapController {
 
     private final Canvas canvas;
     private final GraphicsContext gc;
-    private final RobotModel robotModel;
+    private final RobotModel model;
 
     private final double MAX_PIXELS_PER_SECOND = 50;
     private final double MAX_RADIANS_PER_SECOND = 2 * Math.PI;
@@ -30,7 +30,7 @@ public class MapController {
 
     public MapController(Canvas canvas, RobotModel model) {
         this.canvas = canvas;
-        this.robotModel = model;
+        this.model = model;
         this.centreX = canvas.getWidth() / 2.0;
         this.centreY = canvas.getHeight() / 2.0;
         this.gc = canvas.getGraphicsContext2D(); // This is the object used to actually draw on the canvas
@@ -86,8 +86,16 @@ public class MapController {
     }
 
     private void updateRobotPosition(double changeInTime) {
-        int speed = robotModel.getSpeed();
-        RobotState action = robotModel.getState();
+        RobotState action = model.getState();
+        boolean isFollowingLine = model.getFollowingLineStatus();
+        int speed;
+        
+        // Im bang-bang when we turn we use maximum speed, otherwise we use the current motorspeed
+        if (isFollowingLine && (action == RobotState.TURN_SPOT_LEFT || action == RobotState.TURN_SPOT_RIGHT)) {
+            speed = 255;
+        } else {
+            speed = model.getSpeed();
+        }
 
         double linearVelocity = MAX_PIXELS_PER_SECOND * (speed / 255.0);
         double angularVelocity = angleMultiplier * MAX_RADIANS_PER_SECOND * (speed / 255.0);

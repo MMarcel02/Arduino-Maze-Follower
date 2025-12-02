@@ -41,6 +41,7 @@ public class RobotController {
     
     public void toggleLineFollowing() {
         sendRequest(ArduinoEndpoints.TOGGLE_LINE_FOLLOWING);
+        model.toggleLineFollowing();
     }
 
     public void stop() {

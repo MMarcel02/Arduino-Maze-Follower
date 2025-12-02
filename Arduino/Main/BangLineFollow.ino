@@ -1,35 +1,34 @@
 
 int previousDir ;
 
-void bangLineFollow() {
-  readIRSensors();
 
+void bangLineFollow() {
+    //If doesn't see black at all we assume we are following the line so we go forward
     if (leftReading == 0 && rightReading == 0){
-        setSpeed(85);
+        setLineFollowingSpeed(motorSpeedOutsideLineFollow);
         moveForward();
     }
 
-    //Left Turn
+    //Detect on left so turn left
     else if (leftReading == 1 && rightReading == 0) {
-        setSpeed(250);
+        setLineFollowingSpeed(255);
         turnOnSpotLeft();
-        
         previousDir = -1;
     }
-    //Right Turn
+    //Detect on right so turn right
     else if (leftReading == 0 && rightReading == 1){
-        setSpeed(250); 
+        setLineFollowingSpeed(255); 
         turnOnSpotRight();
-        
         previousDir = 1;
     }
 
+    //Detect on both so lets use last direction we were headed in (probably on a 90 degree turn)
     else if (leftReading == 1 && rightReading == 1) {
          if (previousDir == -1) {
-             setSpeed(250);
+             setLineFollowingSpeed(255);
              turnOnSpotLeft();
          } else {
-             setSpeed(250);
+             setLineFollowingSpeed(255);
              turnOnSpotRight();
          }
     }

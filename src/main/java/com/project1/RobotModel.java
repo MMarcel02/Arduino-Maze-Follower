@@ -9,7 +9,7 @@ public class RobotModel {
     private double dampening = 1.0;
     private int emergencyStopDistance = 20;
     private RobotState state = RobotState.STOPPED;
-
+    private boolean followingLine = false;
 
 
     public int getSpeed() { return speed; }
@@ -36,4 +36,12 @@ public class RobotModel {
         this.state = state;
     }
     public RobotState getState() {return state;}
+
+    public void toggleLineFollowing() {
+        followingLine = !followingLine;
+    }
+
+    public boolean getFollowingLineStatus() {
+        return followingLine;
+    }
 }
