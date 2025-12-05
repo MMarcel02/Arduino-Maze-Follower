@@ -7,7 +7,7 @@ WiFiServer httpServer(80);
 WiFiServer tcpServer(8080);
 
 // Interval (in ms) which determines how often we send sensor data
-const int SENSOR_SEND_INTERVAL = 60;
+const int SENSOR_SEND_INTERVAL = 50;
 // Timer variable which we cross check with SENSOR_SEND_INTERVAL
 unsigned long lastSensorSendTime = 0;
 

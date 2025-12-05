@@ -18,8 +18,13 @@ public class MapController {
 
     private final double MAX_PIXELS_PER_SECOND = 50;
     private final double MAX_RADIANS_PER_SECOND = 2 * Math.PI;
+
+    // We define the (x,y) coordinates of each of the points of the arrow
+    // Apparently default in graphics to be pointing right along x axis
+    private final double[] arrowXPoints = {6, -6, -6};
+    private final double[] arrowYPoints = {0, -4, 4};
     
-    private double angleMultiplier = 0.37;
+    private double angleMultiplier = 1.5;
     private double robotX;
     private double robotY;
     private double robotAngle;
@@ -172,7 +177,7 @@ public class MapController {
         gc.setStroke(Color.valueOf("#4F1C51"));
         gc.setLineWidth(2);
 
-        // Only draw if we have at least 2 points
+        // Only draw if we have at least 2 points, thats why we start from i = 1
         for (int i = 1; i < positionHistory.size(); i++) {
             Point2D p1 = positionHistory.get(i - 1);
             Point2D p2 = positionHistory.get(i);
@@ -181,14 +186,8 @@ public class MapController {
     }
 
     private void drawArrow() {
-        // Size of arrow
-        double arrowLength = 6;
-        double arrowBaseWidth = 4;
+        
 
-        // We define the (x,y) coordinates of each of the points of the arrow
-        // Apparently default in graphics to be pointing right along x axis
-        double[] xPoints = {arrowLength, -arrowLength, -arrowLength};
-        double[] yPoints = { 0, -arrowBaseWidth, arrowBaseWidth};
 
         gc.save();
         
@@ -205,7 +204,7 @@ public class MapController {
         gc.setFill(Color.valueOf("#210F37"));
 
         // Draw the arrow on the translated and rotated canvas
-        gc.fillPolygon(xPoints, yPoints, 3);
+        gc.fillPolygon(arrowXPoints, arrowYPoints, 3);
         
         // Bring canvas back to original state 
         gc.restore();

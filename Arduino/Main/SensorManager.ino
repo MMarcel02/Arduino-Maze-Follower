@@ -29,6 +29,7 @@ void readUltrasonicSensor() {
   // Time out after 5000 gives us a distance of about 80cm
   duration = pulseIn(ECHO_PIN, HIGH, 5000);  
 
+  // 0.343 speed of sound in centimeters per microsecond
   distance = (duration*.0343)/2; 
 }
 
@@ -66,9 +67,7 @@ void updateSensors() {
   }
 }
 
-
-
 String buildSensorMessage() {
-  return String(distance, 2) + "," + String(leftReading) + "," + String(rightReading);;
+  return String(distance, 2) + "," + String(leftReading) + "," + String(rightReading);
 }
 
