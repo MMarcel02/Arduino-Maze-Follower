@@ -12,11 +12,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import com.project1.view.DashboardView;
+
 // extends means that our App inherits all the methods from the JavaFx premade Application class
 public class App extends Application {
 
     private static Scene scene;
-    private GUIController controller;
+    private DashboardView controller;
 
     
     // IOException is a java object representing input/output error, so for example if we cant load our GUI.fxml

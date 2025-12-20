@@ -30,7 +30,7 @@ bool followingLine = false;
 int emergencyStopDistance = 20;
 
 // enum assigns numbers to these words (less mistakes than using strings (typos) and easier and faster to compare numbers) 
-enum RobotState {
+enum RobotMovementState {
   STOPPED, // Compiler assigns this = 0
   FORWARD, // Compiler assigns this = 1
   BACKWARD,
@@ -43,7 +43,7 @@ enum RobotState {
 };
 
 // Default at start
-RobotState currentState = STOPPED;
+RobotMovementState currentState = STOPPED;
 
 
 // --- Variables ---

@@ -1,9 +1,18 @@
-package com.project1;
+package com.project1.view;
 
 import java.net.http.HttpResponse;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Set;
+
+import com.project1.controller.InputHandler;
+import com.project1.controller.RobotController;
+import com.project1.model.RobotControlState;
+import com.project1.model.RobotModel;
+import com.project1.model.RobotMovementState;
+import com.project1.services.ArduinoHTTPClient;
+import com.project1.services.ArduinoTCPClient;
+import com.project1.services.MapPhysics;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,23 +26,24 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 
-public class GUIController {
+public class DashboardView {
 
     // Helping controllers
     private final RobotModel robotModel = new RobotModel();
     private final InputHandler inputHandler = new InputHandler();
     private RobotController robotController;
-    private MapController mapController;
+    private MapPhysics mapPhysics;
+    private MapView mapView;
     
     // Networking
     private ArduinoHTTPClient httpClient = new ArduinoHTTPClient();
     private ArduinoTCPClient tcpClient;
-
     
     @FXML private Canvas canvas;
     @FXML private TextArea logArea;
-    @FXML private Label activeInputsLabel, speedLabel, xLabel, yLabel, angleLabel, currentStateLabel;
+    @FXML private Label activeInputsLabel, speedLabel, xLabel, yLabel, angleLabel, currentMovementStateLabel, currentControlStateLabel;
     @FXML private Label irLeft, irRight, ultraSonic;
     @FXML private Slider speedSlider, canvasRotationSlider, emergencyStopSlider, sensitivitySlider, dampeningSlider;
     @FXML private Button clearMapButton, solveMaze, lostRobot, dragRace;
@@ -43,43 +53,23 @@ public class GUIController {
     @FXML private Button parkingInBox, reverseCorner, reverseStraight, threePointTurn, uTurn, extraSpace;
 
 
-    @FXML
-    void bigDecreaseSpeed(MouseEvent event) { 
-        robotModel.updateSpeed(-20);
-        updateSpeedLabel();    
-    }
+    @FXML void bigDecreaseSpeed(MouseEvent e) { robotController.setSpeed(robotModel.getSpeed() - 20); }
+    @FXML void bigIncreaseSpeed(MouseEvent e) { robotController.setSpeed(robotModel.getSpeed() + 20); }
+    @FXML void smallDecreaseSpeed(MouseEvent e) { robotController.setSpeed(robotModel.getSpeed() - 5); }
+    @FXML void smallIncreaseSpeed(MouseEvent e) { robotController.setSpeed(robotModel.getSpeed() + 5); }
+    @FXML void stopSpeed(MouseEvent e) { robotController.stop(); }
+
+    @FXML void clearMap(MouseEvent e) { mapView.clear(); }
+    @FXML void toggleEmergencyStop(ActionEvent event) { robotController.toggleEmergencyStop(); }
 
     @FXML
-    void bigIncreaseSpeed(MouseEvent event) {
-        robotModel.updateSpeed(20);
-        updateSpeedLabel();
+    void toggleLineFollowing(ActionEvent event) {
+        if (robotModel.getControlState() == RobotControlState.MANUAL) {
+            robotController.setControlState(RobotControlState.LINE_FOLLOW_BANGBANG);
+        } else {
+            robotController.setControlState(RobotControlState.MANUAL);
+        }
     }
-    
-    @FXML
-    void smallDecreaseSpeed(MouseEvent event) {
-        robotModel.updateSpeed(-5);
-        updateSpeedLabel();
-    }
-
-    @FXML
-    void smallIncreaseSpeed(MouseEvent event) {
-        robotModel.updateSpeed(5);
-        updateSpeedLabel();
-    }
-
-    @FXML
-    void stopSpeed(MouseEvent event) {
-        robotController.stop();
-    }
-
-    @FXML 
-    void clearMap(MouseEvent event) {mapController.resetMap();}
-    
-    @FXML
-    void toggleEmergencyStop(ActionEvent event) {robotController.toggleEmergencyStop();}
-
-    @FXML
-    void toggleLineFollowing(ActionEvent event) {robotController.toggleLineFollowing();}
 
     // For Phase 3
     @FXML
@@ -128,82 +118,82 @@ public class GUIController {
     @FXML
     public void initialize() {
         robotController = new RobotController(httpClient, this::logToTextArea, robotModel);
-        mapController = new MapController(canvas, robotModel);
+        mapPhysics = new MapPhysics(robotModel);
+        mapView = new MapView(canvas, robotModel);
 
+        setupBindings();
         setupSliders();
+        mapPhysics.start();
+
         
         tcpClient = new ArduinoTCPClient(data -> {
             Platform.runLater(() -> {
-                updateLabels(data, robotModel);
+                updateModelWithTCPData(data, robotModel);
             });
         });
-
+        
         tcpClient.connect();
+    }
 
+    private void setupBindings() {
+        
+        speedLabel.textProperty().bind(Bindings.concat("Speed: ", robotModel.speedProperty()));
+        
+        // Map
+        xLabel.textProperty().bind(Bindings.format("X: %.1f", robotModel.xProperty()));
+        yLabel.textProperty().bind(Bindings.format("Y: %.1f", robotModel.yProperty()));
+        angleLabel.textProperty().bind(Bindings.format("Angle: %.2f rad", robotModel.angleProperty()));
+
+        // Sensors
+        irLeft.textProperty().bind(Bindings.concat("IR Left: ", robotModel.leftIRProperty()));
+        irRight.textProperty().bind(Bindings.concat("IR Right: ", robotModel.rightIRProperty()));
+        ultraSonic.textProperty().bind(Bindings.concat("Ultrasonic: ", robotModel.ultrasonicProperty()));
+
+        // States
+        emergencyStopToggle.selectedProperty().bindBidirectional(robotModel.emergencyStopEnabledProperty());
+        currentMovementStateLabel.textProperty().bind(Bindings.concat("Movement State: ", robotModel.movementStateProperty()));
+        currentControlStateLabel.textProperty().bind(Bindings.concat("Control Mode: ", robotModel.controlStateProperty()));
     }
     
     private void setupSliders() {
 
-        // Listener fires when dragging starts or stops
-        // Speed is only sent to the robot once drag is released, to avoid spamming requests  
-        speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {                
-            robotModel.setSpeed((int) speedSlider.getValue());
-            updateSpeedLabel();    
-            if (!speedSlider.isValueChanging()) {
-                robotController.applySpeed();
-            }
-        });
-
-        // Listener fires when dragging starts or stops
+        // Listener fires when dragging stops, this sends HTTP req
         speedSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
             if (!isChanging) {
-                robotController.applySpeed();
+                robotController.setSpeed((int) speedSlider.getValue());
             }
         });
 
+        // Map
         canvasRotationSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            mapController.setAngleMultiplier(canvasRotationSlider.getValue());  
-        });
-
-        emergencyStopSlider.valueProperty().addListener((obs, oldVal, newVal) -> {                
-            if (!emergencyStopSlider.isValueChanging()) {
-                robotModel.setEmergencyStopDistance((int) emergencyStopSlider.getValue());
-                robotController.applyEmergencyStopDistUpdate();
-            }
+            robotModel.setAngleMultiplier(newVal.doubleValue());  
         });
 
         emergencyStopSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
             if (!isChanging) {
-                robotModel.setEmergencyStopDistance((int) emergencyStopSlider.getValue());
-                robotController.applyEmergencyStopDistUpdate();
-            }
-        });
-
-        sensitivitySlider.valueProperty().addListener((obs, oldVal, newVal) -> {                
-            robotModel.setSensitivity(Math.round(sensitivitySlider.getValue() * 10) / 10.0);
-            if (!sensitivitySlider.isValueChanging()) {
-                robotController.applySensitivity();
+                robotController.setEmergencyStopDistance((int) emergencyStopSlider.getValue());
             }
         });
 
         sensitivitySlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
             if (!isChanging) {
-                robotController.applySensitivity();
-            }
-        });
-
-        dampeningSlider.valueProperty().addListener((obs, oldVal, newVal) -> {                
-            robotModel.setDampening(Math.round(dampeningSlider.getValue() * 10) / 10.0);
-            if (!dampeningSlider.isValueChanging()) {
-                robotController.applyDampening();
+                robotController.setSensitivity(sensitivitySlider.getValue());
             }
         });
 
         dampeningSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
             if (!isChanging) {
-                robotController.applyDampening();
+                robotController.setDampening(dampeningSlider.getValue());
             }
         });
+
+
+        // Make sliders equal to default values
+        speedSlider.setValue(robotModel.getSpeed());
+        canvasRotationSlider.setValue(robotModel.getAngleMultiplier());
+        sensitivitySlider.setValue(robotModel.getSensitivity());
+        dampeningSlider.setValue(robotModel.getDampening());
+        emergencyStopSlider.setValue(robotModel.getEmergencyStopDistance());
     }
 
 
@@ -218,15 +208,12 @@ public class GUIController {
         return null;
     }
 
-
-
     private void logToTextArea(String message) {
         String timestamp = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
         logArea.appendText("[" + timestamp + "] " + message + "\n");     
     }
     
     public void setupInputHandlers(Scene scene){
-        // Key events are attached at Scene level so 
         scene.setOnKeyPressed(event -> {
             String key = event.getCode().toString();
             if (inputHandler.addKey(key)) {
@@ -259,80 +246,34 @@ public class GUIController {
     }
 
     public void shutdown() {
-        if (tcpClient != null) {
-            tcpClient.disconnect();
+        if (tcpClient == null) return;
+        tcpClient.disconnect();
+    }
+
+    private void updateModelWithTCPData(String tcpData, RobotModel robotModel) {
+        if (tcpData == null || tcpData.isEmpty()) return;
+
+        try {
+            String[] parts = tcpData.split(",");
+            if (parts.length >= 4) {
+                robotModel.setSensorData(
+                    parseDistance(parts[0]), 
+                    parseToColour(parts[1]), 
+                    parseToColour(parts[2])
+                );
+                robotModel.setMovementState(RobotMovementState.values()[Integer.parseInt(parts[3])]);
+            }
+        } catch (Exception e) {
+            logToTextArea("Error parsing TCP: " + tcpData);
         }
     }
 
-    private void updateSpeedLabel() {
-        speedLabel.setText("Speed: " + robotModel.getSpeed());
-        speedSlider.setValue(robotModel.getSpeed());
+    private String parseDistance(String distance) {
+        return distance.equals("0.00") ? "Out Of Range" : distance + " cm";
     }
 
-    private void updateLabels(String tcpData, RobotModel model) {
-        // Since TCP can be lossy we need to check if we actually got the data
-        if (tcpData == null || tcpData.isEmpty()) {
-            return;
-        }
-
-        
-        String[] parts = tcpData.split(",");
-        if (parts.length == 4) {
-            
-            ultraSonic.setText("Ultrasonic: " + parseDistance(parts[0]));
-            irLeft.setText("IR Left: " + parseToColour(parts[1]));
-            irRight.setText("IR Right: " + parseToColour(parts[2]));
-            currentStateLabel.setText("Current State: " + parseState(parts[3], model));
-        }
-
-        double displayX = (mapController.getX() - canvas.getWidth()/2);
-        double displayY = -(mapController.getY() - canvas.getHeight()/2);
-        
-        xLabel.setText("X: " + (int)displayX);
-        yLabel.setText("Y: " + (int)displayY);
-        angleLabel.setText(String.format("Angle: %.1f°", mapController.getAngleDegrees()));
-    }
-
-    private String parseState(String stateEnum, RobotModel model) {
-        int state = Integer.parseInt(stateEnum);
-
-        if (state < 0 || state >= RobotState.values().length) {
-            System.out.println("Invalid state received: " + stateEnum);
-            return "";
-        }
-
-        RobotState newState = RobotState.values()[state];
-        model.setState(newState);
-        
-        switch (state) {
-            case 0: return "STOPPED";
-            case 1: return "FORWARD";
-            case 2: return "BACKWARD";
-            case 3: return "LEFT";
-            case 4: return "RIGHT";
-            case 5: return "TURN_SPOT_LEFT";
-            case 6: return "TURN_SPOT_RIGHT";
-            case 7: return "CW_LEFT";
-            case 8: return "CW_RIGHT";
-            default: return "UNKNOWN";
-        }
-    
-    }
-
-    private String parseDistance(String dist) {
-        if (dist.equals("0.00")) {
-            return "Out Of Range";
-        } else {
-            return dist + " cm";
-        }
-    }
-
-    private String parseToColour(String str) {
-        if (str.equals("1")) {
-            return "BLACK";
-        } else {
-            return "WHITE";
-        }
+    private String parseToColour(String colour) {
+        return colour.equals("1") ? "BLACK" : "WHITE";
     }
 }
 

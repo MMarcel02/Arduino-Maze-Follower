@@ -1,4 +1,4 @@
-package com.project1;
+package com.project1.services;
 
 
 public final class ArduinoEndpoints {

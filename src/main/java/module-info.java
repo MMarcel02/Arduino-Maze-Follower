@@ -4,6 +4,6 @@ module com.project1 {
     requires java.net.http;
     requires java.desktop;
 
-    opens com.project1 to javafx.fxml;
+    opens com.project1.view to javafx.fxml;
     exports com.project1;
 }

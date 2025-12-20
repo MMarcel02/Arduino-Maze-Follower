@@ -10,7 +10,7 @@ void stopAllMotors();
 void setupUltraSonicSensor();
 void setupIRSensors();
 void updateSensors();
-void manageRobotState();
+void manageRobotMovementState();
 void handleHTTPCommands();
 void handleTCPData();
 
@@ -34,7 +34,7 @@ void loop() {
   updateSensors();
 
   // Checks for emergency stop / line following
-  manageRobotState();
+  manageRobotMovementState();
 
   // Checks if received a new HTTP command, e.g. /forward
   handleHTTPCommands();

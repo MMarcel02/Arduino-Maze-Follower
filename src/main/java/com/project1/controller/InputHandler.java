@@ -1,11 +1,11 @@
-package com.project1;
+package com.project1.controller;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class InputHandler {
     
-    // A HashSet prevents duplicate keys (e.g., can't have "W" twice)
+    // A HashSet prevents duplicate keys (e.g. can't have "W" twice if clicking in GUI and pressing on keyboard)
     private final Set<String> activeInputs = new HashSet<>();
 
     public boolean addKey(String key) {

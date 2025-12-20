@@ -276,7 +276,7 @@ void handleTCPData() {
   }
 }
 
-void manageRobotState() {
+void manageRobotMovementState() {
   // Should only stop IF we're trying to move generally forward, otherwise it will block when we try to reverse or rotate
   if (emergencyStop) { 
     checkEmergencyStop();

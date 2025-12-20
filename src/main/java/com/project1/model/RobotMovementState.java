@@ -1,6 +1,6 @@
-package com.project1;
+package com.project1.model;
 
-public enum RobotState {
+public enum RobotMovementState {
     STOPPED,
     FORWARD,
     BACKWARD,

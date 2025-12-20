@@ -1,4 +1,4 @@
-package com.project1;
+package com.project1.services;
 
 import java.net.URI;
 import java.net.http.HttpClient;
