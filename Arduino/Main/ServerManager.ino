@@ -300,6 +300,6 @@ void manageRobotMovementState() {
     checkEmergencyStop();   
   }
   if (currentControlState == LINE_FOLLOW_BANGBANG) {
-    runLineFollowBangBang();
+    bangLineFollow();
   }
 }
