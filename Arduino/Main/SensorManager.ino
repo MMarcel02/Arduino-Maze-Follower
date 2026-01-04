@@ -37,7 +37,7 @@ void checkEmergencyStop() {
   // we check for more than 0 because it displays 0 if it times out
   if (0 < distance && distance < emergencyStopDistance) {
     stopAllMotors();
-    currentState = STOPPED;
+    currentMovementState = STOPPED;
   }
 }
 

@@ -98,8 +98,21 @@ void route(WiFiClient& c, const String& path, const String& q) {
     if (path == "/stop") { handleStop(c); return; }
     if (path == "/crabWalkLeft") { handleCrabWalkLeft(c); return; }
     if (path == "/crabWalkRight") { handleCrabWalkRight(c); return; }
+
     if (path == "/toggleEmergencyStop") { handleToggleEmergencyStop(c); return; }
-    if (path == "/toggleLineFollowing") { handleToggleLineFollowing(c); return; }
+
+    if (path == "/lineFollowBangBang") { handleLineFollowBangBang(c); return; }
+    if (path == "/lineFollowPD") { handleLineFollowPD(c); return; }
+
+    if (path == "/solveMaze1") { handleSolveMaze1(c); return; }
+    if (path == "/solveMaze2") { handleSolveMaze2(c); return; }
+    if (path == "/lostRobot") { handleLostRobot(c); return; }
+
+    if (path == "/reverseStraight") { handleReverseStraight(c); return; }
+    if (path == "/reverseCorner") { handleReverseCorner(c); return; }
+    if (path == "/threePointTurn") { handleThreePointTurn(c); return; }
+    if (path == "/uTurn") { handleUTurn(c); return; }
+    if (path == "/parkingInBox") { handleParkingInBox(c); return; }
 
     // when we change speed we pass down /setSpeed?s=(some value 0-255)
     if (path.startsWith("/setSpeed")) {
@@ -153,46 +166,55 @@ void handleRoot(WiFiClient& client) {
 }
 
 void handleForward(WiFiClient& client) {
+    currentControlState = MANUAL;
     moveForward();
     sendHttpResponse(client, "Moved Forward");
 }
 
 void handleBackward(WiFiClient& client) {
+    currentControlState = MANUAL;
     moveBackward();
     sendHttpResponse(client, "Moved Backward");
 }
 
 void handleTurnOnSpotRight(WiFiClient& client) {
+    currentControlState = MANUAL;
     turnOnSpotRight();
     sendHttpResponse(client, "Turned Right on Spot");
 }
 
 void handleTurnOnSpotLeft(WiFiClient& client) {
+    currentControlState = MANUAL;
     turnOnSpotLeft();
     sendHttpResponse(client, "Turned Left on Spot");
 }
 
 void handleLeft(WiFiClient& client) {
+    currentControlState = MANUAL;
     moveLeft();
     sendHttpResponse(client, "Moved Left");
 }
 
 void handleRight(WiFiClient& client) {
+    currentControlState = MANUAL;
     moveRight();
     sendHttpResponse(client, "Moved Right");
 }
 
 void handleStop(WiFiClient& client) {
+    currentControlState = MANUAL;
     stopAllMotors();
     sendHttpResponse(client, "Stopped");
 }
 
 void handleCrabWalkLeft(WiFiClient& client) {
+    currentControlState = MANUAL;
     crabWalkLeft();
     sendHttpResponse(client, "Crab Walk Left");
 }
 
 void handleCrabWalkRight(WiFiClient& client) {
+    currentControlState = MANUAL;
     crabWalkRight();
     sendHttpResponse(client, "Crab Walk Right");
 }
@@ -222,13 +244,9 @@ void handleToggleEmergencyStop(WiFiClient& client) {
     sendHttpResponse(client, ("Emergency stop set to " + boolToString(emergencyStop))); 
 }   
 
-void handleToggleLineFollowing(WiFiClient& client) {
-    followingLine = !followingLine;
-    if (!followingLine) {
-      stopAllMotors();
-      sendHttpResponse(client, ("Line following set to " + boolToString(followingLine))); 
-    }
-    sendHttpResponse(client, ("Line following set to " + boolToString(followingLine))); 
+void handleLineFollowBangBang(WiFiClient& client) {
+    currentControlState = LINE_FOLLOW_BANGBANG;
+    sendHttpResponse(client, "Control State set to LINE_FOLLOW_BANGBANG"); 
 }   
 
 // We check for a http connection (one everytime we send a command e.g. /forward)
@@ -267,7 +285,7 @@ void handleTCPData() {
 
   
       // Creates String with data separated by commas
-      String tcpPacket = buildSensorMessage() + "," + String(currentState);
+      String tcpPacket = buildSensorMessage() + "," + String(currentMovementState);
       
       // Sends the data all at once as a tcp packet
       streamingClient.println(tcpPacket);
@@ -278,11 +296,10 @@ void handleTCPData() {
 
 void manageRobotMovementState() {
   // Should only stop IF we're trying to move generally forward, otherwise it will block when we try to reverse or rotate
-  if (emergencyStop) { 
-    checkEmergencyStop();
-  } 
-  
-  if (followingLine) {
-    bangLineFollow();
+  if (currentControlState == MANUAL && emergencyStop) {
+    checkEmergencyStop();   
+  }
+  if (currentControlState == LINE_FOLLOW_BANGBANG) {
+    runLineFollowBangBang();
   }
 }

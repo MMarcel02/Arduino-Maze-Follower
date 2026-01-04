@@ -35,7 +35,7 @@ void setLineFollowingSpeed(int newSpeed) {
 }
 
 void stopAllMotors() {
-  currentState = STOPPED;
+  currentMovementState = STOPPED;
   setMotor(FL_PWM, FL_DIR, 0, true);
   setMotor(FR_PWM, FR_DIR, 0, true);
   setMotor(BL_PWM, BL_DIR, 0, true);
@@ -43,7 +43,7 @@ void stopAllMotors() {
 }
 
 void moveForward() {
-  currentState = FORWARD;
+  currentMovementState = FORWARD;
   setMotor(FL_PWM, FL_DIR, motorSpeed, true);
   setMotor(FR_PWM, FR_DIR, motorSpeed, true);
   setMotor(BL_PWM, BL_DIR, motorSpeed, true);
@@ -51,7 +51,7 @@ void moveForward() {
 }
 
 void moveBackward() {
-  currentState = BACKWARD;
+  currentMovementState = BACKWARD;
   setMotor(FL_PWM, FL_DIR, motorSpeed, false);
   setMotor(FR_PWM, FR_DIR, motorSpeed, false);
   setMotor(BL_PWM, BL_DIR, motorSpeed, false);
@@ -59,7 +59,7 @@ void moveBackward() {
 }
 
 void moveRight () {
-  currentState = RIGHT;
+  currentMovementState = RIGHT;
   setMotor(FL_PWM, FL_DIR, motorSpeed, true);
   setMotor(FR_PWM, FR_DIR, motorTurningSpeed, true);
   setMotor(BL_PWM, BL_DIR, motorSpeed, true);
@@ -67,35 +67,35 @@ void moveRight () {
 }
 
 void moveLeft () {
-  currentState = LEFT;
+  currentMovementState = LEFT;
   setMotor(FL_PWM, FL_DIR, motorTurningSpeed, true);
   setMotor(FR_PWM, FR_DIR, motorSpeed, true);
   setMotor(BL_PWM, BL_DIR, motorTurningSpeed, true);
   setMotor(BR_PWM, BR_DIR, motorSpeed, true);
 }
 void turnOnSpotRight () {
-  currentState = TURN_SPOT_RIGHT;
+  currentMovementState = TURN_SPOT_RIGHT;
   setMotor(FL_PWM, FL_DIR, motorSpeed, true);
   setMotor(FR_PWM, FR_DIR, motorSpeed, false);
   setMotor(BL_PWM, BL_DIR, motorSpeed, true);
   setMotor(BR_PWM, BR_DIR, motorSpeed, false);
 }
 void turnOnSpotLeft () {
-  currentState = TURN_SPOT_LEFT;
+  currentMovementState = TURN_SPOT_LEFT;
   setMotor(FL_PWM, FL_DIR, motorSpeed, false);
   setMotor(FR_PWM, FR_DIR, motorSpeed, true);
   setMotor(BL_PWM, BL_DIR, motorSpeed, false);
   setMotor(BR_PWM, BR_DIR, motorSpeed, true);
 }
 void crabWalkRight () {
-  currentState = CW_RIGHT;
+  currentMovementState = CW_RIGHT;
   setMotor(FL_PWM, FL_DIR, motorSpeed, true);
   setMotor(FR_PWM, FR_DIR, motorSpeed, false);
   setMotor(BL_PWM, BL_DIR, motorSpeed, false);
   setMotor(BR_PWM, BR_DIR, motorSpeed, true);
 }
 void crabWalkLeft () {
-  currentState = CW_LEFT;
+  currentMovementState = CW_LEFT;
   setMotor(FL_PWM, FL_DIR, motorSpeed, false);
   setMotor(FR_PWM, FR_DIR, motorSpeed, true);
   setMotor(BL_PWM, BL_DIR, motorSpeed, true);

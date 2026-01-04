@@ -24,8 +24,7 @@ const int TRIG_PIN = 0;
 const int ECHO_PIN = 1; 
 
 // These are the default values, GUI overwrites
-bool emergencyStop = true;
-bool followingLine = false;
+bool emergencyStop = false;
 
 int emergencyStopDistance = 20;
 
@@ -42,9 +41,23 @@ enum RobotMovementState {
   CW_RIGHT
 };
 
-// Default at start
-RobotMovementState currentState = STOPPED;
+enum RobotControlState {
+    MANUAL,
+    LINE_FOLLOW_BANGBANG,
+    LINE_FOLLOW_PD,
+    SOLVE_MAZE_1,
+    SOLVE_MAZE_2,
+    LOST_ROBOT,
+    REVERSE_STRAIGHT,
+    REVERSE_CORNER,
+    THREE_POINT_TURN,
+    U_TURN,
+    PARKING_IN_BOX
+}
 
+// Default at start
+RobotMovementState currentMovementState = STOPPED;
+RobotControlState currentControlState = MANUAL;
 
 // --- Variables ---
 int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
