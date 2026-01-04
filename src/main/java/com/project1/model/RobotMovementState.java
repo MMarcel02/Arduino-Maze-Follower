@@ -1,5 +1,6 @@
 package com.project1.model;
 
+// These are the states we use to draw our path on the map 
 public enum RobotMovementState {
     STOPPED,
     FORWARD,

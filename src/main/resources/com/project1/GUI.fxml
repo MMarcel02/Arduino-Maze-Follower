@@ -245,7 +245,7 @@
                         <Insets />
                      </VBox.margin>
                   </Label>
-                  <Label fx:id="currentMovementStateLabel" prefHeight="17.0" prefWidth="243.0" text="Current Movement State: ">
+                  <Label fx:id="currentMovementStateLabel" prefHeight="17.0" prefWidth="243.0" text="Movement State: ">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -253,7 +253,7 @@
                         <Insets bottom="10.0" top="10.0" />
                      </VBox.margin>
                   </Label>
-                  <Label fx:id="currentControlStateLabel" prefHeight="17.0" prefWidth="243.0" text="Current Control Mode:">
+                  <Label fx:id="currentControlStateLabel" prefHeight="17.0" prefWidth="243.0" text="Control Mode:">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -264,11 +264,11 @@
                      </font>
                   </Label>
                   <Slider fx:id="emergencyStopSlider" blockIncrement="1.0" majorTickUnit="10.0" max="50.0" showTickLabels="true" value="20.0" />
-                  <ToggleButton fx:id="emergencyStopToggle" mnemonicParsing="false" onAction="#toggleEmergencyStop" prefHeight="25.0" prefWidth="275.0" selected="true" text="Emergency Stop">
+                  <ToggleButton fx:id="emergencyStopToggle" mnemonicParsing="false" onAction="#toggleEmergencyStop" prefHeight="25.0" prefWidth="275.0" text="Emergency Stop">
                      <font>
                         <Font size="14.0" />
                      </font></ToggleButton>
-                  <Label alignment="CENTER" prefHeight="20.0" prefWidth="269.0" text="Line Following">
+                  <Label alignment="CENTER" prefHeight="20.0" prefWidth="269.0" text="PD Line Following">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -288,13 +288,6 @@
                      </font>
                   </Label>
                   <Slider fx:id="dampeningSlider" blockIncrement="0.1" majorTickUnit="1.0" max="5.0" minorTickCount="2" showTickLabels="true" value="1.0" />
-                  <ToggleButton fx:id="lineFollowToggle" mnemonicParsing="false" onAction="#toggleLineFollowing" prefHeight="25.0" prefWidth="275.0" text="Follow Line">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin></ToggleButton>
                </children>
                <HBox.margin>
                   <Insets bottom="14.0" left="7.0" right="7.0" top="14.0" />
@@ -310,42 +303,58 @@
                         <Insets bottom="5.0" />
                      </VBox.margin>
                   </Label>
-                  <Button fx:id="solveMaze" mnemonicParsing="false" onMousePressed="#solveMaze" prefHeight="60.0" prefWidth="256.0" text="Solve Maze">
+                  <Button fx:id="bangLineFollow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleBangLineFollow" prefHeight="45.0" prefWidth="73.0" text="Bang Bang Line Following">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button fx:id="lostRobot" mnemonicParsing="false" onMousePressed="#lostRobot" prefHeight="60.0" prefWidth="256.0" text="Lost Robot">
+                  <Button fx:id="pdLineFollow" mnemonicParsing="false" onMousePressed="#handlePDLineFollow" prefHeight="45.0" prefWidth="256.0" text="PD Line Following">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button fx:id="dragRace" mnemonicParsing="false" onMousePressed="#dragRace" prefHeight="60.0" prefWidth="256.0" text="Drag Race">
+                  <Button fx:id="solveMaze1" mnemonicParsing="false" onMousePressed="#handleSolveMaze1" prefHeight="45.0" prefWidth="256.0" text="Maze Algo #1">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="solveMaze2" mnemonicParsing="false" onMousePressed="#handleSolveMaze2" prefHeight="45.0" prefWidth="256.0" text="Maze Algo #2">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button fx:id="reverseStraight" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#reverseStraight" prefHeight="60.0" prefWidth="256.0" text="Reverse Straight">
+                  <Button fx:id="lostRobot" mnemonicParsing="false" onMousePressed="#handleLostRobot" prefHeight="45.0" prefWidth="256.0" text="Lost Robot">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button fx:id="reverseCorner" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#reverseCorner" prefHeight="60.0" prefWidth="73.0" text="Reverse Corner">
+                  <Button fx:id="reverseStraight" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleReverseStraight" prefHeight="45.0" prefWidth="256.0" text="Reverse Straight">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="reverseCorner" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleReverseCorner" prefHeight="45.0" prefWidth="73.0" text="Reverse Corner">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button fx:id="threePointTurn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#threePointTurn" prefHeight="60.0" prefWidth="73.0" text="Three-Point Turn">
+                  <Button fx:id="threePointTurn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleThreePointTurn" prefHeight="45.0" prefWidth="73.0" text="Three-Point Turn">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button fx:id="uTurn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#uTurn" prefHeight="60.0" prefWidth="73.0" text="U-Turn">
+                  <Button fx:id="uTurn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleUTurn" prefHeight="45.0" prefWidth="73.0" text="U-Turn">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button fx:id="parkingInBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#parkingInBox" prefHeight="60.0" prefWidth="73.0" text="Parking in a box">
+                  <Button fx:id="parkingInBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleParkingInBox" prefHeight="45.0" prefWidth="73.0" text="Parking in a box">
                      <font>
                         <Font size="14.0" />
                      </font>

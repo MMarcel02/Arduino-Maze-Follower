@@ -3,6 +3,7 @@ package com.project1.controller;
 import java.util.HashSet;
 import java.util.Set;
 
+// Just keeps track of which keyboard button is being pressed
 public class InputHandler {
     
     // A HashSet prevents duplicate keys (e.g. can't have "W" twice if clicking in GUI and pressing on keyboard)

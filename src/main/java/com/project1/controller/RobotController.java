@@ -11,6 +11,8 @@ import com.project1.model.RobotModel;
 import com.project1.services.ArduinoEndpoints;
 import com.project1.services.ArduinoHTTPClient;
 
+
+// In MVC the controller is called by the view and it updates the model
 public class RobotController {
 
     private final ArduinoHTTPClient client;
@@ -65,6 +67,15 @@ public class RobotController {
         switch (targetState) {
             case MANUAL:               endpoint = "/setMode?mode=manual"; break;
             case LINE_FOLLOW_BANGBANG: endpoint = "/setMode?mode=line_bang"; break;
+            case LINE_FOLLOW_PD:       endpoint = "/setMode?mode=line_pd"; break;
+            case SOLVE_MAZE_1:         endpoint = "/setMode?mode=maze_1"; break;
+            case SOLVE_MAZE_2:         endpoint = "/setMode?mode=maze_2"; break;
+            case LOST_ROBOT:           endpoint = "/setMode?mode=lost_robot"; break;
+            case REVERSE_STRAIGHT:     endpoint = "/setMode?mode=reverse_straight"; break;
+            case REVERSE_CORNER:       endpoint = "/setMode?mode=reverse_corner"; break;
+            case THREE_POINT_TURN:     endpoint = "/setMode?mode=three_point_turn"; break;
+            case U_TURN:               endpoint = "/setMode?mode=u_turn"; break;
+            case PARKING_IN_BOX:       endpoint = "/setMode?mode=parking_in_box"; break;
             default: return;
         }
 

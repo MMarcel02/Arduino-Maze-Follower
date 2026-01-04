@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 
+// In MVC the model stores all the data in one place, is is updated by the Controller and it tells the View what to display
 public class RobotModel {
 
     // We use these JavaFX property objects so we can bind our GUI to these values

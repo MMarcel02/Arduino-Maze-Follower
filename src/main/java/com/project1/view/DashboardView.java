@@ -24,7 +24,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 
@@ -46,11 +45,11 @@ public class DashboardView {
     @FXML private Label activeInputsLabel, speedLabel, xLabel, yLabel, angleLabel, currentMovementStateLabel, currentControlStateLabel;
     @FXML private Label irLeft, irRight, ultraSonic;
     @FXML private Slider speedSlider, canvasRotationSlider, emergencyStopSlider, sensitivitySlider, dampeningSlider;
-    @FXML private Button clearMapButton, solveMaze, lostRobot, dragRace;
+    @FXML private Button clearMapButton;
     @FXML private Button upArrow, downArrow, leftArrow, rightArrow, crabWalkLeft, crabWalkRight, stopButton;
     @FXML private Button bigDecrement, smallDecrement, bigIncrement, smallIncrement;
-    @FXML private ToggleButton emergencyStopToggle, lineFollowToggle;
-    @FXML private Button parkingInBox, reverseCorner, reverseStraight, threePointTurn, uTurn, extraSpace;
+    @FXML private ToggleButton emergencyStopToggle;
+    @FXML private Button bangLineFollow, pdLineFollow, solveMaze1, solveMaze2, lostRobot, parkingInBox, reverseCorner, reverseStraight, threePointTurn, uTurn, extraSpace;
 
 
     @FXML void bigDecreaseSpeed(MouseEvent e) { robotController.setSpeed(robotModel.getSpeed() - 20); }
@@ -63,38 +62,54 @@ public class DashboardView {
     @FXML void toggleEmergencyStop(ActionEvent event) { robotController.toggleEmergencyStop(); }
 
     @FXML
-    void toggleLineFollowing(ActionEvent event) {
-        if (robotModel.getControlState() == RobotControlState.MANUAL) {
-            robotController.setControlState(RobotControlState.LINE_FOLLOW_BANGBANG);
-        } else {
-            robotController.setControlState(RobotControlState.MANUAL);
-        }
+    public void handleBangLineFollow(MouseEvent event) {
+        robotController.setControlState(RobotControlState.LINE_FOLLOW_BANGBANG);
     }
 
-    // For Phase 3
     @FXML
-    void dragRace(MouseEvent event) {}
+    public void handlePDLineFollow(MouseEvent event) {
+        robotController.setControlState(RobotControlState.LINE_FOLLOW_PD);
+    }
 
     @FXML
-    void parkingInBox(MouseEvent event) {}
+    public void handleSolveMaze1(MouseEvent event) {
+        robotController.setControlState(RobotControlState.SOLVE_MAZE_1);
+    }
 
     @FXML
-    void reverseCorner(MouseEvent event) {}
+    public void handleSolveMaze2(MouseEvent event) {
+        robotController.setControlState(RobotControlState.SOLVE_MAZE_2);
+    }
 
     @FXML
-    void reverseStraight(MouseEvent event) {}
+    public void handleLostRobot(MouseEvent event) {
+        robotController.setControlState(RobotControlState.LOST_ROBOT);
+    }
 
     @FXML
-    void lostRobot(MouseEvent event) {}
+    public void handleReverseStraight(MouseEvent event) {
+        robotController.setControlState(RobotControlState.REVERSE_STRAIGHT);
+    }
 
     @FXML
-    void solveMaze(MouseEvent event) {}
+    public void handleReverseCorner(MouseEvent event) {
+        robotController.setControlState(RobotControlState.REVERSE_CORNER);
+    }
 
     @FXML
-    void threePointTurn(MouseEvent event) {}
+    public void handleThreePointTurn(MouseEvent event) {
+        robotController.setControlState(RobotControlState.THREE_POINT_TURN);
+    }
 
     @FXML
-    void uTurn(MouseEvent event) {}
+    public void handleUTurn(MouseEvent event) {
+        robotController.setControlState(RobotControlState.U_TURN);
+    }
+
+    @FXML
+    public void handleParkingInBox(MouseEvent event) {
+        robotController.setControlState(RobotControlState.PARKING_IN_BOX);
+    }
 
 
     @FXML
