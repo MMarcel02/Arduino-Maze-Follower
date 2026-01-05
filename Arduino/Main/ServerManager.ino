@@ -247,6 +247,11 @@ void handleToggleEmergencyStop(WiFiClient& client) {
 void handleLineFollowBangBang(WiFiClient& client) {
     currentControlState = LINE_FOLLOW_BANGBANG;
     sendHttpResponse(client, "Control State set to LINE_FOLLOW_BANGBANG"); 
+}
+
+void handleLineFollowPD(WiFiClient& client) {
+    currentControlState = LINE_FOLLOW_PD;
+    sendHttpResponse(client, "Control State set to LINE_FOLLOW_PD"); 
 }   
 
 // We check for a http connection (one everytime we send a command e.g. /forward)
@@ -301,5 +306,11 @@ void manageRobotMovementState() {
   }
   if (currentControlState == LINE_FOLLOW_BANGBANG) {
     bangLineFollow();
+  }
+
+  if (currentControlState == LINE_FOLLOW_PD) {
+    // We use this for the Drag Race so we want to be going at max speed
+    setSpeed(255);
+    pdLineFollow();
   }
 }

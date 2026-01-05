@@ -2,7 +2,9 @@
 float duration, distance;  
 
 // IR
-int leftReading, rightReading;
+int leftDigitalIRReading, rightDigitalIRReading;
+int leftAnalogIRReading, rightAnalogIRReading;
+
 
 // Interval (in ms) which determines how often we read ultrasonic sensor
 const int ULTRASONIC_READ_INTERVAL = 60;
@@ -15,8 +17,8 @@ void setupUltraSonicSensor () {
 }
 
 void setupIRSensors () {
-	pinMode(IR_LEFT_SENSOR_PIN, INPUT);  
-	pinMode(IR_RIGHT_SENSOR_PIN, INPUT);  
+	pinMode(IR_DIGITAL_LEFT_SENSOR_PIN, INPUT);  
+	pinMode(IR_DIGITAL_RIGHT_SENSOR_PIN, INPUT);  
 }
 
 void readUltrasonicSensor() {
@@ -37,22 +39,16 @@ void checkEmergencyStop() {
   // we check for more than 0 because it displays 0 if it times out
   if (0 < distance && distance < emergencyStopDistance) {
     stopAllMotors();
-    currentMovementState = STOPPED;
   }
 }
 
 void readIRSensors() {
-  leftReading = digitalRead(IR_LEFT_SENSOR_PIN);
-  rightReading = digitalRead(IR_RIGHT_SENSOR_PIN);
+  leftDigitalIRReading = digitalRead(IR_DIGITAL_LEFT_SENSOR_PIN);
+  rightDigitalIRReading = digitalRead(IR_DIGITAL_RIGHT_SENSOR_PIN);
+  leftAnalogIRReading = analogRead(IR_ANALOG_LEFT_PIN);
+  rightAnalogIRReading = analogRead(IR_ANALOG_RIGHT_PIN);
 }
 
-bool checkLeftIRSensor() {
-  return (leftReading == 1);
-}
-
-bool checkRightIRSensor() {
-  return (rightReading == 1);
-}
 
 void updateSensors() {
   // Read IR every cycle (for proper line following)
@@ -68,6 +64,6 @@ void updateSensors() {
 }
 
 String buildSensorMessage() {
-  return String(distance, 2) + "," + String(leftReading) + "," + String(rightReading);
+  return String(distance, 2) + "," + String(leftDigitalIRReading) + "," + String(rightDigitalIRReading);
 }
 

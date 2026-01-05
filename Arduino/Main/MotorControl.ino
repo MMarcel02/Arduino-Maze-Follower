@@ -26,7 +26,7 @@ void setupAllMotors() {
 void setSpeed(int newSpeed) {
   motorSpeed = newSpeed;
   motorSpeedOutsideLineFollow = newSpeed;
-  motorTurningSpeed = motorSpeed - 20;
+  motorTurningSpeed = motorSpeed*0.8;
 }
 
 // This one we use when we're changing speed on the fly in the line following

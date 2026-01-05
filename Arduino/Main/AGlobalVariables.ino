@@ -16,8 +16,13 @@ const int BL_PWM = A4, BL_DIR = A5;    // Back Left
 const int BR_PWM=11, BR_DIR = 12;      // Back Right
 
 // IR Digital Sensor Pins
-const int IR_LEFT_SENSOR_PIN = A0; 
-const int IR_RIGHT_SENSOR_PIN = A2; 
+const int IR_DIGITAL_LEFT_SENSOR_PIN = A0; 
+const int IR_DIGITAL_RIGHT_SENSOR_PIN = A2; 
+
+// IR Analog Sensor Pins
+const int IR_ANALOG_LEFT_SENSOR_PIN = A1;
+const int IR_ANALOG_LEFT_SENSOR_PIN = A3;
+
 
 // Ultrasonic pins
 const int TRIG_PIN = 0;
@@ -65,7 +70,10 @@ int motorTurningSpeed = motorSpeed - 20;
 // Motor speed passed down from GUI
 int motorSpeedOutsideLineFollow = motorSpeed;
 
-// For PDL algorithm
+
+int previousDir = 0;
+
+// For PD algorithm
 double sensitivity = 5.0;
 double dampening = 1.0;
 
@@ -76,5 +84,5 @@ int lineMemoryLatency = 150;
 float duration, distance;  
 
 // IR
-int leftReading, rightReading;
+int leftDigitalIRReading, rightDigitalIRReading;
 

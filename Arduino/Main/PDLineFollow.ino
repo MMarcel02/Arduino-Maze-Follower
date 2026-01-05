@@ -1,55 +1,45 @@
-// int previousDir = 0;
+double lastError = 0;
+unsigned long lastPDTime = 0;
 
-// unsigned long lastLeftSeeTime = 0;
-// unsigned long lastRightSeeTime = 0;
-
-// void pdLineFollow () {
-//   readIRSensors();
-
-//   bool leftLine = checkLeftIRSensor()
-//   bool rightLine = checkRightIRSensor();
+void pdLineFollow () {
   
-//   unsigned long currentTime = millis();
-
-//   if(leftLine)  lastLeftSeeTime = currentTime;
-//   if (rightLine) lastRightSeeTime = currentTime;
-
-//   // We make it still turn for a bit after it stopped seeing the line
-//   bool stickyLeft = (currentTime - lastLeftSeeTime < lineMemoryLatency);
-//   bool stickyRight = (currentTime - lastRightSeeTime < lineMemoryLatency);
+  double error = rightAnalogIRReading - leftAnalogIRReading;
   
-//   int dir = 0;
+  unsigned long currentTime = millis();
+  double changeInTime = (double)(currentTime - lastPDTime);
 
-//   // If it still has both in its memory then we are probably on a curve or zigzagging
-//   if (stickyLeft && stickyRight) dir = previousDir;
-//   else if (stickyLeft)  dir -= 1;
-//   else if (stickyRight) dir += 1;
+  double derivative = 0;
+
+  if (changeInTime > 0 && lastPDTime != 0) {
+    derivative = (error - lastError) / changeInTime;
+  }
+
+  double correction = (sensitivity * error) + (dampening * derivative);
   
-//   double correction = sensitivity * dir + dampening * (dir - previousDir);
+  lastError = error;
+  lastPDTime = currentTime;
+
+  int leftSpeed  = motorSpeed + (int)correction;
+  int rightSpeed = motorSpeed - (int)correction;
+
+  leftSpeed  = constrain(leftSpeed, -255, 255);
+  rightSpeed = constrain(rightSpeed, -255, 255);
+
+  setSmartMotor(FL_PWM, FL_DIR, leftSpeed);
+  setSmartMotor(FR_PWM, FR_DIR, rightSpeed);
+  setSmartMotor(BL_PWM, BL_DIR, leftSpeed);
+  setSmartMotor(BR_PWM, BR_DIR, rightSpeed);
+}
+
+void setSmartMotor(int pwmPin, int dirPin, int speedVal) {
+  bool forward = true;
   
-//   previousDir = dir;
+  // If speed is negative, we need to go BACKWARD
+  if (speedVal < 0) {
+      forward = false;
+      speedVal = -speedVal;
+  }
 
-//   int leftSpeed   = (int)((1 + correction) * motorSpeed);
-//   int rightSpeed  = (int)((1 - correction) * motorSpeed);
-
-//   setSmartMotor(FL_PWM, FL_DIR, leftSpeed);
-//   setSmartMotor(FR_PWM, FR_DIR, rightSpeed);
-//   setSmartMotor(BL_PWM, BL_DIR, leftSpeed);
-//   setSmartMotor(BR_PWM, BR_DIR, rightSpeed);
-// }
-
-// void setSmartMotor(int pwmPin, int dirPin, int speedVal) {
-//   bool forward = true;
-  
-//   // If speed is negative, we need to go BACKWARD
-//   if (speedVal < 0) {
-//       forward = false;
-//       speedVal = -speedVal;
-//   }
-  
-//   // Max speed of motor during line following
-//   if (speedVal > 150) speedVal = 150;
-
-//   // Pass values to the motor
-//   setMotor(pwmPin, dirPin, speedVal, forward);
-// }
+  // Pass values to the motor
+  setMotor(pwmPin, dirPin, speedVal, forward);
+}
