@@ -8,6 +8,8 @@ void setupUltraSonicSensor () {
 void setupIRSensors () {
 	pinMode(IR_DIGITAL_LEFT_SENSOR_PIN, INPUT);  
 	pinMode(IR_DIGITAL_RIGHT_SENSOR_PIN, INPUT);  
+  pinMode(IR_ANALOG_LEFT_SENSOR_PIN, INPUT);
+  pinMode(IR_ANALOG_RIGHT_SENSOR_PIN, INPUT);
 }
 
 void readUltrasonicSensor() {
@@ -56,3 +58,6 @@ String buildSensorMessage() {
   return String(distance, 2) + "," + String(leftDigitalIRReading) + "," + String(rightDigitalIRReading);
 }
 
+
+pinMode(PIN_IR_RIGHT_ANALOG, INPUT);
+pinMode(PIN_IR_RIGHT_ANALOG, INPUT);
