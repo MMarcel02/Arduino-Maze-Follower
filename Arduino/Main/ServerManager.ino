@@ -225,13 +225,13 @@ void handleSetSpeed(WiFiClient& client, int speed) {
 }
 
 void handleSetEmergencyStopDistance(WiFiClient& client, int distance) {
-  emergencyStopDistance = distance;
-  sendHttpResponse(client, "Emergency Stop distance set to " + String(emergencyStopDistance));
+    emergencyStopDistance = distance;
+    sendHttpResponse(client, "Emergency Stop distance set to " + String(emergencyStopDistance));
 }
 
 void handleSetSensitivity (WiFiClient& client, double value) {
-  sensitivity = value;
-  sendHttpResponse(client, "Sensitivity set to " + String(sensitivity, 1));
+    sensitivity = value;
+    sendHttpResponse(client, "Sensitivity set to " + String(sensitivity, 1));
 }
 
 void handleSetDampening(WiFiClient& client, double value) {
@@ -252,7 +252,48 @@ void handleLineFollowBangBang(WiFiClient& client) {
 void handleLineFollowPD(WiFiClient& client) {
     currentControlState = LINE_FOLLOW_PD;
     sendHttpResponse(client, "Control State set to LINE_FOLLOW_PD"); 
-}   
+}  
+
+
+void handleSolveMaze1(WiFiClient& client) {
+    currentControlState = SOLVE_MAZE_1;
+    sendHttpResponse(client, "Control State set to SOLVE_MAZE_1");
+}
+
+void handleSolveMaze2(WiFiClient& client) {
+    currentControlState = SOLVE_MAZE_2;
+    sendHttpResponse(client, "Control State set to SOLVE_MAZE_2");
+}
+
+void handleLostRobot(WiFiClient& client) {
+    currentControlState = LOST_ROBOT;
+    sendHttpResponse(client, "Control State set to LOST_ROBOT");
+}
+
+void handleReverseStraight(WiFiClient& client) {
+    currentControlState = REVERSE_STRAIGHT;
+    sendHttpResponse(client, "Control State set to REVERSE_STRAIGHT");
+}
+
+void handleReverseCorner(WiFiClient& client) {
+    currentControlState = REVERSE_CORNER;
+    sendHttpResponse(client, "Control State set to REVERSE_CORNER");
+}
+
+void handleThreePointTurn(WiFiClient& client) {
+    currentControlState = THREE_POINT_TURN;
+    sendHttpResponse(client, "Control State set to THREE_POINT_TURN");
+}
+
+void handleUTurn(WiFiClient& client) {
+    currentControlState = U_TURN;
+    sendHttpResponse(client, "Control State set to U_TURN");
+}
+
+void handleParkingInBox(WiFiClient& client) {
+    currentControlState = PARKING_IN_BOX;
+    sendHttpResponse(client, "Control State set to PARKING_IN_BOX");
+}
 
 // We check for a http connection (one everytime we send a command e.g. /forward)
 void handleHTTPCommands() {
@@ -301,7 +342,7 @@ void handleTCPData() {
 
 void manageRobotMovementState() {
   // Should only stop IF we're trying to move generally forward, otherwise it will block when we try to reverse or rotate
-  if (currentControlState == MANUAL && emergencyStop) {
+  if (currentControlState == MANUAL && currentMovementState == FORWARD && emergencyStop) {
     checkEmergencyStop();   
   }
   if (currentControlState == LINE_FOLLOW_BANGBANG) {
@@ -312,5 +353,37 @@ void manageRobotMovementState() {
     // We use this for the Drag Race so we want to be going at max speed
     setSpeed(255);
     pdLineFollow();
+  }
+
+  if (currentControlState == SOLVE_MAZE_1) {
+      // To be implemented
+  }
+
+  if (currentControlState == SOLVE_MAZE_2) {
+      // To be implemented
+  }
+
+  if (currentControlState == LOST_ROBOT) {
+      // To be implemented
+  }
+
+  if (currentControlState == REVERSE_STRAIGHT) {
+      // To be implemented
+  }
+
+  if (currentControlState == REVERSE_CORNER) {
+      // To be implemented
+  }
+
+  if (currentControlState == THREE_POINT_TURN) {
+      // To be implemented
+  }
+
+  if (currentControlState == U_TURN) {
+      // To be implemented
+  }
+
+  if (currentControlState == PARKING_IN_BOX) {
+      // To be implemented
   }
 }

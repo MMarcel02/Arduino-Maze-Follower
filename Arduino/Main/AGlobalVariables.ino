@@ -47,17 +47,17 @@ enum RobotMovementState {
 };
 
 enum RobotControlState {
-    MANUAL,
-    LINE_FOLLOW_BANGBANG,
-    LINE_FOLLOW_PD,
-    SOLVE_MAZE_1,
-    SOLVE_MAZE_2,
-    LOST_ROBOT,
-    REVERSE_STRAIGHT,
-    REVERSE_CORNER,
-    THREE_POINT_TURN,
-    U_TURN,
-    PARKING_IN_BOX
+  MANUAL,
+  LINE_FOLLOW_BANGBANG,
+  LINE_FOLLOW_PD,
+  SOLVE_MAZE_1,
+  SOLVE_MAZE_2,
+  LOST_ROBOT,
+  REVERSE_STRAIGHT,
+  REVERSE_CORNER,
+  THREE_POINT_TURN,
+  U_TURN,
+  PARKING_IN_BOX
 }
 
 // Default at start
@@ -79,10 +79,4 @@ double dampening = 1.0;
 
 // Time it keeps turning after it stopped seeing a line
 int lineMemoryLatency = 150;
-
-// Ultrasonic
-float duration, distance;  
-
-// IR
-int leftDigitalIRReading, rightDigitalIRReading;
 
