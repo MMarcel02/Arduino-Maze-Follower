@@ -21,8 +21,19 @@ const int IR_DIGITAL_RIGHT_SENSOR_PIN = A2;
 
 // IR Analog Sensor Pins
 const int IR_ANALOG_LEFT_SENSOR_PIN = A1;
-const int IR_ANALOG_LEFT_SENSOR_PIN = A3;
+const int IR_ANALOG_RIGHT_SENSOR_PIN = A3;
 
+// Ultrasonic
+float duration, distance;  
+
+// Interval (in ms) which determines how often we read ultrasonic sensor
+const int ULTRASONIC_READ_INTERVAL = 60;
+// Timer variable which we cross check with SENSOR_SEND_INTERVAL
+unsigned long lastUltrasonicReadTime = 0;
+
+// IR
+int leftDigitalIRReading, rightDigitalIRReading;
+int leftAnalogIRReading, rightAnalogIRReading;
 
 // Ultrasonic pins
 const int TRIG_PIN = 0;
@@ -58,7 +69,7 @@ enum RobotControlState {
   THREE_POINT_TURN,
   U_TURN,
   PARKING_IN_BOX
-}
+};
 
 // Default at start
 RobotMovementState currentMovementState = STOPPED;

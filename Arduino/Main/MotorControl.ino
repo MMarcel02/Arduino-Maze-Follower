@@ -1,8 +1,4 @@
 
-// --- Variables ---
-int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
-int motorTurningSpeed = motorSpeed - 20;
-
 // --- Function to Drive a Motor ---
 void setMotor(int pwm, int dir, int speed, bool forward) {
   digitalWrite(dir, forward ? HIGH : LOW);  // Set direction

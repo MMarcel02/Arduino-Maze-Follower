@@ -1,15 +1,4 @@
-// Ultrasonic
-float duration, distance;  
 
-// IR
-int leftDigitalIRReading, rightDigitalIRReading;
-int leftAnalogIRReading, rightAnalogIRReading;
-
-
-// Interval (in ms) which determines how often we read ultrasonic sensor
-const int ULTRASONIC_READ_INTERVAL = 60;
-// Timer variable which we cross check with SENSOR_SEND_INTERVAL
-unsigned long lastUltrasonicReadTime = 0;
 
 void setupUltraSonicSensor () {
 	pinMode(TRIG_PIN, OUTPUT);  
@@ -45,8 +34,8 @@ void checkEmergencyStop() {
 void readIRSensors() {
   leftDigitalIRReading = digitalRead(IR_DIGITAL_LEFT_SENSOR_PIN);
   rightDigitalIRReading = digitalRead(IR_DIGITAL_RIGHT_SENSOR_PIN);
-  leftAnalogIRReading = analogRead(IR_ANALOG_LEFT_PIN);
-  rightAnalogIRReading = analogRead(IR_ANALOG_RIGHT_PIN);
+  leftAnalogIRReading = analogRead(IR_ANALOG_LEFT_SENSOR_PIN);
+  rightAnalogIRReading = analogRead(IR_ANALOG_RIGHT_SENSOR_PIN);
 }
 
 
