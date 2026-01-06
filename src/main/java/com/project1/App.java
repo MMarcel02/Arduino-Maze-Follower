@@ -61,7 +61,6 @@ public class App extends Application {
     @Override
     public void stop() throws Exception {
         if (controller != null) {
-            System.out.println("Stopping TCP server");
             controller.shutdown();
         }
         super.stop();

@@ -1,6 +1,5 @@
 package com.project1.view;
 
-import java.net.http.HttpResponse;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Set;
@@ -37,7 +36,7 @@ public class DashboardView {
     private MapView mapView;
     
     // Networking
-    private ArduinoHTTPClient httpClient = new ArduinoHTTPClient();
+    private ArduinoHTTPClient httpClient;
     private ArduinoTCPClient tcpClient;
     
     @FXML private Canvas canvas;
@@ -132,6 +131,7 @@ public class DashboardView {
 
     @FXML
     public void initialize() {
+        httpClient = new ArduinoHTTPClient(this::logToTextArea);
         robotController = new RobotController(httpClient, this::logToTextArea, robotModel);
         mapPhysics = new MapPhysics(robotModel);
         mapView = new MapView(canvas, robotModel);
@@ -141,7 +141,7 @@ public class DashboardView {
         mapPhysics.start();
 
         
-        tcpClient = new ArduinoTCPClient(data -> {
+        tcpClient = new ArduinoTCPClient(this::logToTextArea, data -> {
             Platform.runLater(() -> {
                 updateModelWithTCPData(data, robotModel);
             });

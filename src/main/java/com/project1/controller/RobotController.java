@@ -156,10 +156,14 @@ public class RobotController {
             try {
                 HttpResponse<String> response = client.send(endpoint);
                 Platform.runLater(() -> {
-                    if (response.statusCode() == 200) {
-                        if (onSuccess != null) onSuccess.accept(response);
+                    if (response != null) {
+                        if (response.statusCode() == 200) {
+                            if (onSuccess != null) onSuccess.accept(response);
+                        } else {
+                            logger.accept("Command Failed: " + response.statusCode());
+                        }
                     } else {
-                        logger.accept("Command Failed: " + response.statusCode());
+                        logger.accept("Error: Robot Unreachable after 3 Attempts");
                     }
                 });
             } catch (Exception e) {

@@ -18,10 +18,14 @@ public class ArduinoTCPClient {
     // This way we are decoupling our code in here from GUIController, so we can reuse this class
     // If we need another TCPClient with a different Consumer method
     private Consumer<String> onDataReceived;
+    private final Consumer<String> logger;
+
 
     // We pass that function in and set it to Consumer
-    public ArduinoTCPClient(Consumer<String> onDataReceived) {
+    public ArduinoTCPClient(Consumer<String> logger, Consumer<String> onDataReceived) {
         this.onDataReceived = onDataReceived;
+        this.logger = logger;
+
     }
 
     public void connect() {
@@ -32,12 +36,12 @@ public class ArduinoTCPClient {
             while(true) {
                 try {
                     
-                    System.out.println("Attempting TCP connection...");
+                    logger.accept("Attempting TCP connection...");
                     socket = new Socket(IP, PORT); // Socket is the endpoint on the Arduino we listen to
                     
                     // Only gets here if the new Socket(IP, PORT) didn't throw an Exception that would put is into the catch block
                     connected = true;
-                    System.out.println("TCP Connected!");
+                    logger.accept("TCP Connected!");
 
                     // .getInputStream() just gets 1010101... from our Arduino
                     // InputStreamReader translates the 1010101 into chars like 'H' 'E' ..
@@ -55,9 +59,9 @@ public class ArduinoTCPClient {
                     }
 
                     // Only get here if the while loop fails -> connection dropped
-                    System.err.println("TCP server disconnected");
+                    logger.accept("TCP server disconnected");
                 } catch (Exception e) {
-                    System.err.println("Failed to connect to TCP server: " + e.getMessage());
+                    logger.accept("Failed to connect to TCP server: " + e.getMessage());
                 } finally {
                     // Only get here if we fail to connect, so we reset our connection and clean up
                     disconnect();
@@ -67,8 +71,8 @@ public class ArduinoTCPClient {
                 // Usually it fails when we start our app too fast after starting the robot
                 // So the robot hasnt had time to set up the TCP server yet
                 try {
-                    System.out.println("Retrying..");
-                    Thread.sleep(1000);
+                    logger.accept("Retrying...");
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     break;
                 }
@@ -80,10 +84,11 @@ public class ArduinoTCPClient {
         connected = false;
         try {
             if (socket != null && !socket.isClosed()) {
+                logger.accept("Stopping TCP Server");
                 socket.close();
             }
         } catch (Exception e) {
-            System.err.println("Failed to close: " + e.getMessage());
+            logger.accept("Failed to close: " + e.getMessage());
         }
     }
 
