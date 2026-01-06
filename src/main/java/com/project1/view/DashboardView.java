@@ -168,16 +168,16 @@ public class DashboardView {
             int threshold = robotModel.leftIRThresholdProperty().get();
             
             String status = (rawValue > threshold) ? "BLACK" : "WHITE";
-            return "IR-A Left: " + status;
+            return "IR-A-L: " + status;
             
         }, robotModel.leftIRAnalogRawProperty(), robotModel.leftIRThresholdProperty()));
 
-        irAnalogLeft.textProperty().bind(Bindings.createStringBinding(() -> {
+        irAnalogRight.textProperty().bind(Bindings.createStringBinding(() -> {
             int rawValue = robotModel.rightIRAnalogRawProperty().get();
             int threshold = robotModel.rightIRThresholdProperty().get();
             
             String status = (rawValue > threshold) ? "BLACK" : "WHITE";
-            return "IR-A Right: " + status;
+            return "IR-A-R: " + status;
             
         }, robotModel.rightIRAnalogRawProperty(), robotModel.rightIRThresholdProperty()));
 
