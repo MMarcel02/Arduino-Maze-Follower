@@ -41,42 +41,42 @@
                                     </Label>
                                     <VBox spacing="15.0">
                                        <children>
-                                          <HBox spacing="30.0">
+                                          <HBox>
                                              <children>
-                                                <Label fx:id="irDigitalLeft" prefWidth="140.0" text="IR-D Left: ">
+                                                <Label fx:id="irDigitalLeft" prefWidth="173.0" text="IR-D Left: ">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="irDigitalRight" text="IR-D Right: ">
+                                                <Label fx:id="irDigitalRight" prefWidth="173.0" text="IR-D Right: ">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
                                              </children>
                                           </HBox>
-                                          <HBox spacing="30.0">
+                                          <HBox>
                                              <children>
-                                                <Label fx:id="irAnalogLeft" prefWidth="140.0" text="IR-A Left: ">
+                                                <Label fx:id="irAnalogLeft" prefHeight="20.0" prefWidth="173.0" text="IR-A Left: ">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="irAnalogRight" text="IR-A Right: ">
+                                                <Label fx:id="irAnalogRight" prefWidth="173.0" text="IR-A Right: ">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
                                              </children>
                                           </HBox>
-                                          <HBox spacing="30.0">
+                                          <HBox>
                                              <children>
-                                                <Label fx:id="irAnalogLeftRaw" prefHeight="20.0" prefWidth="140.0" text="IR-A-L Raw: ">
+                                                <Label fx:id="irAnalogLeftRaw" prefHeight="20.0" prefWidth="173.0" text="IR-A-L Raw: ">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="irAnalogRightRaw" text="IR-A-R Raw: ">
+                                                <Label fx:id="irAnalogRightRaw" prefWidth="173.0" text="IR-A-R Raw: ">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>
@@ -297,7 +297,7 @@
                         <Insets />
                      </VBox.margin>
                   </Label>
-                  <Label fx:id="currentMovementStateLabel" prefHeight="17.0" prefWidth="243.0" text="Movement State: ">
+                  <Label fx:id="currentMovementStateLabel" prefHeight="17.0" prefWidth="243.0" text="Movement: ">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -305,7 +305,7 @@
                         <Insets bottom="10.0" top="10.0" />
                      </VBox.margin>
                   </Label>
-                  <Label fx:id="currentControlStateLabel" prefHeight="17.0" prefWidth="243.0" text="Control Mode: ">
+                  <Label fx:id="currentControlStateLabel" prefHeight="17.0" prefWidth="243.0" text="Control: ">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -354,33 +354,29 @@
                         <Font size="14.0" />
                      </font>
                      <VBox.margin>
-                        <Insets top="10.0" />
+                        <Insets />
                      </VBox.margin>
                   </Label>
-                  <HBox prefHeight="44.0" prefWidth="274.0" spacing="5.0">
+                  <VBox alignment="CENTER">
                      <children>
-                        <VBox alignment="CENTER">
-                           <children>
-                              <Slider fx:id="irLeftThresholdSlider" showTickLabels="true" value="50.0" />
-                              <Label text="Left">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </VBox>
-                        <VBox alignment="CENTER">
-                           <children>
-                              <Slider fx:id="irRightThresholdSlider" showTickLabels="true" value="50.0" />
-                              <Label text="Right">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </VBox>
+                        <Slider fx:id="irLeftThresholdSlider" blockIncrement="1.0" max="75.0" minorTickCount="1" showTickLabels="true" snapToTicks="true" value="37.0" />
+                        <Label text="Left">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
                      </children>
-                  </HBox>
+                  </VBox>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Slider fx:id="irRightThresholdSlider" blockIncrement="1.0" max="75.0" minorTickCount="1" showTickLabels="true" snapToTicks="true" value="37.0" />
+                        <Label text="Right">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
                </children>
                <HBox.margin>
                   <Insets />

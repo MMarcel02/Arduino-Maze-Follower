@@ -35,8 +35,8 @@ unsigned long lastUltrasonicReadTime = 0;
 int leftDigitalIRReading, rightDigitalIRReading;
 int leftAnalogIRReading, rightAnalogIRReading;
 
-int leftIRThreshold = 50;
-int rightIRThreshold = 50;
+int leftIRThreshold = 37;
+int rightIRThreshold = 37;
 
 boolean leftIRAnalog, rightIRAnalog;
 

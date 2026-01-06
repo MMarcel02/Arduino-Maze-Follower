@@ -360,7 +360,7 @@ void handleTCPData() {
 
   
       // Creates String with data separated by commas
-      String tcpPacket = buildSensorMessage() + "," + String(currentMovementState);
+      String tcpPacket = buildSensorMessage() + "," + String(currentMovementState) + "," + String(currentControlState);
       
       // Sends the data all at once as a tcp packet
       streamingClient.println(tcpPacket);
@@ -374,13 +374,12 @@ void manageRobotMovementState() {
   if (currentControlState == MANUAL && currentMovementState == FORWARD && emergencyStop) {
     checkEmergencyStop();   
   }
+  
   if (currentControlState == LINE_FOLLOW_BANGBANG) {
     bangLineFollow();
   }
 
   if (currentControlState == LINE_FOLLOW_PD) {
-    // We use this for the Drag Race so we want to be going at max speed
-    setSpeed(255);
     pdLineFollow();
   }
 

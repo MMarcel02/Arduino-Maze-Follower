@@ -29,28 +29,24 @@ public class RobotController {
     public void setSpeed(int targetSpeed) {
         sendRequest(ArduinoEndpoints.getSpeedEndpoint(targetSpeed), res -> {
             model.setSpeed(targetSpeed);
-            logger.accept("Speed set to: " + targetSpeed);
         });
     }
 
     public void setSensitivity(double targetVal) {
         sendRequest(ArduinoEndpoints.getSensitivityEndpoint(targetVal), res -> {
             model.setSensitivity(targetVal);
-            logger.accept("Sensitivity set to: " + targetVal);
         });
     }
 
     public void setDampening(double targetVal) {
         sendRequest(ArduinoEndpoints.getDampeningEndpoint(targetVal), res -> {
             model.setDampening(targetVal);
-            logger.accept("Dampening set to: " + targetVal);
         });
     }
 
     public void setEmergencyStopDistance(int targetDist) {
         sendRequest(ArduinoEndpoints.getEmergencyStopDistanceEndpoint(targetDist), res -> {
             model.setEmergencyStopDistance(targetDist);
-            logger.accept("Emergency Stop Distance set to: " + targetDist);
         });
     }
     
@@ -58,56 +54,48 @@ public class RobotController {
         sendRequest(ArduinoEndpoints.TOGGLE_EMERGENCY_STOP, res -> {
             boolean newState = !model.isEmergencyStopEnabled();
             model.setEmergencyStopEnabled(newState);
-            logger.accept("Emergency Stop Status: " + (newState ? "ENABLED" : "DISABLED"));
         });
     }
 
     public void setLeftIRThreshold(int targetVal) {
         sendRequest(ArduinoEndpoints.getLeftIRThresholdEndpoint(targetVal), res -> {
             model.setLeftIRThreshold(targetVal);
-            logger.accept("Left IR Analog Threshold set to: " + targetVal);
         });
     }
 
     public void setRightIRThreshold(int targetVal) {
         sendRequest(ArduinoEndpoints.getRightIRThresholdEndpoint(targetVal), res -> {
             model.setRightIRThreshold(targetVal);
-            logger.accept("Right IR Analog Threshold set to: " + targetVal);
         });
     }
 
     public void setControlState(RobotControlState targetState) {
         String endpoint;
         switch (targetState) {
-            case MANUAL:             endpoint = "/manual"; break; 
-            case LINE_FOLLOW_BANGBANG: endpoint = "/lineFollowBangBang"; break;
-            case LINE_FOLLOW_PD:       endpoint = "/lineFollowPD"; break;
-            case SOLVE_MAZE_1:         endpoint = "/solveMaze1"; break;
-            case SOLVE_MAZE_2:         endpoint = "/solveMaze2"; break;
-            case LOST_ROBOT:           endpoint = "/lostRobot"; break;
-            case REVERSE_STRAIGHT:     endpoint = "/reverseStraight"; break;
-            case REVERSE_CORNER:       endpoint = "/reverseCorner"; break;
-            case THREE_POINT_TURN:     endpoint = "/threePointTurn"; break;
-            case U_TURN:               endpoint = "/uTurn"; break;
-            case PARKING_IN_BOX:       endpoint = "/parkingInBox"; break;
+            case MANUAL:                 endpoint = ArduinoEndpoints.MANUAL;               break; 
+            case LINE_FOLLOW_BANGBANG:   endpoint = ArduinoEndpoints.LINE_FOLLOW_BANGBANG; break;
+            case LINE_FOLLOW_PD:         endpoint = ArduinoEndpoints.LINE_FOLLOW_PD;       break;
+            case SOLVE_MAZE_1:           endpoint = ArduinoEndpoints.SOLVE_MAZE_1;         break;
+            case SOLVE_MAZE_2:           endpoint = ArduinoEndpoints.SOLVE_MAZE_2;         break;
+            case LOST_ROBOT:             endpoint = ArduinoEndpoints.LOST_ROBOT;           break;
+            case REVERSE_STRAIGHT:       endpoint = ArduinoEndpoints.REVERSE_STRAIGHT;     break;
+            case REVERSE_CORNER:         endpoint = ArduinoEndpoints.REVERSE_CORNER;       break;
+            case THREE_POINT_TURN:       endpoint = ArduinoEndpoints.THREE_POINT_TURN;     break;
+            case U_TURN:                 endpoint = ArduinoEndpoints.U_TURN;               break;
+            case PARKING_IN_BOX:         endpoint = ArduinoEndpoints.PARKING_IN_BOX;       break;
             default: return;
         }
 
         sendRequest(endpoint, res -> {
             model.setControlState(targetState);
-            logger.accept("Control Mode changed to: " + targetState);
         });
     }
 
     public void stop() {
-        sendRequest(ArduinoEndpoints.STOP, null);
+        sendRequest(ArduinoEndpoints.STOP, res -> {});
     }
 
     public void handleMovement(Set<String> activeInputs) {
-        // We ignore keyboard input if not in manual mode
-        if (model.getControlState() != RobotControlState.MANUAL) {
-            return;
-        }
         
         if (activeInputs.isEmpty()) {
             stop();
@@ -144,7 +132,7 @@ public class RobotController {
             endpoint = ArduinoEndpoints.STOP;
         }
 
-        sendRequest(endpoint, null);
+        sendRequest(endpoint, res -> {});
     }
 
     public void sendRequest(String endpoint, Consumer<HttpResponse<String>> onSuccess) {
@@ -158,7 +146,10 @@ public class RobotController {
                 Platform.runLater(() -> {
                     if (response != null) {
                         if (response.statusCode() == 200) {
-                            if (onSuccess != null) onSuccess.accept(response);
+                            if (onSuccess != null) {
+                                logger.accept(response.body());
+                                onSuccess.accept(response);
+                            } 
                         } else {
                             logger.accept("Command Failed: " + response.statusCode());
                         }

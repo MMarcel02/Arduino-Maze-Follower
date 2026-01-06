@@ -28,8 +28,8 @@ public class RobotModel {
     private final IntegerProperty irAnalogLeftRaw = new SimpleIntegerProperty(0);
     private final IntegerProperty irAnalogRightRaw = new SimpleIntegerProperty(0);
 
-    private final IntegerProperty leftIRThreshold = new SimpleIntegerProperty(50);
-    private final IntegerProperty rightIRThreshold = new SimpleIntegerProperty(50);
+    private final IntegerProperty leftIRThreshold = new SimpleIntegerProperty(37);
+    private final IntegerProperty rightIRThreshold = new SimpleIntegerProperty(37);
 
     // Map
     private final DoubleProperty x = new SimpleDoubleProperty(0);

@@ -189,8 +189,8 @@ public class DashboardView {
 
         // States
         emergencyStopToggle.selectedProperty().bindBidirectional(robotModel.emergencyStopEnabledProperty());
-        currentMovementStateLabel.textProperty().bind(Bindings.concat("Movement State: ", robotModel.movementStateProperty()));
-        currentControlStateLabel.textProperty().bind(Bindings.concat("Control Mode: ", robotModel.controlStateProperty()));
+        currentMovementStateLabel.textProperty().bind(Bindings.concat("M:: ", robotModel.movementStateProperty()));
+        currentControlStateLabel.textProperty().bind(Bindings.concat("C:: ", robotModel.controlStateProperty()));
     }
     
     private void setupSliders() {
@@ -310,19 +310,18 @@ public class DashboardView {
 
         try {
             String[] parts = tcpData.split(",");
-            if (parts.length >= 6) {
-
-                int irLeftRaw = Integer.parseInt(parts[3]);
-                int irRightRaw = Integer.parseInt(parts[4]);
+            if (parts.length >= 7) {
 
                 robotModel.setSensorData(
                     parseDistance(parts[0]), // Ultrasonic distance
                     parseToColour(parts[1]), //Left Digital ("WHITE" or "BLACK")
                     parseToColour(parts[2]), //Right Digital
-                    irLeftRaw, // Actual Raw value e.g. 60
-                    irRightRaw
+                    Integer.parseInt(parts[3]), // Actual Raw value for LEFT IR e.g. 60
+                    Integer.parseInt(parts[4])
                 );
                 robotModel.setMovementState(RobotMovementState.values()[Integer.parseInt(parts[5])]);
+                robotModel.setControlState(RobotControlState.values()[Integer.parseInt(parts[6])]);
+
             }
         } catch (Exception e) {
             logToTextArea("Error parsing TCP: " + tcpData);
