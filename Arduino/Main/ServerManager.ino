@@ -138,6 +138,18 @@ void route(WiFiClient& c, const String& path, const String& q) {
       handleSetDampening(c, dampening);
       return;
     }
+
+    if (path.startsWith("/setLeftIR")) {
+      int leftIRLimit = parseIntEndpoint(q);
+      handleSetLeftIRThreshold(c, leftIRLimit);
+      return;
+    }
+
+    if (path.startsWith("/setRightIR")) {
+      int rightIRLimit = parseIntEndpoint(q);
+      handleSetRightIRThreshold(c, rightIRLimit);
+      return;
+    }
 }
 
 // Helper to get string after s= 
@@ -237,6 +249,16 @@ void handleSetSensitivity (WiFiClient& client, double value) {
 void handleSetDampening(WiFiClient& client, double value) {
   dampening = value;
   sendHttpResponse(client, "Dampening set to " + String(dampening, 1));
+}
+
+void handleSetLeftIRThreshold(WiFiClient& client, int value) {
+  leftIRThreshold = value;
+  sendHttpResponse(client, "Left IR threshold set to " + String(value));
+}
+
+void handleSetRightIRThreshold(WiFiClient& client, int value) {
+  rightIRThreshold = value;
+  sendHttpResponse(client, "Right IR threshold set to " + String(value));
 }
 
 void handleToggleEmergencyStop(WiFiClient& client) {

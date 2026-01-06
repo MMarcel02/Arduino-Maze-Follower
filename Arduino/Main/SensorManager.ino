@@ -40,6 +40,10 @@ void readIRSensors() {
   rightAnalogIRReading = analogRead(IR_ANALOG_RIGHT_SENSOR_PIN);
 }
 
+void checkIRAnalogOverThreshold() {
+  leftIRAnalog = (leftAnalogIRReading > leftIRThreshold);
+  rightIRAnalog = (rightAnalogIRReading > rightIRThreshold);
+}
 
 void updateSensors() {
   // Read IR every cycle (for proper line following)

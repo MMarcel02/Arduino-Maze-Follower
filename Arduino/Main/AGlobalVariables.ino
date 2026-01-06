@@ -35,6 +35,11 @@ unsigned long lastUltrasonicReadTime = 0;
 int leftDigitalIRReading, rightDigitalIRReading;
 int leftAnalogIRReading, rightAnalogIRReading;
 
+int leftIRThreshold = 50;
+int rightIRThreshold = 50;
+
+boolean leftIRAnalog, rightIRAnalog;
+
 // Ultrasonic pins
 const int TRIG_PIN = 0;
 const int ECHO_PIN = 1; 
@@ -77,7 +82,7 @@ RobotControlState currentControlState = MANUAL;
 
 // --- Variables ---
 int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
-int motorTurningSpeed = motorSpeed - 20;
+int motorTurningSpeed = motorSpeed*0.8;
 // Motor speed passed down from GUI
 int motorSpeedOutsideLineFollow = motorSpeed;
 

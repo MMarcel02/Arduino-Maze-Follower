@@ -215,14 +215,14 @@ public class DashboardView {
 
         sensitivitySlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
             if (!isChanging) {
-                double roundedValue = Math.round(sensitivitySlider.getValue() * 100.0) / 100.0;
+                double roundedValue = Math.round(sensitivitySlider.getValue() * 10.0) / 10.0;
                 robotController.setSensitivity(roundedValue);
             }
         });
 
         dampeningSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
             if (!isChanging) {
-                double roundedValue = Math.round(dampeningSlider.getValue() * 100.0) / 100.0;
+                double roundedValue = Math.round(dampeningSlider.getValue() * 10.0) / 10.0;
                 robotController.setDampening(roundedValue);
             }
         });
