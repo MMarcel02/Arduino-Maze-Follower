@@ -384,6 +384,7 @@ void manageRobotMovementState() {
   }
 
   if (currentControlState == SOLVE_MAZE_1) {
+    bangTLineFollow();
       // To be implemented
   }
 
