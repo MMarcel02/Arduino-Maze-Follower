@@ -84,7 +84,6 @@ public class ArduinoTCPClient {
         connected = false;
         try {
             if (socket != null && !socket.isClosed()) {
-                logger.accept("Stopping TCP Server");
                 socket.close();
             }
         } catch (Exception e) {

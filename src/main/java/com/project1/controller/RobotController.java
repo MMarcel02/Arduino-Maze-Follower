@@ -79,17 +79,17 @@ public class RobotController {
     public void setControlState(RobotControlState targetState) {
         String endpoint;
         switch (targetState) {
-            case MANUAL:               endpoint = "/setMode?mode=manual"; break;
-            case LINE_FOLLOW_BANGBANG: endpoint = "/setMode?mode=line_bang"; break;
-            case LINE_FOLLOW_PD:       endpoint = "/setMode?mode=line_pd"; break;
-            case SOLVE_MAZE_1:         endpoint = "/setMode?mode=maze_1"; break;
-            case SOLVE_MAZE_2:         endpoint = "/setMode?mode=maze_2"; break;
-            case LOST_ROBOT:           endpoint = "/setMode?mode=lost_robot"; break;
-            case REVERSE_STRAIGHT:     endpoint = "/setMode?mode=reverse_straight"; break;
-            case REVERSE_CORNER:       endpoint = "/setMode?mode=reverse_corner"; break;
-            case THREE_POINT_TURN:     endpoint = "/setMode?mode=three_point_turn"; break;
-            case U_TURN:               endpoint = "/setMode?mode=u_turn"; break;
-            case PARKING_IN_BOX:       endpoint = "/setMode?mode=parking_in_box"; break;
+            case MANUAL:             endpoint = "/manual"; break; 
+            case LINE_FOLLOW_BANGBANG: endpoint = "/lineFollowBangBang"; break;
+            case LINE_FOLLOW_PD:       endpoint = "/lineFollowPD"; break;
+            case SOLVE_MAZE_1:         endpoint = "/solveMaze1"; break;
+            case SOLVE_MAZE_2:         endpoint = "/solveMaze2"; break;
+            case LOST_ROBOT:           endpoint = "/lostRobot"; break;
+            case REVERSE_STRAIGHT:     endpoint = "/reverseStraight"; break;
+            case REVERSE_CORNER:       endpoint = "/reverseCorner"; break;
+            case THREE_POINT_TURN:     endpoint = "/threePointTurn"; break;
+            case U_TURN:               endpoint = "/uTurn"; break;
+            case PARKING_IN_BOX:       endpoint = "/parkingInBox"; break;
             default: return;
         }
 

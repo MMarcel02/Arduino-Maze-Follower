@@ -101,6 +101,8 @@ void route(WiFiClient& c, const String& path, const String& q) {
 
     if (path == "/toggleEmergencyStop") { handleToggleEmergencyStop(c); return; }
 
+    if (path == "/manual") { handleManual(c); return; }
+    
     if (path == "/lineFollowBangBang") { handleLineFollowBangBang(c); return; }
     if (path == "/lineFollowPD") { handleLineFollowPD(c); return; }
 
@@ -265,6 +267,11 @@ void handleToggleEmergencyStop(WiFiClient& client) {
     emergencyStop = !emergencyStop;
     sendHttpResponse(client, ("Emergency stop set to " + boolToString(emergencyStop))); 
 }   
+
+void handleManual(WiFiClient& client) {
+    currentControlState = MANUAL;
+    sendHttpResponse(client, "Control State set to MANUAL"); 
+}
 
 void handleLineFollowBangBang(WiFiClient& client) {
     currentControlState = LINE_FOLLOW_BANGBANG;

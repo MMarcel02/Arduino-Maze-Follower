@@ -322,7 +322,7 @@ public class DashboardView {
                     irLeftRaw, // Actual Raw value e.g. 60
                     irRightRaw
                 );
-                robotModel.setMovementState(RobotMovementState.values()[Integer.parseInt(parts[3])]);
+                robotModel.setMovementState(RobotMovementState.values()[Integer.parseInt(parts[5])]);
             }
         } catch (Exception e) {
             logToTextArea("Error parsing TCP: " + tcpData);
