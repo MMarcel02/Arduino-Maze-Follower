@@ -19,161 +19,213 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox alignment="CENTER" fillWidth="false" focusTraversable="true" maxHeight="600.0" maxWidth="1500.0" minHeight="600.0" minWidth="1200.0" prefHeight="600.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project1.view.DashboardView">
+<VBox alignment="CENTER" focusTraversable="true" maxHeight="600.0" maxWidth="1500.0" minHeight="600.0" minWidth="1200.0" prefHeight="600.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project1.view.DashboardView">
    <children>
-      <HBox alignment="CENTER">
+      <HBox alignment="CENTER" prefHeight="600.0" prefWidth="1500.0" spacing="15.0">
          <children>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+            <VBox alignment="TOP_CENTER" prefHeight="550.0" prefWidth="587.0" spacing="15.0">
                <children>
-                  <AnchorPane minHeight="600.0" minWidth="625.0">
+                  <VBox prefHeight="350.0" prefWidth="582.0">
                      <children>
-                        <Label alignment="CENTER" layoutX="14.0" layoutY="16.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Values" textAlignment="CENTER" wrapText="false">
-                           <font>
-                              <Font size="18.0" fx:id="x1" />
-                           </font>
-                           <textFill>
-                              <Color red="0.624" green="0.624" blue="0.624" fx:id="x2" />
-                           </textFill>
-                        </Label>
-                        <Label fx:id="irLeft" layoutX="21.0" layoutY="53.0" text="IR Left: ">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="irRight" layoutX="20.0" layoutY="85.0" text="IR Right: ">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="ultraSonic" layoutX="20.0" layoutY="113.0" text="Ultrasonic:">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label alignment="CENTER" font="$x1" layoutX="416.0" layoutY="15.0" style="&#10;" text="Controls" textAlignment="CENTER" textFill="$x2" wrapText="false" />
-                        <TextArea fx:id="logArea" editable="false" focusTraversable="false" layoutX="9.0" layoutY="368.0" prefHeight="218.0" prefWidth="607.0">
+                        <HBox prefHeight="350.0" prefWidth="615.0" spacing="20.0">
+                           <children>
+                              <VBox alignment="TOP_CENTER" prefWidth="349.0" spacing="15.0">
+                                 <children>
+                                    <Label alignment="CENTER" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Sensor Values" textAlignment="CENTER" wrapText="false">
+                                       <font>
+                                          <Font size="18.0" fx:id="x1" />
+                                       </font>
+                                       <textFill>
+                                          <Color red="0.624" green="0.624" blue="0.624" fx:id="x2" />
+                                       </textFill>
+                                    </Label>
+                                    <VBox spacing="15.0">
+                                       <children>
+                                          <HBox spacing="30.0">
+                                             <children>
+                                                <Label fx:id="irDigitalLeft" prefWidth="140.0" text="IR-D Left: ">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label fx:id="irDigitalRight" text="IR-D Right: ">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <HBox spacing="30.0">
+                                             <children>
+                                                <Label fx:id="irAnalogLeft" prefWidth="140.0" text="IR-A Left: ">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label fx:id="irAnalogRight" text="IR-A Right: ">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <HBox spacing="30.0">
+                                             <children>
+                                                <Label fx:id="irAnalogLeftRaw" prefHeight="20.0" prefWidth="140.0" text="IR-A-L Raw: ">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label fx:id="irAnalogRightRaw" text="IR-A-R Raw: ">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <HBox>
+                                             <children>
+                                                <Label fx:id="ultraSonic" text="Ultrasonic:">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" prefHeight="150.0" prefWidth="331.0" spacing="15.0">
+                                       <children>
+                                          <Slider fx:id="speedSlider" blockIncrement="5.0" max="255.0" minorTickCount="2" prefHeight="24.0" prefWidth="245.0" value="80.0">
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                          </Slider>
+                                          <Label fx:id="speedLabel" text="Speed: 80">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <GridPane alignment="TOP_CENTER" hgap="4.0" prefHeight="63.0" prefWidth="331.0" vgap="4.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Button fx:id="bigDecrement" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#bigDecreaseSpeed" prefHeight="0.0" prefWidth="73.0">
+                                                   <graphic>
+                                                      <FontIcon iconLiteral="fas-minus" styleClass="buttonIcon" />
+                                                   </graphic>
+                                                </Button>
+                                                <Button fx:id="smallDecrement" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#smallDecreaseSpeed" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="1">
+                                                   <graphic>
+                                                      <FontIcon iconLiteral="fas-minus" styleClass="smallButtonIcon" />
+                                                   </graphic>
+                                                </Button>
+                                                <Button fx:id="smallIncrement" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#smallIncreaseSpeed" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="2">
+                                                   <graphic>
+                                                      <FontIcon iconLiteral="fas-plus" styleClass="smallButtonIcon" />
+                                                   </graphic>
+                                                </Button>
+                                                <Button fx:id="bigIncrement" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#bigIncreaseSpeed" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="3">
+                                                   <graphic>
+                                                      <FontIcon iconLiteral="fas-plus" styleClass="buttonIcon" />
+                                                   </graphic>
+                                                </Button>
+                                             </children>
+                                          </GridPane>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </VBox>
+                              <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0">
+                                 <children>
+                                    <Label alignment="CENTER" font="$x1" style="&#10;" text="Controls" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+                                    <Label fx:id="activeInputsLabel" maxHeight="53.0" maxWidth="218.0" prefHeight="53.0" prefWidth="218.0" text="Active: " wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <AnchorPane>
+                                       <children>
+                                          <GridPane alignment="TOP_CENTER" hgap="4.0" prefHeight="144.0" prefWidth="218.0" vgap="4.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Button fx:id="crabWalkLeft" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0">
+                                                   <GridPane.margin>
+                                                      <Insets />
+                                                   </GridPane.margin>
+                                                   <graphic>
+                                                      <FontIcon iconLiteral="fas-angle-double-left" styleClass="buttonIcon" />
+                                                   </graphic>
+                                                   
+                                                </Button>
+                                                <Button fx:id="upArrow" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="1">
+                                                   
+                                                   <GridPane.margin>
+                                                      <Insets />
+                                                   </GridPane.margin>
+                                                   <graphic>
+                                                      <FontIcon iconLiteral="fas-arrow-up" styleClass="buttonIcon" />
+                                                   </graphic>
+                                                </Button>
+                                                <Button fx:id="crabWalkRight" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="2">
+                                                   <graphic>
+                                                      <FontIcon iconLiteral="fas-angle-double-right" styleClass="buttonIcon" />
+                                                   </graphic>
+                                                </Button>
+                                                <Button fx:id="rightArrow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                   <graphic>
+                                                      <FontIcon iconLiteral="fas-arrow-right" styleClass="buttonIcon" />
+                                                   </graphic>
+                                                </Button>
+                                                <Button fx:id="downArrow" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                   <graphic>
+                                                      <FontIcon iconLiteral="fas-arrow-down" styleClass="buttonIcon" />
+                                                   </graphic>
+                                                </Button>
+                                                <Button fx:id="leftArrow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0" GridPane.rowIndex="1">
+                                                   <graphic>
+                                                      <FontIcon iconLiteral="fas-arrow-left" styleClass="buttonIcon" />
+                                                   </graphic>
+                                                </Button>
+                                             </children>
+                                          </GridPane>
+                                          <Button fx:id="stopButton" layoutY="148.0" mnemonicParsing="false" onMousePressed="#stopSpeed" prefHeight="70.0" prefWidth="218.0">
+                                             <graphic>
+                                                <FontIcon iconLiteral="fas-pause" styleClass="buttonIcon" />
+                                             </graphic>
+                                          </Button>
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="214.0" prefWidth="584.0" spacing="10.0">
+                     <children>
+                        <TextArea fx:id="logArea" editable="false" focusTraversable="false" prefHeight="214.0" prefWidth="584.0">
                            <font>
                               <Font name="Consolas" size="12.0" />
                            </font>
                         </TextArea>
-                        <VBox alignment="CENTER" layoutX="20.0" layoutY="173.0" prefHeight="150.0" prefWidth="284.0" spacing="15.0">
-                           <children>
-                              <Slider fx:id="speedSlider" blockIncrement="5.0" max="255.0" minorTickCount="2" prefHeight="24.0" prefWidth="245.0" value="80.0" />
-                              <Label fx:id="speedLabel" text="Speed: 80">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Label>
-                              <GridPane alignment="TOP_CENTER" hgap="4.0" prefHeight="63.0" prefWidth="284.0" vgap="4.0">
-                                 <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <Button fx:id="bigDecrement" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#bigDecreaseSpeed" prefHeight="0.0" prefWidth="73.0">
-                                       <graphic>
-                                          <FontIcon iconLiteral="fas-minus" styleClass="buttonIcon" />
-                                       </graphic>
-                                    </Button>
-                                    <Button fx:id="smallDecrement" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#smallDecreaseSpeed" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="1">
-                                       <graphic>
-                                          <FontIcon iconLiteral="fas-minus" styleClass="smallButtonIcon" />
-                                       </graphic>
-                                    </Button>
-                                    <Button fx:id="smallIncrement" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#smallIncreaseSpeed" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="2">
-                                       <graphic>
-                                          <FontIcon iconLiteral="fas-plus" styleClass="smallButtonIcon" />
-                                       </graphic>
-                                    </Button>
-                                    <Button fx:id="bigIncrement" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#bigIncreaseSpeed" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="3">
-                                       <graphic>
-                                          <FontIcon iconLiteral="fas-plus" styleClass="buttonIcon" />
-                                       </graphic>
-                                    </Button>
-                                 </children>
-                              </GridPane>
-                           </children>
-                        </VBox>
-                        <AnchorPane layoutX="349.0" layoutY="105.0">
-                           <children>
-                              <GridPane alignment="TOP_CENTER" hgap="4.0" prefHeight="144.0" prefWidth="218.0" vgap="4.0">
-                                 <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <Button fx:id="crabWalkLeft" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0">
-                                       <GridPane.margin>
-                                          <Insets />
-                                       </GridPane.margin>
-                                       <graphic>
-                                          <FontIcon iconLiteral="fas-angle-double-left" styleClass="buttonIcon" />
-                                       </graphic>
-                                       
-                                    </Button>
-                                    <Button fx:id="upArrow" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="1">
-                                       
-                                       <GridPane.margin>
-                                          <Insets />
-                                       </GridPane.margin>
-                                       <graphic>
-                                          <FontIcon iconLiteral="fas-arrow-up" styleClass="buttonIcon" />
-                                       </graphic>
-                                    </Button>
-                                    <Button fx:id="crabWalkRight" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="2">
-                                       <graphic>
-                                          <FontIcon iconLiteral="fas-angle-double-right" styleClass="buttonIcon" />
-                                       </graphic>
-                                    </Button>
-                                    <Button fx:id="rightArrow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                                       <graphic>
-                                          <FontIcon iconLiteral="fas-arrow-right" styleClass="buttonIcon" />
-                                       </graphic>
-                                    </Button>
-                                    <Button fx:id="downArrow" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                       <graphic>
-                                          <FontIcon iconLiteral="fas-arrow-down" styleClass="buttonIcon" />
-                                       </graphic>
-                                    </Button>
-                                    <Button fx:id="leftArrow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#onButtonPressed" onMouseReleased="#onButtonReleased" prefHeight="0.0" prefWidth="73.0" GridPane.rowIndex="1">
-                                       <graphic>
-                                          <FontIcon iconLiteral="fas-arrow-left" styleClass="buttonIcon" />
-                                       </graphic>
-                                    </Button>
-                                 </children>
-                              </GridPane>
-                              <Button fx:id="stopButton" layoutY="148.0" mnemonicParsing="false" onMousePressed="#stopSpeed" prefHeight="70.0" prefWidth="218.0">
-                                 <graphic>
-                                    <FontIcon iconLiteral="fas-pause" styleClass="buttonIcon" />
-                                 </graphic>
-                              </Button>
-                           </children>
-                        </AnchorPane>
-                        <Label alignment="CENTER" layoutX="9.0" layoutY="334.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Logs:" textAlignment="CENTER" wrapText="false">
-                           <textFill>
-                              <Color red="0.624" green="0.624" blue="0.624" fx:id="x21" />
-                           </textFill>
-                           <font>
-                              <Font size="18.0" fx:id="x11" />
-                           </font>
-                        </Label>
-                        <Label fx:id="activeInputsLabel" layoutX="349.0" layoutY="43.0" maxHeight="53.0" maxWidth="218.0" prefHeight="53.0" prefWidth="218.0" text="Active: " wrapText="true">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
                      </children>
-                  </AnchorPane>
+                  </VBox>
                </children>
             </VBox>
             <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="600.0" prefWidth="300.0" spacing="20.0">
@@ -229,12 +281,12 @@
                   </Slider>
                </children>
                <HBox.margin>
-                  <Insets top="14.0" />
+                  <Insets />
                </HBox.margin>
             </VBox>
-            <VBox alignment="TOP_CENTER" prefHeight="529.0" prefWidth="256.0" spacing="15.0">
+            <VBox alignment="TOP_CENTER" prefHeight="572.0" prefWidth="274.0" spacing="10.0">
                <children>
-                  <Label alignment="CENTER" style="&#10;" text="Emergency Stop" textAlignment="CENTER" wrapText="false">
+                  <Label alignment="CENTER" style="&#10;" text="Adjustments" textAlignment="CENTER" wrapText="false">
                      <font>
                         <Font size="18.0" fx:id="x13" />
                      </font>
@@ -253,27 +305,36 @@
                         <Insets bottom="10.0" top="10.0" />
                      </VBox.margin>
                   </Label>
-                  <Label fx:id="currentControlStateLabel" prefHeight="17.0" prefWidth="243.0" text="Control Mode:">
+                  <Label fx:id="currentControlStateLabel" prefHeight="17.0" prefWidth="243.0" text="Control Mode: ">
                      <font>
                         <Font size="14.0" />
                      </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
                   </Label>
                   <Label text="Emergency stop distance">
                      <font>
                         <Font size="14.0" />
                      </font>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
                   </Label>
                   <Slider fx:id="emergencyStopSlider" blockIncrement="1.0" majorTickUnit="10.0" max="50.0" showTickLabels="true" value="20.0" />
                   <ToggleButton fx:id="emergencyStopToggle" mnemonicParsing="false" onAction="#toggleEmergencyStop" prefHeight="25.0" prefWidth="275.0" text="Emergency Stop">
                      <font>
                         <Font size="14.0" />
-                     </font></ToggleButton>
-                  <Label alignment="CENTER" prefHeight="20.0" prefWidth="269.0" text="PD Line Following">
-                     <font>
-                        <Font size="18.0" />
                      </font>
                      <VBox.margin>
-                        <Insets top="15.0" />
+                        <Insets />
+                     </VBox.margin></ToggleButton>
+                  <Label alignment="CENTER" prefHeight="20.0" prefWidth="269.0" text="PD Line Following">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="10.0" />
                      </VBox.margin>
                   </Label>
                   <Label text="Sensitivity">
@@ -281,16 +342,48 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Slider fx:id="sensitivitySlider" blockIncrement="0.1" majorTickUnit="2.5" max="10.0" minorTickCount="2" showTickLabels="true" value="5.0" />
+                  <Slider fx:id="sensitivitySlider" blockIncrement="0.1" majorTickUnit="2.5" max="10.0" minorTickCount="0" showTickLabels="true" value="5.0" />
                   <Label text="Dampening">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
                   <Slider fx:id="dampeningSlider" blockIncrement="0.1" majorTickUnit="1.0" max="5.0" minorTickCount="2" showTickLabels="true" value="1.0" />
+                  <Label text="IR-A Black Detected Threshold">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <HBox prefHeight="44.0" prefWidth="274.0" spacing="5.0">
+                     <children>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <Slider fx:id="irLeftThresholdSlider" showTickLabels="true" value="50.0" />
+                              <Label text="Left">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <Slider fx:id="irRightThresholdSlider" showTickLabels="true" value="50.0" />
+                              <Label text="Right">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
                </children>
                <HBox.margin>
-                  <Insets bottom="14.0" left="7.0" right="7.0" top="14.0" />
+                  <Insets />
                </HBox.margin>
                <opaqueInsets>
                   <Insets />
@@ -300,7 +393,7 @@
                <children>
                   <Label alignment="TOP_CENTER" font="$x1" style="&#10;" text="Maneuvers" textAlignment="CENTER" textFill="$x2" wrapText="false">
                      <VBox.margin>
-                        <Insets bottom="5.0" />
+                        <Insets bottom="15.0" />
                      </VBox.margin>
                   </Label>
                   <Button fx:id="bangLineFollow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleBangLineFollow" prefHeight="45.0" prefWidth="73.0" text="Bang Bang Line Following">
@@ -318,7 +411,7 @@
                         <Font size="14.0" />
                      </font>
                      <VBox.margin>
-                        <Insets top="10.0" />
+                        <Insets top="12.0" />
                      </VBox.margin>
                   </Button>
                   <Button fx:id="solveMaze2" mnemonicParsing="false" onMousePressed="#handleSolveMaze2" prefHeight="45.0" prefWidth="256.0" text="Maze Algo #2">
@@ -336,7 +429,7 @@
                         <Font size="14.0" />
                      </font>
                      <VBox.margin>
-                        <Insets top="10.0" />
+                        <Insets top="12.0" />
                      </VBox.margin>
                   </Button>
                   <Button fx:id="reverseCorner" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleReverseCorner" prefHeight="45.0" prefWidth="73.0" text="Reverse Corner">
@@ -361,7 +454,7 @@
                   </Button>
                </children>
                <HBox.margin>
-                  <Insets bottom="14.0" left="7.0" right="7.0" top="14.0" />
+                  <Insets />
                </HBox.margin>
             </VBox>
          </children>
@@ -373,4 +466,7 @@
    <cursor>
       <Cursor fx:constant="DEFAULT" />
    </cursor>
+   <padding>
+      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+   </padding>
 </VBox>

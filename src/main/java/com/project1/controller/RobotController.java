@@ -62,6 +62,20 @@ public class RobotController {
         });
     }
 
+    public void setLeftIRThreshold(int targetVal) {
+        sendRequest(ArduinoEndpoints.getLeftIRThresholdEndpoint(targetVal), res -> {
+            model.setLeftIRThreshold(targetVal);
+            logger.accept("Left IR Analog Threshold set to: " + targetVal);
+        });
+    }
+
+    public void setRightIRThreshold(int targetVal) {
+        sendRequest(ArduinoEndpoints.getRightIRThresholdEndpoint(targetVal), res -> {
+            model.setRightIRThreshold(targetVal);
+            logger.accept("Right IR Analog Threshold set to: " + targetVal);
+        });
+    }
+
     public void setControlState(RobotControlState targetState) {
         String endpoint;
         switch (targetState) {

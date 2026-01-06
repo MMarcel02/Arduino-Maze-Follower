@@ -43,8 +43,8 @@ public class DashboardView {
     @FXML private Canvas canvas;
     @FXML private TextArea logArea;
     @FXML private Label activeInputsLabel, speedLabel, xLabel, yLabel, angleLabel, currentMovementStateLabel, currentControlStateLabel;
-    @FXML private Label irLeft, irRight, ultraSonic;
-    @FXML private Slider speedSlider, canvasRotationSlider, emergencyStopSlider, sensitivitySlider, dampeningSlider;
+    @FXML private Label irDigitalLeft, irDigitalRight, irAnalogLeft, irAnalogRight, irAnalogLeftRaw, irAnalogRightRaw, ultraSonic;
+    @FXML private Slider speedSlider, canvasRotationSlider, emergencyStopSlider, sensitivitySlider, dampeningSlider, irLeftThresholdSlider, irRightThresholdSlider;
     @FXML private Button clearMapButton;
     @FXML private Button upArrow, downArrow, leftArrow, rightArrow, crabWalkLeft, crabWalkRight, stopButton;
     @FXML private Button bigDecrement, smallDecrement, bigIncrement, smallIncrement;
@@ -160,8 +160,31 @@ public class DashboardView {
         angleLabel.textProperty().bind(Bindings.format("Angle: %.2f rad", robotModel.angleProperty()));
 
         // Sensors
-        irLeft.textProperty().bind(Bindings.concat("IR Left: ", robotModel.leftIRProperty()));
-        irRight.textProperty().bind(Bindings.concat("IR Right: ", robotModel.rightIRProperty()));
+        irDigitalLeft.textProperty().bind(Bindings.concat("IR-D Left: ", robotModel.leftIRDigitalProperty()));
+        irDigitalRight.textProperty().bind(Bindings.concat("IR-D Right: ", robotModel.rightIRDigitalProperty()));
+
+        irAnalogLeft.textProperty().bind(Bindings.createStringBinding(() -> {
+            int rawValue = robotModel.leftIRAnalogRawProperty().get();
+            int threshold = robotModel.leftIRThresholdProperty().get();
+            
+            String status = (rawValue > threshold) ? "BLACK" : "WHITE";
+            return "IR-A Left: " + status;
+            
+        }, robotModel.leftIRAnalogRawProperty(), robotModel.leftIRThresholdProperty()));
+
+        irAnalogLeft.textProperty().bind(Bindings.createStringBinding(() -> {
+            int rawValue = robotModel.rightIRAnalogRawProperty().get();
+            int threshold = robotModel.rightIRThresholdProperty().get();
+            
+            String status = (rawValue > threshold) ? "BLACK" : "WHITE";
+            return "IR-A Right: " + status;
+            
+        }, robotModel.rightIRAnalogRawProperty(), robotModel.rightIRThresholdProperty()));
+
+
+        irAnalogLeftRaw.textProperty().bind(Bindings.concat("IR-A-L Raw: ", robotModel.leftIRAnalogRawProperty()));
+        irAnalogRightRaw.textProperty().bind(Bindings.concat("IR-A-R Raw: ", robotModel.rightIRAnalogRawProperty()));
+
         ultraSonic.textProperty().bind(Bindings.concat("Ultrasonic: ", robotModel.ultrasonicProperty()));
 
         // States
@@ -192,13 +215,27 @@ public class DashboardView {
 
         sensitivitySlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
             if (!isChanging) {
-                robotController.setSensitivity(sensitivitySlider.getValue());
+                double roundedValue = Math.round(sensitivitySlider.getValue() * 100.0) / 100.0;
+                robotController.setSensitivity(roundedValue);
             }
         });
 
         dampeningSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
             if (!isChanging) {
-                robotController.setDampening(dampeningSlider.getValue());
+                double roundedValue = Math.round(dampeningSlider.getValue() * 100.0) / 100.0;
+                robotController.setDampening(roundedValue);
+            }
+        });
+
+        irLeftThresholdSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
+            if (!isChanging) {
+                robotController.setLeftIRThreshold((int) irLeftThresholdSlider.getValue());
+            }
+        });
+
+        irRightThresholdSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
+            if (!isChanging) {
+                robotController.setRightIRThreshold((int) irRightThresholdSlider.getValue());
             }
         });
 
@@ -209,6 +246,9 @@ public class DashboardView {
         sensitivitySlider.setValue(robotModel.getSensitivity());
         dampeningSlider.setValue(robotModel.getDampening());
         emergencyStopSlider.setValue(robotModel.getEmergencyStopDistance());
+        irLeftThresholdSlider.setValue(robotModel.getLeftIRThreshold());
+        irRightThresholdSlider.setValue(robotModel.getRightIRThreshold());
+
     }
 
 
@@ -270,11 +310,17 @@ public class DashboardView {
 
         try {
             String[] parts = tcpData.split(",");
-            if (parts.length >= 4) {
+            if (parts.length >= 6) {
+
+                int irLeftRaw = Integer.parseInt(parts[3]);
+                int irRightRaw = Integer.parseInt(parts[4]);
+
                 robotModel.setSensorData(
-                    parseDistance(parts[0]), 
-                    parseToColour(parts[1]), 
-                    parseToColour(parts[2])
+                    parseDistance(parts[0]), // Ultrasonic distance
+                    parseToColour(parts[1]), //Left Digital ("WHITE" or "BLACK")
+                    parseToColour(parts[2]), //Right Digital
+                    irLeftRaw, // Actual Raw value e.g. 60
+                    irRightRaw
                 );
                 robotModel.setMovementState(RobotMovementState.values()[Integer.parseInt(parts[3])]);
             }

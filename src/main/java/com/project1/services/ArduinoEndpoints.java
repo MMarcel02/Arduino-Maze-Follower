@@ -33,6 +33,12 @@ public final class ArduinoEndpoints {
         return "/setDampening?s=" + value;
     }
 
+    public static String getLeftIRThresholdEndpoint(int value) {
+        return "/setLeftIR?s=" + value;
+    }
 
-    private ArduinoEndpoints() {}
+    public static String getRightIRThresholdEndpoint(int value) {
+        return "/setRightIR?s=" + value;
+    }
+    
 }

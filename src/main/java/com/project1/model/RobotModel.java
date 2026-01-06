@@ -7,6 +7,7 @@ import javafx.geometry.Point2D;
 
 // In MVC the model stores all the data in one place, is is updated by the Controller and it tells the View what to display
 public class RobotModel {
+    public RobotModel() {};
 
     // We use these JavaFX property objects so we can bind our GUI to these values
     private final IntegerProperty speed = new SimpleIntegerProperty(80);
@@ -21,17 +22,21 @@ public class RobotModel {
     
     // Sensors
     private final StringProperty ultrasonic = new SimpleStringProperty("WAITING");
-    private final StringProperty leftIR = new SimpleStringProperty("WAITING");
-    private final StringProperty rightIR = new SimpleStringProperty("WAITING");
-    
+    private final StringProperty irLeftDigital = new SimpleStringProperty("WAITING");
+    private final StringProperty irRightDigital = new SimpleStringProperty("WAITING");
+
+    private final IntegerProperty irAnalogLeftRaw = new SimpleIntegerProperty(0);
+    private final IntegerProperty irAnalogRightRaw = new SimpleIntegerProperty(0);
+
+    private final IntegerProperty leftIRThreshold = new SimpleIntegerProperty(50);
+    private final IntegerProperty rightIRThreshold = new SimpleIntegerProperty(50);
+
     // Map
     private final DoubleProperty x = new SimpleDoubleProperty(0);
     private final DoubleProperty y = new SimpleDoubleProperty(0);
     private final DoubleProperty angle = new SimpleDoubleProperty(Math.toRadians(90)); 
     private final DoubleProperty angleMultiplier = new SimpleDoubleProperty(1.5); 
     private final ObservableList<Point2D> positionHistory = FXCollections.observableArrayList();
-
-    public RobotModel() {}
 
     public IntegerProperty speedProperty() { return speed; }
     public DoubleProperty sensitivityProperty() { return sensitivity; }
@@ -49,9 +54,14 @@ public class RobotModel {
     public ObservableList<Point2D> getPositionHistory() { return positionHistory; }
 
     public StringProperty ultrasonicProperty() { return ultrasonic; }
-    public StringProperty leftIRProperty() { return leftIR; }
-    public StringProperty rightIRProperty() { return rightIR; }
-    
+    public StringProperty leftIRDigitalProperty() { return irLeftDigital; }
+    public StringProperty rightIRDigitalProperty() { return irRightDigital; }
+
+    public IntegerProperty leftIRAnalogRawProperty() { return irAnalogLeftRaw; }
+    public IntegerProperty rightIRAnalogRawProperty() { return irAnalogRightRaw; }
+
+    public IntegerProperty leftIRThresholdProperty() { return leftIRThreshold; }
+    public IntegerProperty rightIRThresholdProperty() { return rightIRThreshold; }
 
     public int getSpeed() { return speed.get(); }
     public void setSpeed(int val) { this.speed.set(val); }
@@ -67,6 +77,12 @@ public class RobotModel {
 
     public boolean isEmergencyStopEnabled() { return emergencyStopEnabled.get(); }
     public void setEmergencyStopEnabled(boolean val) { this.emergencyStopEnabled.set(val); }
+
+    public int getLeftIRThreshold() { return leftIRThreshold.get(); }
+    public void setLeftIRThreshold(int val) { this.leftIRThreshold.set(val); }
+
+    public int getRightIRThreshold() { return rightIRThreshold.get(); }
+    public void setRightIRThreshold(int val) { this.rightIRThreshold.set(val); }
     
     public RobotMovementState getMovementState() { return movementState.get(); }
     public void setMovementState(RobotMovementState val) { this.movementState.set(val); }
@@ -90,10 +106,12 @@ public class RobotModel {
         positionHistory.clear();
     }
 
-    public void setSensorData(String dist, String leftIR, String rightIR) {
+    public void setSensorData(String dist, String irLeftDigital, String irRightDigital, int irLeftRaw, int irRightRaw) {
         this.ultrasonic.set(dist);
-        this.leftIR.set(leftIR);
-        this.rightIR.set(rightIR);
+        this.irLeftDigital.set(irLeftDigital);
+        this.irRightDigital.set(irRightDigital);
+        this.irAnalogLeftRaw.set(irLeftRaw);
+        this.irAnalogRightRaw.set(irRightRaw);
     }
     
 }

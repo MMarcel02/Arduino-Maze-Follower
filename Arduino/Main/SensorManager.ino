@@ -55,9 +55,5 @@ void updateSensors() {
 }
 
 String buildSensorMessage() {
-  return String(distance, 2) + "," + String(leftDigitalIRReading) + "," + String(rightDigitalIRReading);
+  return String(distance, 2) + "," + String(leftDigitalIRReading) + "," + String(rightDigitalIRReading)+ "," + String(leftAnalogIRReading) + "," + String(rightAnalogIRReading);
 }
-
-
-pinMode(PIN_IR_RIGHT_ANALOG, INPUT);
-pinMode(PIN_IR_RIGHT_ANALOG, INPUT);
