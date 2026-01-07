@@ -32,15 +32,15 @@ void loop() {
 
   // Updates the IR and UltraSonic values
   updateSensors();
-bangTLineFollowState();
+  
   // Checks for emergency stop / line following
-  //manageRobotMovementState();
+  manageRobotMovementState();
 
   // // Checks if received a new HTTP command, e.g. /forward
-  // handleHTTPCommands();
+  handleHTTPCommands();
 
   // // Sends Sensor Data back to GUI
-  // handleTCPData();
+  handleTCPData();
 }
 
 
