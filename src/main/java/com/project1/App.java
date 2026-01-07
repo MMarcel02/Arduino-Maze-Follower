@@ -9,7 +9,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-aa
 import java.io.IOException;
 
 import com.project1.view.DashboardView;
@@ -30,7 +29,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException { 
         // This if if we want to start our window without the default OS close, expand, minimize buttons, but we'd need to create our own ones
-        // primaryStage.initStyle(StageStyle.UNDECORATED);
+        // primaryStage.initStyle(StageStyle.UNDECORATED);w
 
         // So we load our layout of our GUI (kind of like HTML in web dev)
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("GUI.fxml"));
