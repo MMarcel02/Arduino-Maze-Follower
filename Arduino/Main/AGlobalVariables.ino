@@ -96,3 +96,6 @@ double dampening = 1.0;
 // Time it keeps turning after it stopped seeing a line
 int lineMemoryLatency = 150;
 
+
+// Maze State
+int mazeState = 0;

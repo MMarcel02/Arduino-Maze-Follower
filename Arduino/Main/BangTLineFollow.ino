@@ -28,7 +28,5 @@ void bangTLineFollow() {
         setLineFollowingSpeed(215); 
 
         turnOnSpotLeft();
-        if (rightDigitalIRReading == 1)
     }
-
 }
