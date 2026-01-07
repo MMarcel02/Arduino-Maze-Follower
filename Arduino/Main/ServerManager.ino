@@ -152,6 +152,18 @@ void route(WiFiClient& c, const String& path, const String& q) {
       handleSetRightIRThreshold(c, rightIRLimit);
       return;
     }
+
+    if (path.startsWith("/setMazeSpeed")) {
+      int mazeSpeed = parseIntEndpoint(q);
+      handleSetRightIRThreshold(c, mazeSpeed);
+      return;
+    }
+
+    if (path.startsWith("/setRightDelay")) {
+      int rightDelay = parseIntEndpoint(q);
+      handleSetRightIRThreshold(c, rightDelay);
+      return;
+    }
 }
 
 // Helper to get string after s= 
@@ -261,6 +273,16 @@ void handleSetLeftIRThreshold(WiFiClient& client, int value) {
 void handleSetRightIRThreshold(WiFiClient& client, int value) {
   rightIRThreshold = value;
   sendHttpResponse(client, "Right IR threshold set to " + String(value));
+}
+
+void handleSetMazeSpeed(WiFiClient& client, int value) {
+  mazeSpeed = value;
+  sendHttpResponse(client, "Maze Speed set to: " + String(value));
+}
+
+void handleSetRightDelay(WiFiClient& client, int value) {
+  rightDelay = value;
+  sendHttpResponse(client, "Right Delay set to " + String(value));
 }
 
 void handleToggleEmergencyStop(WiFiClient& client) {

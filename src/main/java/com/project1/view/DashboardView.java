@@ -21,6 +21,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 import javafx.application.Platform;
@@ -50,6 +51,8 @@ public class DashboardView {
     @FXML private ToggleButton emergencyStopToggle;
     @FXML private Button bangLineFollow, pdLineFollow, solveMaze1, solveMaze2, lostRobot, parkingInBox, reverseCorner, reverseStraight, threePointTurn, uTurn, extraSpace;
 
+    @FXML private TextField mazeTurningSpeed, delayForRight;
+    @FXML private Button updateMazeTurning, updateDelayForRight;
 
     @FXML void bigDecreaseSpeed(MouseEvent e) { robotController.setSpeed(robotModel.getSpeed() - 20); }
     @FXML void bigIncreaseSpeed(MouseEvent e) { robotController.setSpeed(robotModel.getSpeed() + 20); }
@@ -138,6 +141,9 @@ public class DashboardView {
 
         setupBindings();
         setupSliders();
+
+        setupDebugButtons();
+
         mapPhysics.start();
 
         
@@ -148,6 +154,30 @@ public class DashboardView {
         });
         
         tcpClient.connect();
+    }
+
+    private void setupDebugButtons() {
+        updateMazeTurning.setOnAction(e -> {
+            try {
+                int val = Integer.parseInt(mazeTurningSpeed.getText());
+                
+                robotController.setMazeSpeed(val); 
+                
+            } catch (NumberFormatException ex) {
+                logToTextArea("Error: '" + mazeTurningSpeed.getText() + "' is not a valid number.");
+            }
+        });
+
+        updateDelayForRight.setOnAction(e -> {
+            try {
+                int val = Integer.parseInt(delayForRight.getText());
+                
+                robotController.setRightDelay(val); 
+
+            } catch (NumberFormatException ex) {
+                logToTextArea("Error: '" + delayForRight.getText() + "' is not a valid number.");
+            }
+        });
     }
 
     private void setupBindings() {

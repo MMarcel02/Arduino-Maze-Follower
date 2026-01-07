@@ -7,13 +7,13 @@ void bangTLineFollowState() {
             setLineFollowingSpeed(motorSpeedOutsideLineFollow);
             moveForward();
         } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 0) {
-            setLineFollowingSpeed(150);
+            setLineFollowingSpeed(mazeSpeed);
             turnOnSpotLeft();
-            delay(10);
+            delay(rightDelay);
         } else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 1) {
-            setLineFollowingSpeed(150); 
+            setLineFollowingSpeed(mazeSpeed); 
             turnOnSpotRight();
-            delay(10);
+            delay(rightDelay);
         } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 1) {
             stopAllMotors();
             delay(1500);
@@ -29,7 +29,7 @@ void bangTLineFollowState() {
             mazeState = 2;
         }
     } else if (mazeState == 2) {
-        setLineFollowingSpeed(150);
+        setLineFollowingSpeed(mazeSpeed);
         turnOnSpotLeft();
         if (rightDigitalIRReading == 1) {
             mazeState = 0;

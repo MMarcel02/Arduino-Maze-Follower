@@ -99,3 +99,6 @@ int lineMemoryLatency = 150;
 
 // Maze State
 int mazeState = 0;
+
+int mazeSpeed = 150;
+int rightDelay = 20;

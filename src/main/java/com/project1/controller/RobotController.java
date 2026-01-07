@@ -135,6 +135,14 @@ public class RobotController {
         sendRequest(endpoint, res -> {});
     }
 
+    public void setMazeSpeed(int val) {
+        sendRequest("/setMazeSpeed?s=" + val, res -> {});
+    }
+
+    public void setRightDelay(int val) {
+        sendRequest("/setRightDelay?s=" + val, res -> {});
+    }
+
     public void sendRequest(String endpoint, Consumer<HttpResponse<String>> onSuccess) {
         
         currentEndpoint = endpoint;
