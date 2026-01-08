@@ -392,7 +392,7 @@ void manageRobotMovementState() {
   }
 
   if (currentControlState == LOST_ROBOT) {
-      // To be implemented
+      searchForLine();
   }
 
   if (currentControlState == REVERSE_STRAIGHT) {
