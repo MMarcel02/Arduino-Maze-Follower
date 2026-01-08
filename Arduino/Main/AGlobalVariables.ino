@@ -96,3 +96,23 @@ double dampening = 1.0;
 // Time it keeps turning after it stopped seeing a line
 int lineMemoryLatency = 150;
 
+// Maze solver variables 
+
+// int mazeState = 0;
+
+enum MazeState {
+    FOLLOW_LINE,
+    CLEAR_JUNCTION,
+    CHECK_LEFT_130DEG,
+    CHECK_LEFT_DONE_CENTERING_LINE,
+    RETURN_FROM_LEFT_TO_LINE,
+};
+
+MazeState mazeState = FOLLOW_LINE;
+unsigned long stateStartTime = 0;
+
+const unsigned long CLEAR_JUNCTION_TIME = 500;
+const unsigned long CHECK_LEFT_130DEG_TIME = 150;
+const unsigned long CENTERING_TIMEOUT = 100;
+
+
