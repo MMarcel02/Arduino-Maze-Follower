@@ -1,4 +1,4 @@
-void bangLineFollowStates() {
+void bangLineFollowStatesWithStops() {
 
     unsigned long currentTime = millis();
 
@@ -9,11 +9,11 @@ void bangLineFollowStates() {
             setLineFollowingSpeed(motorSpeedOutsideLineFollow);
             moveForward(); 
         } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 0) {
-            setLineFollowingSpeed(215);
-            turnOnSpotLeft();
+            stateStartTime = currentTime;
+            mazeState = STOP_AND_SETTLE;
         } else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 1) {
-            setLineFollowingSpeed(215);
-            turnOnSpotRight();
+            stateStartTime = currentTime;
+            mazeState = STOP_AND_SETTLE;
         } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 1) {
             setLineFollowingSpeed(motorSpeedOutsideLineFollow);
             moveForward();
@@ -21,6 +21,35 @@ void bangLineFollowStates() {
             mazeState = CLEAR_JUNCTION;
         }
         break;
+
+        case STOP_AND_SETTLE:
+            stopAllMotors();
+            if (currentTime - stateStartTime >= STOP_AND_SETTLE_TIME) {
+                if (leftDigitalIRReading == 1 && rightDigitalIRReading == 0) {
+                    mazeState = TURN_LEFT;
+                } else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 1) {
+                    mazeState = TURN_RIGHT;
+                }
+            }
+            break;
+
+        case TURN_LEFT:
+            setLineFollowingSpeed(150);
+            turnOnSpotLeft();
+            if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
+                stopAllMotors();
+                mazeState = FOLLOW_LINE;
+            }
+            break;
+
+        case TURN_RIGHT:
+            setLineFollowingSpeed(150);
+            turnOnSpotRight();
+            if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
+                stopAllMotors();
+                mazeState = FOLLOW_LINE;
+            }
+            break;
 
         case CLEAR_JUNCTION:
             moveForward();

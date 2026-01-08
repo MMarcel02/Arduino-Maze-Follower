@@ -106,6 +106,9 @@ enum MazeState {
     CHECK_LEFT_130DEG,
     CHECK_LEFT_DONE_CENTERING_LINE,
     RETURN_FROM_LEFT_TO_LINE,
+    STOP_AND_SETTLE,
+    TURN_LEFT,
+    TURN_RIGHT,
 };
 
 MazeState mazeState = FOLLOW_LINE;
@@ -114,5 +117,7 @@ unsigned long stateStartTime = 0;
 const unsigned long CLEAR_JUNCTION_TIME = 500;
 const unsigned long CHECK_LEFT_130DEG_TIME = 1500;
 const unsigned long CENTERING_TIMEOUT = 200;
+const unsigned long STOP_AND_SETTLE_TIME = 300;
 
+int loopTjunctionsCount = 0;
 
