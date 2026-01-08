@@ -98,18 +98,4 @@ void crabWalkLeft () {
   setMotor(BR_PWM, BR_DIR, motorSpeed, false);
 }
 
-void turnOnSpotLeftV2 () {
-  setMotor(FL_PWM, FL_DIR, motorSpeed*0.8, false);
-  setMotor(FR_PWM, FR_DIR, motorSpeed, true);
-  setMotor(BL_PWM, BL_DIR, motorSpeed*0.8, false);
-  setMotor(BR_PWM, BR_DIR, motorSpeed, true);
-}
-
-void turnOnSpotRightV2 () {
-  currentMovementState = TURN_SPOT_RIGHT;
-  setMotor(FL_PWM, FL_DIR, motorSpeed, true);
-  setMotor(FR_PWM, FR_DIR, motorSpeed*0.8, false);
-  setMotor(BL_PWM, BL_DIR, motorSpeed, true);
-  setMotor(BR_PWM, BR_DIR, motorSpeed*0.8, false);
-}
 

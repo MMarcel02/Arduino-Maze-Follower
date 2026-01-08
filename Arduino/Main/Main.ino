@@ -17,10 +17,10 @@ void handleTCPData();
 // setup() is automatically ran by Arduino on startup
 void setup() {
   Serial.begin(115200); // USB Port for debugging
-  delay(1000); // delay for the server to setup
-  setupWifiPins(); 
-  wifiSafetyCheck();
-  startWifiAp();
+  // delay(1000); // delay for the server to setup
+  // setupWifiPins(); 
+  // wifiSafetyCheck();
+  // startWifiAp();
   setupAllMotors();
   stopAllMotors();
   setupUltraSonicSensor();

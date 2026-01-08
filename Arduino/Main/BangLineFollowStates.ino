@@ -9,10 +9,10 @@ void bangLineFollowStates() {
             setLineFollowingSpeed(motorSpeedOutsideLineFollow);
             moveForward(); 
         } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 0) {
-            setLineFollowingSpeed(215);
+            setLineFollowingSpeed(150);
             turnOnSpotLeft();
         } else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 1) {
-            setLineFollowingSpeed(215);
+            setLineFollowingSpeed(150);
             turnOnSpotRight();
         } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 1) {
             setLineFollowingSpeed(motorSpeedOutsideLineFollow);
@@ -68,8 +68,6 @@ void bangLineFollowStates() {
                 break;
             }
             break;            
-                
-         
-    
+                  
     }
 }
