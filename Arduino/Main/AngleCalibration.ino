@@ -28,14 +28,8 @@ void calibrate() {
   if (calibrationState == 0) {
     startTime = millis();
     
-    
     calibrationState = 1;
     motorSpeed = testedSpeeds[currentTestingSpeedIdx];
-    
-    if (motorSpeed == 0) {
-      previewCalibrationState = 4;
-      return;
-    }
     
     // start turning immediately
     turnOnSpotLeft();
