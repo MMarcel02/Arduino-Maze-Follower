@@ -93,6 +93,7 @@ void bangLineFollowStates() {
             setLineFollowingSpeed(100);
             turnOnSpotLeft();
             if (leftDigitalIRReading == 1){
+            stopAllMotors();
             stateStartTime = currentTime;
             mazeState = SELF_ROTATE_3;
             break;
