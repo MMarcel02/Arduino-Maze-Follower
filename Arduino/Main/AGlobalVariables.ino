@@ -1,4 +1,3 @@
-// This file contains all the global variables used in our project
 // Has A at front so we know we compile this right after Main
 
 // Pins that describe the WIFI module. Pins used from the Arduino Wi-Fi library
@@ -8,7 +7,6 @@ const int WINC_CS  = 8, WINC_IRQ = 7, WINC_RST = 4, WINC_EN = 2;
 const char ssid[] = "Team 36";
 const char pass[] = "Team36Rules";     // >= 8 chars for WPA2
 
-// Pins for the control of the motors
 // Assign PWM (speed) and DIR (direction) pins for each motor
 const int FL_PWM = 6,  FL_DIR = 5;     // Front Left Motor
 const int FR_PWM =9, FR_DIR=10;        // Front Right 
@@ -19,35 +17,15 @@ const int BR_PWM=11, BR_DIR = 12;      // Back Right
 const int IR_DIGITAL_LEFT_SENSOR_PIN = A0; 
 const int IR_DIGITAL_RIGHT_SENSOR_PIN = A2; 
 
-// IR Analog Sensor Pins
-const int IR_ANALOG_LEFT_SENSOR_PIN = A1;
-const int IR_ANALOG_RIGHT_SENSOR_PIN = A3;
-
-// Ultrasonic
-float duration, distance;  
-
-// Interval (in ms) which determines how often we read ultrasonic sensor
-const int ULTRASONIC_READ_INTERVAL = 60;
-// Timer variable which we cross check with SENSOR_SEND_INTERVAL
-unsigned long lastUltrasonicReadTime = 0;
-
-// IR
-int leftDigitalIRReading, rightDigitalIRReading;
-int leftAnalogIRReading, rightAnalogIRReading;
-
-int leftIRThreshold = 37;
-int rightIRThreshold = 37;
-
-boolean leftIRAnalog, rightIRAnalog;
+// Pins for encoders
+const int leftEncA = A3; // Pin A3
+const int leftEncB = A1; // Pin A1
+const int rightEncA = 21; // Pin SCL
+const int rightEncB = 20; // Pin SDA
 
 // Ultrasonic pins
 const int TRIG_PIN = 0;
 const int ECHO_PIN = 1; 
-
-// These are the default values, GUI overwrites
-bool emergencyStop = false;
-
-int emergencyStopDistance = 20;
 
 // enum assigns numbers to these words (less mistakes than using strings (typos) and easier and faster to compare numbers) 
 enum RobotMovementState {
@@ -59,7 +37,8 @@ enum RobotMovementState {
   TURN_SPOT_LEFT,
   TURN_SPOT_RIGHT,
   CW_LEFT,
-  CW_RIGHT
+  CW_RIGHT,
+  TURN_90_LEFT
 };
 
 enum RobotControlState {
@@ -80,16 +59,48 @@ enum RobotControlState {
 RobotMovementState currentMovementState = STOPPED;
 RobotControlState currentControlState = MANUAL;
 
-// --- Variables ---
+// Robot physical constants
+const float WHEEL_RADIUS = 0.0335;   // 3.35 cm in meters
+const float TRACK_WIDTH  = 0.33;     // 22 cm in meters (multiplied by 1.5x to account for slippage)
+const int TICKS_PER_REV  = 225;      // Ticks for one full spin
+const float DISTANCE_PER_TICK = (2 * 3.14159 * WHEEL_RADIUS) / TICKS_PER_REV; // ~0.000935 m/tick
+
+// Robot Position and Speed
+
 int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
 int motorTurningSpeed = motorSpeed*0.8;
-// Motor speed passed down from GUI
 int motorSpeedOutsideLineFollow = motorSpeed;
 
+float robotAngle = 3.14159/2; // angle in Radians (initial is 90 degrees for facing up on the map)
+float robotSpeed = 0; // in metres per second
+float totalDistance = 0; // in metres
+
+// Time
+unsigned long currentTime = 0;
+
+// Ultrasonic
+float duration, distance;  
+
+// we have HC-SR04 sensor, 60 ms is taken from the docs, needed to avoid bad data
+const int ULTRASONIC_READ_INTERVAL = 60;
+unsigned long lastUltrasonicReadTime = 0;
+
+// IR
+int leftDigitalIRReading, rightDigitalIRReading;
+int leftAnalogIRReading, rightAnalogIRReading;
+
+int leftIRThreshold = 37;
+int rightIRThreshold = 37;
+
+boolean leftIRAnalog, rightIRAnalog;
+
+// These are the default values, GUI overwrites
+bool emergencyStop = false;
+int emergencyStopDistance = 20;
 
 int previousDir = 0;
 
-// For PD algorithm
+// For PD algorithm (not used anymore)
 double sensitivity = 5.0;
 double dampening = 1.0;
 

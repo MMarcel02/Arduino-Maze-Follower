@@ -17,7 +17,7 @@ public class RobotModel {
     private final BooleanProperty emergencyStopEnabled = new SimpleBooleanProperty(false);
     
     // State
-    private final ObjectProperty<RobotMovementState> movementState = new SimpleObjectProperty<>(RobotMovementState.STOPPED);
+    private final ObjectProperty<RobotMovementState> movementState = new SimpleObjectProperty<>(RobotMovementState.LEFT);
     private final ObjectProperty<RobotControlState> controlState = new SimpleObjectProperty<>(RobotControlState.MANUAL);
     
     // Sensors

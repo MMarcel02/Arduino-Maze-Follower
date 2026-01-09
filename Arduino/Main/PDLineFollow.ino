@@ -6,7 +6,6 @@ void pdLineFollow () {
   
   double error = rightAnalogIRReading - leftAnalogIRReading;
   
-  unsigned long currentTime = millis();
   double changeInTime = (double)(currentTime - lastPDTime);
 
   double derivative = 0;
