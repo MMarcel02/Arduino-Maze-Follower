@@ -11,6 +11,7 @@ void setupUltraSonicSensor();
 void setupIRSensors();
 void updateSensors();
 void manageRobotMovementState();
+void runReversePDLineFollow();
 void handleHTTPCommands();
 void handleTCPData();
 
