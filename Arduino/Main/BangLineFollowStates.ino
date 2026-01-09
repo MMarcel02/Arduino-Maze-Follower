@@ -8,7 +8,7 @@ void bangLineFollowStates() {
         if (obstacleFound()) {
             stopAllMotors();
             stateStartTime = currentTime;
-            mazeState = SELF_ROTATE;
+            mazeState = SELF_ROTATE_1;
             break;
         } else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
             setLineFollowingSpeed(motorSpeedOutsideLineFollow);
@@ -81,6 +81,7 @@ void bangLineFollowStates() {
             setLineFollowingSpeed(150);
             turnOnSpotLeft();
             if (rightDigitalIRReading == 1){
+            stateStartTime = currentTime;
             mazeState = SELF_ROTATE_2;
             break;
             }
@@ -88,6 +89,18 @@ void bangLineFollowStates() {
         break;
 
         case SELF_ROTATE_2:
+        if (currentTime - stateStartTime >= SHORT_STOP_TIME) {
+            setLineFollowingSpeed(150);
+            turnOnSpotLeft();
+            if (leftDigitalIRReading == 1){
+            stateStartTime = currentTime;
+            mazeState = SELF_ROTATE_3;
+            break;
+            }
+        }
+        break;
+
+        case SELF_ROTATE_3:
         if (currentTime - stateStartTime >= SHORT_STOP_TIME) {
             setLineFollowingSpeed(150);
             turnOnSpotLeft();

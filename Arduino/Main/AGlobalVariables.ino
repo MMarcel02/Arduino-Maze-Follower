@@ -111,6 +111,7 @@ enum MazeState {
     TURN_RIGHT,
     SELF_ROTATE_1,
     SELF_ROTATE_2,
+    SELF_ROTATE_3,
 };
 
 MazeState mazeState = FOLLOW_LINE;
