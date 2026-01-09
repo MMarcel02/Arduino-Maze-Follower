@@ -21,7 +21,7 @@ void bangLineFollowStates() {
             turnOnSpotRight();
         } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 1) {
             setLineFollowingSpeed(motorSpeedOutsideLineFollow);
-            moveForward();
+            stopAllMotors(); // changed this from move forwards to stopAllMotors
             stateStartTime = currentTime; // the timer now starts
             mazeState = CLEAR_JUNCTION;
         }
@@ -37,9 +37,10 @@ void bangLineFollowStates() {
             break;
         // turn left till you find a line in a certain time period this is Phase 1 of the left search
         case CHECK_LEFT_130DEG:
-            setLineFollowingSpeed(150);
+            setLineFollowingSpeed(100);
             turnOnSpotLeft();
             if (leftDigitalIRReading == 1){
+                stopAllMotors();
                 stateStartTime = currentTime;
                 mazeState = CHECK_LEFT_DONE_CENTERING_LINE; // implement this
                 break;
@@ -51,7 +52,7 @@ void bangLineFollowStates() {
             break;
             
         case CHECK_LEFT_DONE_CENTERING_LINE:
-            setLineFollowingSpeed(150);
+            setLineFollowingSpeed(100);
             turnOnSpotLeft();
             if (leftDigitalIRReading == 0 && rightDigitalIRReading == 1) {
                 stopAllMotors();
@@ -66,7 +67,7 @@ void bangLineFollowStates() {
 
         case RETURN_FROM_LEFT_TO_LINE:
         if (currentTime - stateStartTime >= SHORT_STOP_TIME) {
-            setLineFollowingSpeed(150);
+            setLineFollowingSpeed(100);
             turnOnSpotRight();
             if (leftDigitalIRReading == 1){
                 stopAllMotors();
