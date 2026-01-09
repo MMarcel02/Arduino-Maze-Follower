@@ -1,10 +1,10 @@
 unsigned long startTime = 0;
 
-int[] testedSpeeds = { 25, 50, 80, 100, 150, 200, 255 };
+int testedSpeeds[] = { 25, 50, 80, 100, 150, 200, 255 };
 int testedSpeedsCount = sizeof(testedSpeeds)/sizeof(testedSpeeds[0]);
 
 // Calibration
-unsigned long[] testedSpeedsTimes = new long[testedSpeedsCount];
+unsigned long testedSpeedsTimes[7];
 int currentTestingSpeedIdx = 0;
 int calibrationState = 0;
 
