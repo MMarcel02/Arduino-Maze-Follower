@@ -52,7 +52,7 @@ void bangLineFollowStates() {
             break;
             
         case CHECK_LEFT_DONE_CENTERING_LINE:
-            setLineFollowingSpeed(100);
+            setLineFollowingSpeed(90);
             turnOnSpotLeft();
             if (leftDigitalIRReading == 0 && rightDigitalIRReading == 1) {
                 stopAllMotors();

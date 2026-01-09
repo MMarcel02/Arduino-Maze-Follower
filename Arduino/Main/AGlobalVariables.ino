@@ -118,8 +118,8 @@ MazeState mazeState = FOLLOW_LINE;
 unsigned long stateStartTime = 0;
 
 const unsigned long CLEAR_JUNCTION_TIME = 500;
-const unsigned long CHECK_LEFT_130DEG_TIME = 1500;
-const unsigned long CENTERING_TIMEOUT = 200;
+const unsigned long CHECK_LEFT_130DEG_TIME = 3000;
+const unsigned long CENTERING_TIMEOUT = 1500;
 const unsigned long STOP_AND_SETTLE_TIME = 100;
 const unsigned long SHORT_STOP_TIME = 500;
 
