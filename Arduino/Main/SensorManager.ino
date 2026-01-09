@@ -61,3 +61,12 @@ void updateSensors() {
 String buildSensorMessage() {
   return String(distance, 2) + "," + String(leftDigitalIRReading) + "," + String(rightDigitalIRReading)+ "," + String(leftAnalogIRReading) + "," + String(rightAnalogIRReading);
 }
+
+// new check for emergency stop
+
+boolean obstacleFound(){
+  if (0 < distance && distance < emergencyStopDistance) {
+    return true;
+  }
+  return false;
+}

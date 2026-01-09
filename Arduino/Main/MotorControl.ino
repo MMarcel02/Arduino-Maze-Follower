@@ -98,4 +98,17 @@ void crabWalkLeft () {
   setMotor(BR_PWM, BR_DIR, motorSpeed, false);
 }
 
+void turnLeftPivot() {
+  setMotor(FL_PWM, FL_DIR, 0, false);
+  setMotor(FR_PWM, FR_DIR, 0, true);
+  setMotor(BL_PWM, BL_DIR, motorSpeed, true);
+  setMotor(BR_PWM, BR_DIR, motorSpeed, false);
+}
+
+void turnRightPivot() {
+  setMotor(FL_PWM, FL_DIR, 0, false);
+  setMotor(FR_PWM, FR_DIR, 0, true);
+  setMotor(BL_PWM, BL_DIR, motorSpeed, false);
+  setMotor(BR_PWM, BR_DIR, motorSpeed, true);
+}
 

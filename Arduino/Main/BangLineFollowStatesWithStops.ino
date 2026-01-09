@@ -9,11 +9,9 @@ void bangLineFollowStatesWithStops() {
             setLineFollowingSpeed(motorSpeedOutsideLineFollow);
             moveForward(); 
         } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 0) {
-            stateStartTime = currentTime;
-            mazeState = STOP_AND_SETTLE;
+            mazeState = TURN_LEFT;
         } else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 1) {
-            stateStartTime = currentTime;
-            mazeState = STOP_AND_SETTLE;
+            mazeState = TURN_RIGHT;
         } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 1) {
             setLineFollowingSpeed(motorSpeedOutsideLineFollow);
             moveForward();
@@ -23,13 +21,10 @@ void bangLineFollowStatesWithStops() {
         break;
 
         case STOP_AND_SETTLE:
-            stopAllMotors();
+            setLineFollowingSpeed(70);
+            moveForward();
             if (currentTime - stateStartTime >= STOP_AND_SETTLE_TIME) {
-                if (leftDigitalIRReading == 1 && rightDigitalIRReading == 0) {
-                    mazeState = TURN_LEFT;
-                } else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 1) {
-                    mazeState = TURN_RIGHT;
-                }
+               mazeState = FOLLOW_LINE;
             }
             break;
 
@@ -37,8 +32,8 @@ void bangLineFollowStatesWithStops() {
             setLineFollowingSpeed(150);
             turnOnSpotLeft();
             if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
-                stopAllMotors();
-                mazeState = FOLLOW_LINE;
+                stateStartTime = currentTime;
+                mazeState = STOP_AND_SETTLE;
             }
             break;
 
@@ -46,8 +41,8 @@ void bangLineFollowStatesWithStops() {
             setLineFollowingSpeed(150);
             turnOnSpotRight();
             if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
-                stopAllMotors();
-                mazeState = FOLLOW_LINE;
+                stateStartTime = currentTime;
+                mazeState = STOP_AND_SETTLE;
             }
             break;
 

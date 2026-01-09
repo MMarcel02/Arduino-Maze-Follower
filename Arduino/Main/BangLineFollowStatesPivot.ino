@@ -1,24 +1,19 @@
-void bangLineFollowStates() {
+void bangLineFollowStatesPivot() {
 
     unsigned long currentTime = millis();
 
     switch (mazeState) {
 
         case FOLLOW_LINE:
-        if (obstacleFound()) {
-            stopAllMotors();
-            stateStartTime = currentTime;
-            mazeState = SELF_ROTATE;
-            break;
-        } else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
+        if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
             setLineFollowingSpeed(motorSpeedOutsideLineFollow);
             moveForward(); 
         } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 0) {
-            setLineFollowingSpeed(215);
-            turnOnSpotLeft();
+            setLineFollowingSpeed(180);
+            turnRightPivot();
         } else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 1) {
-            setLineFollowingSpeed(215);
-            turnOnSpotRight();
+            setLineFollowingSpeed(180);
+            turnLeftPivot();
         } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 1) {
             setLineFollowingSpeed(motorSpeedOutsideLineFollow);
             moveForward();
@@ -65,26 +60,16 @@ void bangLineFollowStates() {
             break;
 
         case RETURN_FROM_LEFT_TO_LINE:
-        if (currentTime - stateStartTime >= SHORT_STOP_TIME) {
             setLineFollowingSpeed(150);
             turnOnSpotRight();
             if (leftDigitalIRReading == 1){
                 stopAllMotors();
                 mazeState = FOLLOW_LINE;
                 break;
-            }          
-        }
-        break;
-
-        case SELF_ROTATE:
-        if (currentTime - stateStartTime >= SHORT_STOP_TIME) {
-            setLineFollowingSpeed(150);
-            turnOnSpotLeft();
-            if (rightDigitalIRReading == 1){
-            mazeState = FOLLOW_LINE;
-            break;
             }
-        }
-        break;
+            break;            
+                
+         
+    
     }
 }

@@ -81,7 +81,7 @@ RobotMovementState currentMovementState = STOPPED;
 RobotControlState currentControlState = MANUAL;
 
 // --- Variables ---
-int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
+int motorSpeed = 78;           // Default speed for all motors (range: 0–255)
 int motorTurningSpeed = motorSpeed*0.8;
 // Motor speed passed down from GUI
 int motorSpeedOutsideLineFollow = motorSpeed;
@@ -117,7 +117,8 @@ unsigned long stateStartTime = 0;
 const unsigned long CLEAR_JUNCTION_TIME = 500;
 const unsigned long CHECK_LEFT_130DEG_TIME = 1500;
 const unsigned long CENTERING_TIMEOUT = 200;
-const unsigned long STOP_AND_SETTLE_TIME = 300;
+const unsigned long STOP_AND_SETTLE_TIME = 100;
+const unsigned long SHORT_STOP_TIME = 500;
 
 int loopTjunctionsCount = 0;
 
