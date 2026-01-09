@@ -3,14 +3,22 @@ unsigned long startTime = 0;
 int[] testedSpeeds = { 25, 50, 80, 100, 150, 200, 255 };
 int testedSpeedsCount = sizeof(testedSpeeds)/sizeof(testedSpeeds[0]);
 
+// Calibration
 unsigned long[] testedSpeedsTimes = new long[testedSpeedsCount];
 int currentTestingSpeedIdx = 0;
-
 int calibrationState = 0;
+
+// Preview
+int previewCalibrationState = 0;
+int currentPreviewSpeedIdx = 0;
+unsigned long previewStartTime = 0;
 
 void resetCalibration() {
   calibrationState = 0;
   currentTestingSpeedIdx = 0;
+  previewCalibrationState = 0;
+  currentPreviewSpeedIdx = 0;
+  previewStartTime = 0;
 }
 
 /// Measures how long it takes the robot to rotate 90 degrees at different speeds.
@@ -23,6 +31,11 @@ void calibrate() {
     
     calibrationState = 1;
     motorSpeed = testedSpeeds[currentTestingSpeedIdx];
+    
+    if (motorSpeed == 0) {
+      previewCalibrationState = 4;
+      return;
+    }
     
     // start turning immediately
     turnOnSpotLeft();
@@ -53,24 +66,25 @@ void calibrate() {
       // If we reached the end of the array, stop calibrating
       if (currentTestingSpeedIdx == testedSpeedsCount) {
         calibrationState = 3;
+        previewCalibrationState = 0;
+        currentPreviewSpeedIdx = 0;
       }
       else {
         calibrationState = 0;
       }
       
       stopAllMotors();
-      delay(300);
     }
     
     return;
   }
+  
+  if (calibrationState == 3) {
+    previewCalibration();
+  }
 }
 
-int previewCalibrationState = 0;
-int currentPreviewSpeedIdx = 0;
-unsigned long previewStartTime = 0;
-
-void previewCalibrationState() {
+void previewCalibration() {
   
   // init state
   if (previewCalibrationState == 0) {
@@ -96,7 +110,7 @@ void previewCalibrationState() {
   // rotate state
   if (previewCalibrationState == 2) {
     // wait 2.5 seconds to start rotating
-    if (millis() - previewStartTime < testedSpeedsTimes[previewSpeedIdx]) return;
+    if (millis() - previewStartTime < testedSpeedsTimes[currentPreviewSpeedIdx]) return;
     
     stopAllMotors();
     previewCalibrationState = 3;
@@ -114,7 +128,7 @@ void previewCalibrationState() {
       previewCalibrationState = 4;
     } else {
       previewStartTime = millis();
-      previewState = 1;
+      previewCalibrationState = 1;
     }
   }
   
