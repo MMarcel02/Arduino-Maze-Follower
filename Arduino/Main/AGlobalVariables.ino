@@ -89,9 +89,9 @@ unsigned long lastUltrasonicReadTime = 0;
 int leftDigitalIRReading, rightDigitalIRReading;
 int leftAnalogIRReading, rightAnalogIRReading;
 
+
 int leftIRThreshold = 37;
 int rightIRThreshold = 37;
-
 boolean leftIRAnalog, rightIRAnalog;
 
 // These are the default values, GUI overwrites
@@ -103,7 +103,4 @@ int previousDir = 0;
 // For PD algorithm (not used anymore)
 double sensitivity = 5.0;
 double dampening = 1.0;
-
-// Time it keeps turning after it stopped seeing a line
-int lineMemoryLatency = 150;
 
