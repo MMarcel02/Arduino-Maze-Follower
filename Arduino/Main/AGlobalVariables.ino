@@ -73,7 +73,8 @@ enum RobotControlState {
   REVERSE_CORNER,
   THREE_POINT_TURN,
   U_TURN,
-  PARKING_IN_BOX
+  PARKING_IN_BOX,
+  CALIBRATE
 };
 
 // Default at start

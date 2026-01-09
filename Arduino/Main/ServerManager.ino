@@ -115,6 +115,8 @@ void route(WiFiClient& c, const String& path, const String& q) {
     if (path == "/threePointTurn") { handleThreePointTurn(c); return; }
     if (path == "/uTurn") { handleUTurn(c); return; }
     if (path == "/parkingInBox") { handleParkingInBox(c); return; }
+    
+    if (path == "/calibrate") { handleCalibrate(c); return ;}
 
     // when we change speed we pass down /setSpeed?s=(some value 0-255)
     if (path.startsWith("/setSpeed")) {
@@ -324,6 +326,12 @@ void handleParkingInBox(WiFiClient& client) {
     sendHttpResponse(client, "Control State set to PARKING_IN_BOX");
 }
 
+void handleCalibrate(WiFiClient& client) {
+    currentControlState = CALIBRATE;
+    resetCalibration();
+    sendHttpResponse(client, "Control State set to CALIBRATE");
+}
+
 // We check for a http connection (one everytime we send a command e.g. /forward)
 void handleHTTPCommands() {
   WiFiClient httpClient = httpServer.available();  
@@ -413,5 +421,9 @@ void manageRobotMovementState() {
 
   if (currentControlState == PARKING_IN_BOX) {
       // To be implemented
+  }
+  
+  if (currentControlState == CALIBRATE) {
+    calibrate();
   }
 }
