@@ -8,14 +8,24 @@ int currentTestingSpeedIdx = 0;
 
 int calibrationState = 0;
 
+void resetCalibration() {
+  calibrationState = 0;
+  currentTestingSpeedIdx = 0;
+}
+
 /// Measures how long it takes the robot to rotate 90 degrees at different speeds.
 void calibrate() {
   
   // Initialization state
   if (calibrationState == 0) {
     startTime = millis();
+    
+    
     calibrationState = 1;
     motorSpeed = testedSpeeds[currentTestingSpeedIdx];
+    
+    // start turning immediately
+    turnOnSpotLeft();
     return;
   }
   
@@ -47,8 +57,70 @@ void calibrate() {
       else {
         calibrationState = 0;
       }
+      
+      stopAllMotors();
+      delay(300);
     }
     
     return;
   }
+}
+
+int previewCalibrationState = 0;
+int currentPreviewSpeedIdx = 0;
+unsigned long previewStartTime = 0;
+
+void previewCalibrationState() {
+  
+  // init state
+  if (previewCalibrationState == 0) {
+    previewStartTime = millis();
+    stopAllMotors();
+    
+    previewCalibrationState = 1;
+    return;
+  }
+  
+  // wait state
+  if (previewCalibrationState == 1) {
+    // wait .25s to start rotating
+    if (millis() - previewStartTime < 250) return;
+    
+    motorSpeed = testedSpeeds[currentPreviewSpeedIdx];
+    previewStartTime = millis();
+    turnOnSpotLeft();
+    previewCalibrationState = 2;
+    return;
+  }
+  
+  // rotate state
+  if (previewCalibrationState == 2) {
+    // wait 2.5 seconds to start rotating
+    if (millis() - previewStartTime < testedSpeedsTimes[previewSpeedIdx]) return;
+    
+    stopAllMotors();
+    previewCalibrationState = 3;
+    previewStartTime = millis();
+    return;
+  }
+  
+  // change speed state
+  if (previewCalibrationState == 3) {
+    // wait .25s between changing speeds
+    if (millis() - previewStartTime < 250) return;
+    ++currentPreviewSpeedIdx;
+  
+    if (currentPreviewSpeedIdx >= testedSpeedsCount) {
+      previewCalibrationState = 4;
+    } else {
+      previewStartTime = millis();
+      previewState = 1;
+    }
+  }
+  
+  if (previewCalibrationState == 4) {
+    stopAllMotors();
+  }
+  
+  
 }
