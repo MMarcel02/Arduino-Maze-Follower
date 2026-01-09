@@ -114,6 +114,7 @@ bool detectEndOfLine() {
 
     unsigned long avgBounceTime = getAvgBounceTime();
       
+    // require at least 5 bounces for now
     if (bounceFilled >= 5 && avgBounceTime > 0) {
       // we check if the current time without bouncing
       // is more than 2 times the calculated average
