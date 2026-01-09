@@ -44,3 +44,33 @@ void setSmartMotor(int pwmPin, int dirPin, int speedVal) {
   // Pass values to the motor
   setMotor(pwmPin, dirPin, speedVal, forward);
 }
+void runReversePDLineFollow() {
+  double error = 0;
+
+  if (leftDigitalIRReading == 1 && rightDigitalIRReading == 0) {
+    error = -1
+  } else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 1) {
+    error = 1;
+  } else {
+    error = 0;
+  }
+
+  if (leftDigitalIRReading == 1 && rightDigitalIRReading == 1) {
+    stopAllMotors();
+    return;
+  }
+
+  double correction = error * reverseKp;
+
+  if (REVERSE_INVERT_STEERING) {
+    correction = -correction;
+  }
+
+  int leftSpd = -reverseBaseSpeed + correction;
+  int rightSpd = -reverseBaseSpeed - correction;
+
+  leftSpd = constrain(leftSpd, -255, 255);
+  rightSpd = constrain(rightSpd, -255, 255);
+
+  setSignedMotorSpeeds(leftSpd, rightSpd);
+}
