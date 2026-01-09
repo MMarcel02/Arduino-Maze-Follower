@@ -78,7 +78,7 @@ void bangLineFollowStates() {
 
         case SELF_ROTATE_1:
         if (currentTime - stateStartTime >= SHORT_STOP_TIME) {
-            setLineFollowingSpeed(150);
+            setLineFollowingSpeed(125);
             turnOnSpotLeft();
             if (rightDigitalIRReading == 1){
             stateStartTime = currentTime;
@@ -90,7 +90,7 @@ void bangLineFollowStates() {
 
         case SELF_ROTATE_2:
         if (currentTime - stateStartTime >= SHORT_STOP_TIME) {
-            setLineFollowingSpeed(150);
+            setLineFollowingSpeed(125);
             turnOnSpotLeft();
             if (leftDigitalIRReading == 1){
             stateStartTime = currentTime;
@@ -102,7 +102,7 @@ void bangLineFollowStates() {
 
         case SELF_ROTATE_3:
         if (currentTime - stateStartTime >= SHORT_STOP_TIME) {
-            setLineFollowingSpeed(150);
+            setLineFollowingSpeed(125);
             turnOnSpotLeft();
             if (rightDigitalIRReading == 1){
             mazeState = FOLLOW_LINE;
