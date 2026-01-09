@@ -96,3 +96,9 @@ double dampening = 1.0;
 // Time it keeps turning after it stopped seeing a line
 int lineMemoryLatency = 150;
 
+int reverseBaseSpeed = 50;
+
+float reverseKp = 3.0;
+
+bool REVERSE_INVERT_STEERING = true;
+
