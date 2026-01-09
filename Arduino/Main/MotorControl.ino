@@ -97,3 +97,14 @@ void crabWalkLeft () {
   setMotor(BL_PWM, BL_DIR, motorSpeed, true);
   setMotor(BR_PWM, BR_DIR, motorSpeed, false);
 }
+void setSignedMotorSpeeds(int leftSpeed, int rightSpeed) {
+  bool leftFwd = (leftSpeed >= 0);
+  int leftPwm = abs(leftSpeed);
+  setMotor(FL_PWM, FL_DIR, leftPwm, leftFwd);
+  setMotor(BL_PWM, BL_DIR, leftPwm, leftFwd);
+
+  bool rightFwd = (rightSpeed >= 0);
+  int rightPwm = abs(rightSpeed); 
+  setMotor(FR_PWM, FR_DIR, rightPwm, rightFwd);
+  setMotor(BR_PWM, BR_DIR, rightPwm, rightFwd);
+}
