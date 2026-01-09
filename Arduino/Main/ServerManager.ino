@@ -316,6 +316,7 @@ void handleThreePointTurn(WiFiClient& client) {
 
 void handleUTurn(WiFiClient& client) {
     currentControlState = U_TURN;
+    resetUTurn();
     sendHttpResponse(client, "Control State set to U_TURN");
 }
 
@@ -408,7 +409,7 @@ void manageRobotMovementState() {
   }
 
   if (currentControlState == U_TURN) {
-      // To be implemented
+    uTurn();
   }
 
   if (currentControlState == PARKING_IN_BOX) {
