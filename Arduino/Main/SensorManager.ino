@@ -61,3 +61,77 @@ void updateSensors() {
 String buildSensorMessage() {
   return String(distance, 2) + "," + String(leftDigitalIRReading) + "," + String(rightDigitalIRReading)+ "," + String(leftAnalogIRReading) + "," + String(rightAnalogIRReading);
 }
+
+#pragma region END_OF_LINE_DETECTION
+
+// e.g. compare against last 10 bounces
+const int AVERAGE_BOUNCE_COUNT = 10;
+unsigned long bounceTimes[AVERAGE_BOUNCE_COUNT];
+int bounceIndex = 0;
+int bounceFilled = 0;
+
+unsigned long lastBounceTime = 0;
+unsigned long straightStartTime = 0;
+
+unsigned long getAvgBounceTime() {
+  unsigned long sum = 0;
+  for (int i = 0; i < bounceFilled; i++) {
+    sum += bounceTimes[i];
+  }
+  return (bounceFilled > 0) ? (sum / bounceFilled) : 0;
+}
+
+bool detectEndOfLine() {
+  unsigned long now = millis();
+
+  bool isStraight = (leftDigitalIRReading == 0 && rightDigitalIRReading == 0);
+  bool isBounce   = !isStraight;
+  
+  // We bang banged
+  if (isBounce) {
+
+    // measure the time and calculate the average time between bounces
+    if (lastBounceTime != 0) {
+      unsigned long dt = now - lastBounceTime;
+
+      bounceTimes[bounceIndex] = dt;
+      bounceIndex = (bounceIndex + 1) % AVERAGE_BOUNCE_COUNT;
+      
+      if (bounceFilled < AVERAGE_BOUNCE_COUNT) {
+        ++bounceFilled;
+      }
+      
+    }
+
+    lastBounceTime = now;
+    straightStartTime = 0; // reset straight timer
+  }
+  
+  else {
+
+    if (straightStartTime == 0)
+      straightStartTime = now;
+
+    unsigned long avgBounceTime = getAvgBounceTime();
+      
+    if (bounceFilled >= 5 && avgBounceTime > 0) {
+      // we check if the current time without bouncing
+      // is more than 2 times the calculated average
+      if ((now - straightStartTime) > (avgBounceTime * 2)) {
+        return true;
+      }
+    }
+  }
+  
+  return false;
+}
+
+void resetEndOfLineDetection() {
+  lastBounceTime = 0;
+  straightStartTime = 0;
+
+  bounceIndex = 0;
+  bounceFilled = 0;
+}
+
+#pragma endregion
