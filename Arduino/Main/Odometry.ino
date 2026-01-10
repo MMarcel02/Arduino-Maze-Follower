@@ -21,6 +21,10 @@ float degToRad(float degrees) {
   return degrees * (PI / 180.0);
 }
 
+float radToDeg(float radians) {
+  return radians * (180.0 / PI);
+}
+
 void updateOdometry() {
   if (currentTime - prevTime < 50) return; 
 

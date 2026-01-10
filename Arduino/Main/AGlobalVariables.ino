@@ -74,6 +74,12 @@ float robotAngle = 3.14159/2; // angle in Radians (initial is 90 degrees for fac
 float robotSpeed = 0; // in metres per second
 float totalDistance = 0; // in metres
 
+// Target angles  
+float targetAngleEnd = 0;
+float targetAngleEnd2 = 0;
+float targetAngleStart = 0;
+float targetTotalDistance = 0;
+
 
 
 // Ultrasonic
@@ -102,3 +108,26 @@ int previousDir = 0;
 double sensitivity = 5.0;
 double dampening = 1.0;
 
+
+//MAZE SOLVING STATES
+enum mazeState {
+    FOLLOW_LINE,
+    TURNING_LEFT,
+    BLIND_TURN,
+    TURNING_RIGHT,
+    OBJECT_DETECTED,
+    TURNING_180_DEGREES,
+    AFTER_180_RIGHT_SENSOR_SEARCH,
+    JUNCTION_FOUND,
+    CLEAR_JUNCTION,
+    SEARCHING_FOR_LINE_90_DEG_LEFT,
+    TURNING_90_DEGREES_LEFT,
+    RETURN_90_DEGREES_RIGHT,
+    LOST_ROBOT
+}
+
+const unsigned int SmallStopAfterSensorDetection = 80;
+const unsigned int BlindTime = 100;
+const unsigned int ObjectFoundTime = 500;
+    
+    
