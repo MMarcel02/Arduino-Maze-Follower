@@ -389,11 +389,11 @@ void manageRobotMovementState() {
   }
 
   if (currentControlState == LOST_ROBOT) {
-      searchForLine();
+      // To be implemented
   }
 
   if (currentControlState == REVERSE_STRAIGHT) {
-      // To be implemented
+    reverseBangLineFollow();
   }
 
   if (currentControlState == REVERSE_CORNER) {
