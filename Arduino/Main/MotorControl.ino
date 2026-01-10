@@ -97,3 +97,39 @@ void crabWalkLeft () {
   setMotor(BL_PWM, BL_DIR, motorSpeed, true);
   setMotor(BR_PWM, BR_DIR, motorSpeed, false);
 }
+
+// angle of 90 degrees is the start, the angle moves counter-clockwise
+boolean turnToAbsoluteAngle(float targetAngle) {
+  boolean isTurning = false;
+
+  if (robotAngle < degToRad(targetAngle - 1)) {
+    motorSpeed = 100;
+    turnOnSpotLeft();
+    isTurning = true;
+  } else if (robotAngle > degToRad(targetAngle + 1)) {
+    motorSpeed = 100;
+    turnOnSpotRight();
+    isTurning = true;
+  } else {
+    motorSpeed = motorSpeedOutsideLineFollow;
+    stopAllMotors();
+    isTurning = false;
+  }
+  return isTurning;
+}
+
+// totalTargetDistance should be calculated in the earlier state before this state
+boolean moveToDistance(float totalTargetDistance) {
+  boolean isMoving = false;
+  if (totalDistance < (totalTargetDistance - 0.01)) {
+    moveForward();
+    isMoving = true;
+  } else if (totalDistance > (totalTargetDistance + 0.01)) {
+    moveBackward();
+    isMoving = true;
+  } else {
+    stopAllMotors();
+    isMoving = false;
+  }
+  return isMoving;
+}

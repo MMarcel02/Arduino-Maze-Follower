@@ -353,18 +353,15 @@ void handleTCPData() {
   }
   
   if (streamingClient && streamingClient.connected()) {
-    // 32 bit, so would take about 50 days to run out of space
-    unsigned long currentMillis = millis();
     // We check if 100ms has elapsed yet, if it has we send a packet with data
-    if (currentMillis - lastSensorSendTime >= SENSOR_SEND_INTERVAL) {
+    if (currentTime - lastSensorSendTime >= SENSOR_SEND_INTERVAL) {
 
-  
       // Creates String with data separated by commas
       String tcpPacket = buildSensorMessage() + "," + String(currentMovementState) + "," + String(currentControlState);
       
       // Sends the data all at once as a tcp packet
       streamingClient.println(tcpPacket);
-      lastSensorSendTime = currentMillis;
+      lastSensorSendTime = currentTime;
     }
   }
 }

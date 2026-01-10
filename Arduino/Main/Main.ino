@@ -1,6 +1,6 @@
-// Main file that Arduino compiles first
-// All other files added alphabetically below this
+
 #include <WiFi101.h>
+
 
 void setupWifiPins(); 
 void wifiSafetyCheck();
@@ -13,34 +13,42 @@ void updateSensors();
 void manageRobotMovementState();
 void handleHTTPCommands();
 void handleTCPData();
+void setUpEncoders();
 
-// setup() is automatically ran by Arduino on startup
+
 void setup() {
-  Serial.begin(115200); // USB Port for debugging
-  delay(1000); // delay for the server to setup
+  Serial.begin(115200); 
+  delay(1000); 
   setupWifiPins(); 
   wifiSafetyCheck();
   startWifiAp();
   setupAllMotors();
+  setUpEncoders();
   stopAllMotors();
   setupUltraSonicSensor();
   setupIRSensors();
 }
 
-// loop() is automatically run by Arduino as its running
-void loop() {
+// Time
+unsigned long currentTime = 0;
 
-  // Updates the IR and UltraSonic values
+void loop() {
+  currentTime = millis();
+  
+  // Update sensor values
   updateSensors();
 
-  // Checks for emergency stop / line following
+  // Check distance and angle every 50ms
+  updateOdometry();
+  
+  // Checks for emergency stop and line following etc.
   manageRobotMovementState();
 
   // Checks if received a new HTTP command, e.g. /forward
   handleHTTPCommands();
 
-  // Sends Sensor Data back to GUI
+  // Sends Sensor Data back to GUL
   handleTCPData();
+  
 }
-
 
