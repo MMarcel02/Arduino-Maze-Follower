@@ -83,6 +83,34 @@ void turnOnSpotLeft () {
   setMotor(BL_PWM, BL_DIR, motorSpeed, false);
   setMotor(BR_PWM, BR_DIR, motorSpeed, true);
 }
+void steerFrontWheelsLeft() {
+  currentMovementState = STEER_FRONTWHEELS_LEFT;
+  setMotor(FL_PWM, FL_DIR, motorTurningSpeed, false);
+  setMotor(FR_PWM, FR_DIR, motorTurningSpeed, true);
+  setMotor(BL_PWM, BL_DIR, motorSpeed, true);
+  setMotor(BR_PWM, BR_DIR, motorSpeed, true);
+}
+void steerFrontWheelsRight() {
+  currentMovementState = STEER_FRONTWHEELS_RIGHT;
+  setMotor(FL_PWM, FL_DIR, motorTurningSpeed, true);
+  setMotor(FR_PWM, FR_DIR, motorTurningSpeed, false);
+  setMotor(BL_PWM, BL_DIR, motorSpeed, true);
+  setMotor(BR_PWM, BR_DIR, motorSpeed, true);
+}
+void steerBackWheelsLeft() {
+  currentMovementState = STEER_BACKWHEELS_RIGHT;
+  setMotor(FL_PWM, FL_DIR, motorSpeed, true);
+  setMotor(FR_PWM, FR_DIR, motorSpeed, true);
+  setMotor(BL_PWM, BL_DIR, motorTurningSpeed, false);
+  setMotor(BR_PWM, BR_DIR, motorTurningSpeed, true);
+}
+void steerBackWheelsRight() {
+  currentMovementState = STEER_BACKWHEELS_RIGHT;
+  setMotor(FL_PWM, FL_DIR, motorSpeed, true);
+  setMotor(FR_PWM, FR_DIR, motorSpeed, true);
+  setMotor(BL_PWM, BL_DIR, motorTurningSpeed, true);
+  setMotor(BR_PWM, BR_DIR, motorTurningSpeed, false);
+}
 void crabWalkRight () {
   currentMovementState = CW_RIGHT;
   setMotor(FL_PWM, FL_DIR, motorSpeed, true);
