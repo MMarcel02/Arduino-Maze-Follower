@@ -66,7 +66,7 @@ String buildSensorMessage() {
 
 const unsigned long MIN_STRAIGHT_TIME = 500; // 500ms
 // e.g. compare against last 10 bounces
-const int AVERAGE_BOUNCE_COUNT = 4;
+const int AVERAGE_BOUNCE_COUNT = 50;
 unsigned long bounceTimes[AVERAGE_BOUNCE_COUNT];
 int bounceIndex = 0;
 int bounceFilled = 0;
@@ -118,7 +118,7 @@ bool detectEndOfLine() {
     unsigned long avgBounceTime = getAvgBounceTime();
       
     // require at least 5 bounces for now
-    if (bounceFilled >= (AVERAGE_BOUNCE_COUNT / 2) && avgBounceTime > 0) {
+    if (bounceFilled >= 5 && avgBounceTime > 0) {
       // we check if the current time without bouncing
       // is more than 15 times the calculated average
       if ((now - straightStartTime) > (avgBounceTime * 3)) {
