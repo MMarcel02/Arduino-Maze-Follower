@@ -118,7 +118,7 @@ bool detectEndOfLine() {
     if (bounceFilled >= 5 && avgBounceTime > 0) {
       // we check if the current time without bouncing
       // is more than 2 times the calculated average
-      if ((now - straightStartTime) > (avgBounceTime * 5)) {
+      if ((now - straightStartTime) > (avgBounceTime * 15)) {
         return true;
       }
     }
