@@ -64,15 +64,23 @@ String buildSensorMessage() {
 
 #pragma region END_OF_LINE_DETECTION
 
-const unsigned long MIN_STRAIGHT_TIME = 500; // 500ms
-// e.g. compare against last 10 bounces
-const int AVERAGE_BOUNCE_COUNT = 50;
+// e.g. compare against last N bounces
+const int AVERAGE_BOUNCE_COUNT = 10;
 unsigned long bounceTimes[AVERAGE_BOUNCE_COUNT];
 int bounceIndex = 0;
 int bounceFilled = 0;
 
 unsigned long lastBounceTime = 0;
 unsigned long straightStartTime = 0;
+
+bool lostLine = false;
+enum elostLineState {
+  SCANNING_LEFT,
+  SCANNING_RIGHT,
+  RETURNING,
+  REACHED_END
+};
+elostLineState lostLineState = SCANNING_LEFT;
 
 unsigned long getAvgBounceTime() {
   unsigned long sum = 0;
@@ -84,6 +92,18 @@ unsigned long getAvgBounceTime() {
 
 bool detectEndOfLine() {
   unsigned long now = millis();
+  
+  if (lostLine) {
+    
+    switch (lostLineState) {
+      case SCANNING_LEFT:
+        //turnToAbsoluteAngle
+        break;
+    }
+    
+    
+    return;
+  }
 
   bool isStraight = (leftDigitalIRReading == 0 && rightDigitalIRReading == 0);
   bool isBounce   = !isStraight;
@@ -120,8 +140,11 @@ bool detectEndOfLine() {
     // require at least 5 bounces for now
     if (bounceFilled >= 5 && avgBounceTime > 0) {
       // we check if the current time without bouncing
-      // is more than 15 times the calculated average
-      if ((now - straightStartTime) > (avgBounceTime * 3)) {
+      // is more than 2 times the calculated average
+      if ((now - straightStartTime) > (avgBounceTime * 2)) {
+        
+        
+        
         return true;
       }
     }
