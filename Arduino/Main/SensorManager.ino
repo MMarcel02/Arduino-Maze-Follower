@@ -76,6 +76,8 @@ int bounceFilled = 0;
 unsigned long lastBounceTime = 0;
 unsigned long straightStartTime = 0;
 
+float initialAngle = 0;
+float angleScanOffset = degToRad(30);
 bool lostLine = false;
 enum elostLineState {
   SCANNING_LEFT,
@@ -100,10 +102,51 @@ bool detectEndOfLine() {
     
     switch (lostLineState) {
       case SCANNING_LEFT:
-        //turnToAbsoluteAngle
+        if(!turnToAbsoluteAngle(initialAngle - angleScanOffset)) {
+          // Didn't find the line, return to original angle
+          lostLineState = SCANNING_RIGHT;  
+        }
+        
+        bool noLine = (leftDigitalIRReading == 0 && rightDigitalIRReading == 0);
+        if (noLine) break;
+        
+        // Found the line
+        lostLine = false;
+        
         break;
+        
+      case SCANNING_RIGHT:
+        if(!turnToAbsoluteAngle(initialAngle + angleScanOffset)) {
+          // Didn't find the line, lets go right
+          lostLineState = RETURNING;  
+        }
+        
+        bool noLine = (leftDigitalIRReading == 0 && rightDigitalIRReading == 0);
+        if (noLine) break;
+        
+        // Found the line
+        lostLine = false;
+        
+        break;
+        
+      case RETURNING:
+        if(!turnToAbsoluteAngle(initialAngle)) {
+          // Didn't find the line, reached end
+          lostLineState = REACHED_END;  
+        }
+        
+        // In case the sweep missed the line, lets check it in returning as well
+        bool noLine = (leftDigitalIRReading == 0 && rightDigitalIRReading == 0);
+        if (noLine) break;
+        
+        // Found the line
+        lostLine = false;
+        
+        break;
+        
+      case REACHED_END:
+        return true;
     }
-    
     
     return;
   }
@@ -146,9 +189,12 @@ bool detectEndOfLine() {
       // is more than 2 times the calculated average
       if ((now - straightStartTime) > (avgBounceTime * 2)) {
         
+        // start scanning with turning left
+        lostLineState = SCANNING_LEFT;
+        lostLine = true;
+        initialAngle = robotAngle;
         
-        
-        return true;
+        return false;
       }
     }
   }
@@ -162,6 +208,7 @@ void resetEndOfLineDetection() {
 
   bounceIndex = 0;
   bounceFilled = 0;
+  lostLineState = SCANNING_LEFT;
 }
 
 #pragma endregion
