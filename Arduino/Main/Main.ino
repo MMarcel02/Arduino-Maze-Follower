@@ -33,7 +33,7 @@ void loop() {
   // Updates the IR and UltraSonic values
   updateSensors();
   //bangLineFollowStates();
-  bangLineFollowStates();
+  bangLineFollowStatesEncoders();
   // // Checks for emergency stop / line following
   // manageRobotMovementState();
 

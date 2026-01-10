@@ -112,6 +112,9 @@ enum MazeState {
     SELF_ROTATE_1,
     SELF_ROTATE_2,
     SELF_ROTATE_3,
+    TURNING_LEFT,
+    TURNING_RIGHT,
+    BLIND_TURN
 };
 
 MazeState mazeState = FOLLOW_LINE;
@@ -122,6 +125,9 @@ const unsigned long CHECK_LEFT_130DEG_TIME = 3000;
 const unsigned long CENTERING_TIMEOUT = 1500;
 const unsigned long STOP_AND_SETTLE_TIME = 100;
 const unsigned long SHORT_STOP_TIME = 500;
+const unsigned long SmallStopAfterSensorDetection = 300;
+const unsigned long BlindTime = 50;
+
 
 int loopTjunctionsCount = 0;
 
