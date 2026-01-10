@@ -53,7 +53,7 @@ void checkIRAnalogOverThreshold() {
 void updateSensors() {
   // Read IR every cycle (for proper line following)
   readIRSensors();
-  updateLineSensorTimes(currentTime);
+  updateLineSensorTimes();
 
   // We need to wait for the previous Ultrasonic waves to clear the area before reading again to get cleaner data
   if (currentTime - lastUltrasonicReadTime >= ULTRASONIC_READ_INTERVAL) {
@@ -63,7 +63,7 @@ void updateSensors() {
 }
 // new helper functions for junctions id
 
-void updateLineSensorTimes(unsigned long currentTime) {
+void updateLineSensorTimes() {
   if (leftDigitalIRReading == 1) {
     lastLeftBlackTime = currentTime;
   }
@@ -73,12 +73,10 @@ void updateLineSensorTimes(unsigned long currentTime) {
 }
 
 bool junctionDetectedTimed() {
-  boolean doubleSensorDetectedDelta = abs((long)(lastLeftBlackTime - lastRightBlackTime)) < JUNCTION_TIME_DELTA;
-  boolean isRecent = (currentTime - lastLeftBlackTime < 100);
-  return doubleSensorDetectedDelta && isRecent;
+  boolean doubleSensorDetectedDelta = abs(lastLeftBlackTime - lastRightBlackTime) < JUNCTION_TIME_DELTA;
+  boolean isRecent = (currentTime - lastLeftBlackTime < JUNCTION_TIME_DELTA || currentTime - lastRightBlackTime < JUNCTION_TIME_DELTA);
+  return (doubleSensorDetectedDelta && isRecent);
 }
-
-// 
 
 String buildSensorMessage() {
   return String(distance, 2) + "," + String(leftDigitalIRReading) + "," + String(rightDigitalIRReading)+ "," + String(leftAnalogIRReading) + "," + String(rightAnalogIRReading);

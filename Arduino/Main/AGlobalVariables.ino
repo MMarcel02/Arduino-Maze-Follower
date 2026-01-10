@@ -135,10 +135,10 @@ unsigned long lastRightBlackTime = 0;
 
 
 
-const unsigned int SmallStopAfterSensorDetection = 50;
-const unsigned int BlindTime = 100;
+const unsigned int SmallStopAfterSensorDetection = 100;
+const unsigned int BlindTime = 150;
 const unsigned int ObjectFoundTime = 500;
-const unsigned long JUNCTION_TIME_DELTA = 20;
+const unsigned long JUNCTION_TIME_DELTA = 200;
 
     
     

@@ -104,7 +104,7 @@ void bangLineFollowMaze() {
   case SEARCHING_FOR_LINE_90_DEG_LEFT:
     if (currentTime - stateStartTime >= ObjectFoundTime) {
       targetAngleEnd = radToDeg(robotAngle) + 110;
-      targetAngleStart = radToDeg(robotAngle) - 5;
+      targetAngleStart = radToDeg(robotAngle) - 90;
       mazeState = TURNING_100_DEGREES_LEFT;
       break;
     }
@@ -126,6 +126,7 @@ void bangLineFollowMaze() {
         if (leftDigitalIRReading == 1) {
           stopAllMotors();
           mazeState = FOLLOW_LINE;
+          break;
         }
       } else if (!isTurning) { // the robot never is lost
         stopAllMotors();
