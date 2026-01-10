@@ -15,6 +15,7 @@ void handleHTTPCommands();
 void handleTCPData();
 void setUpEncoders();
 
+
 void setup() {
   Serial.begin(115200); 
   delay(1000); 
@@ -28,6 +29,9 @@ void setup() {
   setupIRSensors();
 }
 
+// Time
+unsigned long currentTime = 0;
+
 void loop() {
   currentTime = millis();
   
@@ -36,7 +40,7 @@ void loop() {
 
   // Check distance and angle every 50ms
   updateOdometry();
-
+  
   // Checks for emergency stop and line following etc.
   manageRobotMovementState();
 

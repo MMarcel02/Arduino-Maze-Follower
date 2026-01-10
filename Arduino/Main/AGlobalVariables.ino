@@ -37,8 +37,7 @@ enum RobotMovementState {
   TURN_SPOT_LEFT,
   TURN_SPOT_RIGHT,
   CW_LEFT,
-  CW_RIGHT,
-  TURN_90_LEFT
+  CW_RIGHT
 };
 
 enum RobotControlState {
@@ -75,13 +74,12 @@ float robotAngle = 3.14159/2; // angle in Radians (initial is 90 degrees for fac
 float robotSpeed = 0; // in metres per second
 float totalDistance = 0; // in metres
 
-// Time
-unsigned long currentTime = 0;
+
 
 // Ultrasonic
 float duration, distance;  
 
-// we have HC-SR04 sensor, 60 ms is taken from the docs, needed to avoid bad data
+// we have HC-SR04 sensor, 60 ms is needed to avoid bad data from ghost echoes
 const int ULTRASONIC_READ_INTERVAL = 60;
 unsigned long lastUltrasonicReadTime = 0;
 
