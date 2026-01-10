@@ -1,6 +1,5 @@
 void bangLineFollowMaze() {
 
-  unsigned long currentTime = millis();
 
   switch (mazeState) {
   case FOLLOW_LINE:
@@ -115,6 +114,7 @@ void bangLineFollowMaze() {
     boolean isTurning = turnToAbsoluteAngle(targetAngleEnd);
     if (!isTurning) {
       stopAllMotors();
+      stateStartTime = currentTime;
       mazeState = RETURN_RIGHT;
     }
   } break;

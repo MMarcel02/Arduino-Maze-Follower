@@ -74,7 +74,7 @@ void updateLineSensorTimes(unsigned long currentTime) {
 
 bool junctionDetectedTimed() {
   boolean doubleSensorDetectedDelta = abs((long)(lastLeftBlackTime - lastRightBlackTime)) < JUNCTION_TIME_DELTA;
-  boolean isRecent = (currentTime - lastLeftBlackTime < 150);
+  boolean isRecent = (currentTime - lastLeftBlackTime < 100);
   return doubleSensorDetectedDelta && isRecent;
 }
 
