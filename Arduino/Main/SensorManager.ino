@@ -96,7 +96,7 @@ bool detectEndOfLine() {
       unsigned long dt = now - lastBounceTime;
       
       // don't store micro movements
-      if (dt >= 10) {
+      if (dt >= 70) {
         bounceTimes[bounceIndex] = dt;
         bounceIndex = (bounceIndex + 1) % AVERAGE_BOUNCE_COUNT;
         
