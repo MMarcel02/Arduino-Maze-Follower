@@ -94,6 +94,8 @@ int leftDigitalIRReading, rightDigitalIRReading;
 int leftAnalogIRReading, rightAnalogIRReading;
 
 
+
+
 int leftIRThreshold = 37;
 int rightIRThreshold = 37;
 boolean leftIRAnalog, rightIRAnalog;
@@ -128,12 +130,15 @@ enum mazeState {
 
 mazeState mazeState = FOLLOW_LINE;
 unsigned long stateStartTime = 0;
+unsigned long lastLeftBlackTime = 0;
+unsigned long lastRightBlackTime = 0;
 
 
 
-const unsigned int SmallStopAfterSensorDetection = 80;
+const unsigned int SmallStopAfterSensorDetection = 50;
 const unsigned int BlindTime = 100;
 const unsigned int ObjectFoundTime = 500;
+const unsigned long JUNCTION_TIME_DELTA = 20;
 
     
     

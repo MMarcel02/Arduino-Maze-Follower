@@ -9,6 +9,11 @@ void bangLineFollowMaze() {
       stateStartTime = currentTime;
       mazeState = OBJECT_DETECTED;
       break;
+    } else if (junctionDetectedTimed()) {
+      stopAllMotors();
+      stateStartTime = currentTime;
+      mazeState = JUNCTION_FOUND;
+      break;
     } else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
       setLineFollowingSpeed(motorSpeedOutsideLineFollow);
       moveForward();
@@ -21,11 +26,6 @@ void bangLineFollowMaze() {
       moveBackward();
       stateStartTime = currentTime;
       mazeState = TURNING_RIGHT;
-      break;
-    } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 1) {
-      stopAllMotors();
-      stateStartTime = currentTime;
-      mazeState = JUNCTION_FOUND;
       break;
     }
     break;
