@@ -24,12 +24,12 @@ void bangLineFollowStatesEncoders() {
             setLineFollowingSpeed(motorSpeedOutsideLineFollow);
             moveForward();
         } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 0) {
-            stopAllMotors();
+            moveBackward();
             stateStartTime = currentTime;
             mazeState = TURNING_LEFT;
             break;
         } else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 1) {
-            stopAllMotors();
+            moveBackward();
             stateStartTime = currentTime;
             mazeState = TURNING_RIGHT;
             break;
