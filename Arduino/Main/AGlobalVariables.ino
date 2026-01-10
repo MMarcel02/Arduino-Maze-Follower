@@ -121,13 +121,19 @@ enum mazeState {
     JUNCTION_FOUND,
     CLEAR_JUNCTION,
     SEARCHING_FOR_LINE_90_DEG_LEFT,
-    TURNING_90_DEGREES_LEFT,
-    RETURN_90_DEGREES_RIGHT,
-    LOST_ROBOT
-}
+    TURNING_100_DEGREES_LEFT,
+    RETURN_RIGHT,
+    LOST_ROBOT1
+};
+
+mazeState mazeState = FOLLOW_LINE;
+unsigned long stateStartTime = 0;
+
+
 
 const unsigned int SmallStopAfterSensorDetection = 80;
 const unsigned int BlindTime = 100;
 const unsigned int ObjectFoundTime = 500;
+
     
     

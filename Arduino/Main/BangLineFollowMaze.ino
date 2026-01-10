@@ -129,12 +129,12 @@ void bangLineFollowMaze() {
         }
       } else if (!isTurning) { // the robot never is lost
         stopAllMotors();
-        mazeState = LOST_ROBOT;
+        mazeState = LOST_ROBOT1;
       }
     }
   } break;
 
-  case LOST_ROBOT:
+  case LOST_ROBOT1:
     stopAllMotors();
     break;
   }
