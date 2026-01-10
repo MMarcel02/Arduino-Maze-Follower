@@ -40,15 +40,16 @@ void loop() {
 
   // Check distance and angle every 50ms
   updateOdometry();
+  bangLineFollowMaze();
   
   // Checks for emergency stop and line following etc.
-  manageRobotMovementState();
+  // manageRobotMovementState();
 
-  // Checks if received a new HTTP command, e.g. /forward
-  handleHTTPCommands();
+  // // Checks if received a new HTTP command, e.g. /forward
+  // handleHTTPCommands();
 
-  // Sends Sensor Data back to GUL
-  handleTCPData();
+  // // Sends Sensor Data back to GUL
+  // handleTCPData();
   
 }
 
