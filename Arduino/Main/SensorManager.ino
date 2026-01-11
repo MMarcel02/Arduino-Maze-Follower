@@ -112,6 +112,7 @@ bool detectEndOfLine() {
         
         // Found the line
         lostLine = false;
+        lastBounceTime = now;
         
         break;
         
@@ -126,6 +127,7 @@ bool detectEndOfLine() {
         
         // Found the line
         lostLine = false;
+        lastBounceTime = now;
         
         break;
         
@@ -141,6 +143,7 @@ bool detectEndOfLine() {
         
         // Found the line
         lostLine = false;
+        lastBounceTime = now;
         
         break;
         
