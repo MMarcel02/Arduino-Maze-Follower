@@ -68,7 +68,7 @@ String buildSensorMessage() {
 #pragma region END_OF_LINE_DETECTION
 
 // e.g. compare against last N bounces
-const int AVERAGE_BOUNCE_COUNT = 10;
+const int AVERAGE_BOUNCE_COUNT = 5;
 unsigned long bounceTimes[AVERAGE_BOUNCE_COUNT];
 int bounceIndex = 0;
 int bounceFilled = 0;
@@ -77,7 +77,7 @@ unsigned long lastBounceTime = 0;
 unsigned long straightStartTime = 0;
 
 float initialAngle = 0;
-float angleScanOffset = degToRad(30);
+float angleScanOffset = degToRad(10);
 bool lostLine = false;
 enum elostLineState {
   SCANNING_LEFT,
@@ -183,11 +183,11 @@ bool detectEndOfLine() {
 
     unsigned long avgBounceTime = getAvgBounceTime();
       
-    // require at least 5 bounces for now
-    if (bounceFilled >= 5 && avgBounceTime > 0) {
+    // require at least 2 bounces for now
+    if (bounceFilled >= 2 && avgBounceTime > 0) {
       // we check if the current time without bouncing
-      // is more than 2 times the calculated average
-      if ((now - straightStartTime) > (avgBounceTime * 2)) {
+      // is more than N times the calculated average
+      if ((now - straightStartTime) > (avgBounceTime * 1.5)) {
         
         // start scanning with turning left
         lostLineState = SCANNING_LEFT;
