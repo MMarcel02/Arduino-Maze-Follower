@@ -102,7 +102,7 @@ bool detectEndOfLine() {
     bool noLine;
     switch (lostLineState) {
       case SCANNING_LEFT:
-        if(!turnToAbsoluteAngleRad(initialAngle - angleScanOffset)) {
+        if(!turnToAbsoluteAngleRad(initialAngle + angleScanOffset)) {
           // Didn't find the line, return to original angle
           lostLineState = SCANNING_RIGHT;  
         }
@@ -116,7 +116,7 @@ bool detectEndOfLine() {
         break;
         
       case SCANNING_RIGHT:
-        if(!turnToAbsoluteAngleRad(initialAngle + angleScanOffset)) {
+        if(!turnToAbsoluteAngleRad(initialAngle - angleScanOffset)) {
           // Didn't find the line, lets go right
           lostLineState = RETURNING;  
         }
