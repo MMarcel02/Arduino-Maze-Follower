@@ -389,6 +389,7 @@ void manageRobotMovementState() {
 
   if (currentControlState == SOLVE_MAZE_1) {
       // To be implemented
+      leftHandMazeWithoutLoops();
   }
 
   if (currentControlState == SOLVE_MAZE_2) {

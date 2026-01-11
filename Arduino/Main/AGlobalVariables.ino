@@ -101,7 +101,7 @@ boolean leftIRAnalog, rightIRAnalog;
 
 // These are the default values, GUI overwrites
 bool emergencyStop = false;
-int emergencyStopDistance = 20;
+int emergencyStopDistance = 10;
 
 int previousDir = 0;
 
@@ -110,34 +110,15 @@ double sensitivity = 5.0;
 double dampening = 1.0;
 
 
-//MAZE SOLVING STATES
-enum mazeState {
-    FOLLOW_LINE,
-    TURNING_LEFT,
-    BLIND_TURN,
-    TURNING_RIGHT,
-    OBJECT_DETECTED,
-    TURNING_180_DEGREES,
-    AFTER_180_RIGHT_SENSOR_SEARCH,
-    JUNCTION_FOUND,
-    CLEAR_JUNCTION,
-    SEARCHING_FOR_LINE_90_DEG_LEFT,
-    TURNING_100_DEGREES_LEFT,
-    RETURN_RIGHT,
-    LOST_ROBOT1
-};
-
-mazeState mazeState = FOLLOW_LINE;
 unsigned long stateStartTime = 0;
 unsigned long lastLeftBlackTime = 0;
 unsigned long lastRightBlackTime = 0;
 
 
-
-const unsigned int SmallStopAfterSensorDetection = 100;
-const unsigned int BlindTime = 150;
+const unsigned int SmallStopAfterSensorDetection = 175;
+const unsigned int BlindTime = 175;
 const unsigned int ObjectFoundTime = 500;
-const unsigned long JUNCTION_TIME_DELTA = 200;
+const unsigned long JUNCTION_TIME_DELTA = 100;
 
     
     
