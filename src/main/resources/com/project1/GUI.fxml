@@ -57,12 +57,12 @@
                                           </HBox>
                                           <HBox>
                                              <children>
-                                                <Label fx:id="irAnalogLeft" prefHeight="20.0" prefWidth="173.0" text="IR-A Left: ">
+                                                <Label fx:id="irAnalogLeft" prefHeight="20.0" prefWidth="173.0" text="IR-A Left:  ————">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="irAnalogRight" prefWidth="173.0" text="IR-A Right: ">
+                                                <Label fx:id="irAnalogRight" prefWidth="173.0" text="IR-A Right:  ————">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>
@@ -71,12 +71,12 @@
                                           </HBox>
                                           <HBox>
                                              <children>
-                                                <Label fx:id="irAnalogLeftRaw" prefHeight="20.0" prefWidth="173.0" text="IR-A-L Raw: ">
+                                                <Label fx:id="irAnalogLeftRaw" prefHeight="20.0" prefWidth="173.0" text="IR-A-L Raw  ————">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="irAnalogRightRaw" prefWidth="173.0" text="IR-A-R Raw: ">
+                                                <Label fx:id="irAnalogRightRaw" prefWidth="173.0" text="IR-A-R Raw  ————">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>
@@ -243,42 +243,42 @@
                         <Canvas fx:id="canvas" height="275.0" width="275.0" />
                      </children>
                   </Pane>
-                  <HBox prefHeight="34.0" prefWidth="275.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="275.0">
                      <children>
-                        <Label maxHeight="53.0" maxWidth="218.0" prefHeight="53.0" prefWidth="60.0" text="X:" wrapText="true" fx:id="xLabel">
+                        <Label prefHeight="53.0" prefWidth="137.0" text="X:" wrapText="true" fx:id="xLabel">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <Label fx:id="yLabel" maxHeight="53.0" maxWidth="218.0" prefHeight="53.0" prefWidth="60.0" text="Y: " wrapText="true">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="angleLabel" maxHeight="53.0" maxWidth="218.0" prefHeight="34.0" prefWidth="152.0" text="Angle: " wrapText="true">
+                        <Label fx:id="yLabel" maxHeight="53.0" maxWidth="218.0" prefHeight="53.0" prefWidth="137.0" text="Y: " wrapText="true">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Label>
                      </children>
                   </HBox>
-                  <Button fx:id="clearMapButton" mnemonicParsing="false" onMousePressed="#clearMap" prefHeight="25.0" prefWidth="275.0" text="Clear Map">
+                  <HBox prefHeight="35.0" prefWidth="275.0">
+                     <children>
+                        <Label fx:id="angleLabel" prefHeight="34.0" prefWidth="275.0" text="Angle: " wrapText="true">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="275.0">
+                     <children>
+                        <Label fx:id="totalDistanceLabel" prefWidth="275.0" text="Total Distance:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <Button fx:id="clearMapButton" mnemonicParsing="false" onMousePressed="#clearMap" prefHeight="25.0" prefWidth="275.0" text="Reset Odometry">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin></Button>
-                  <Label text="Map Rotation Sensitivity">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets top="15.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Slider fx:id="canvasRotationSlider" blockIncrement="0.1" majorTickUnit="0.5" max="5.0" minorTickCount="0" prefHeight="33.0" prefWidth="275.0" showTickLabels="true" value="3.3">
-                     <VBox.margin>
-                        <Insets top="5.0" />
-                     </VBox.margin>
-                  </Slider>
                </children>
                <HBox.margin>
                   <Insets />
@@ -342,13 +342,13 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Slider fx:id="sensitivitySlider" blockIncrement="0.1" majorTickUnit="2.5" max="10.0" minorTickCount="0" showTickLabels="true" value="5.0" />
+                  <Slider fx:id="sensitivitySlider" blockIncrement="0.1" disable="true" majorTickUnit="2.5" max="10.0" minorTickCount="0" showTickLabels="true" value="5.0" />
                   <Label text="Dampening">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Slider fx:id="dampeningSlider" blockIncrement="0.1" majorTickUnit="1.0" max="5.0" minorTickCount="2" showTickLabels="true" value="1.0" />
+                  <Slider fx:id="dampeningSlider" blockIncrement="0.1" disable="true" majorTickUnit="1.0" max="5.0" minorTickCount="2" showTickLabels="true" value="1.0" />
                   <Label text="IR-A Black Detected Threshold">
                      <font>
                         <Font size="14.0" />
@@ -359,7 +359,7 @@
                   </Label>
                   <VBox alignment="CENTER">
                      <children>
-                        <Slider fx:id="irLeftThresholdSlider" blockIncrement="1.0" max="75.0" minorTickCount="1" showTickLabels="true" snapToTicks="true" value="37.0" />
+                        <Slider fx:id="irLeftThresholdSlider" blockIncrement="1.0" disable="true" max="75.0" minorTickCount="1" showTickLabels="true" snapToTicks="true" value="37.0" />
                         <Label text="Left">
                            <font>
                               <Font size="14.0" />
@@ -369,7 +369,7 @@
                   </VBox>
                   <VBox alignment="CENTER">
                      <children>
-                        <Slider fx:id="irRightThresholdSlider" blockIncrement="1.0" max="75.0" minorTickCount="1" showTickLabels="true" snapToTicks="true" value="37.0" />
+                        <Slider fx:id="irRightThresholdSlider" blockIncrement="1.0" disable="true" max="75.0" minorTickCount="1" showTickLabels="true" snapToTicks="true" value="37.0" />
                         <Label text="Right">
                            <font>
                               <Font size="14.0" />

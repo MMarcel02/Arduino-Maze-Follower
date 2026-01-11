@@ -12,7 +12,6 @@ void setUpEncoders() {
   pinMode(rightEncA, INPUT_PULLUP);
   pinMode(rightEncB, INPUT_PULLUP);
 
-
   attachInterrupt(digitalPinToInterrupt(leftEncA), handleLeftEncoder, RISING);
   attachInterrupt(digitalPinToInterrupt(rightEncA), handleRightEncoder, RISING);
 }
@@ -22,7 +21,7 @@ float degToRad(float degrees) {
 }
 
 void updateOdometry() {
-  if (currentTime - prevTime < 50) return; 
+  if (currentTime - prevTime < 10) return; 
 
   long currentLeft, currentRight;
   noInterrupts();
@@ -42,7 +41,6 @@ void updateOdometry() {
   float distAverage = (distLeft + distRight) / 2.0;
   totalDistance += distAverage;
 
-  // 
   float changeInAngle = (distRight - distLeft) / TRACK_WIDTH;
   robotAngle += changeInAngle;
 
@@ -67,4 +65,18 @@ void handleRightEncoder() {
   else {
     rightTick--;
   }
+}
+
+void resetOdometry() {
+
+  noInterrupts();
+  leftTick = 0;
+  rightTick = 0;
+  interrupts();
+
+  prevLeftTick = 0;
+  prevRightTick = 0;
+
+  robotAngle = PI / 2.0;
+  totalDistance = 0;
 }
