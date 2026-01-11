@@ -85,6 +85,9 @@ void resetOdometry() {
   prevLeftTick = 0;
   prevRightTick = 0;
 
+  robotX = 0;
+  robotY = 0;
+
   robotAngle = PI / 2.0;
   totalDistance = 0;
 }

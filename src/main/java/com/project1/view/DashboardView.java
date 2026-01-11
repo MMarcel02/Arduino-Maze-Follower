@@ -157,7 +157,7 @@ public class DashboardView {
         
         // Map
         xLabel.textProperty().bind(Bindings.format("X: %.1f cm", robotModel.xProperty()));
-        yLabel.textProperty().bind(Bindings.format("Y: %.1f cm", robotModel.yProperty()));
+        yLabel.textProperty().bind(Bindings.format("Y: %.1f cm", robotModel.yProperty().multiply(-1)));
         angleLabel.textProperty().bind(Bindings.format("Angle: %.1f deg", robotModel.angleProperty().multiply(180 / Math.PI)));
         totalDistanceLabel.textProperty().bind(Bindings.format("Dist: %.1f cm", robotModel.totalDistanceProperty()));
 
@@ -294,9 +294,9 @@ public class DashboardView {
                 double newY = Double.parseDouble(parts[8]) * PIXELS_PER_METER;
 
                 robotModel.setX(newX);
-                robotModel.setY(newY);
+                robotModel.setY(-newY);
 
-                robotModel.getPositionHistory().add(new Point2D(newX, newY));
+                robotModel.getPositionHistory().add(new Point2D(newX, -newY));
 
                 robotModel.setSensorData(
                     parseDistance(parts[0]), // Ultrasonic distance
