@@ -353,11 +353,11 @@ void handleTCPData() {
   }
   
   if (streamingClient && streamingClient.connected()) {
-    // We check if 100ms has elapsed yet, if it has we send a packet with data
+    // We check if 50ms has elapsed yet, if it has we send a packet with data
     if (currentTime - lastSensorSendTime >= SENSOR_SEND_INTERVAL) {
 
       // Creates String with data separated by commas
-      String tcpPacket = buildSensorMessage() + "," + String(currentMovementState) + "," + String(currentControlState);
+      String tcpPacket = buildSensorMessage() + "," + String(currentMovementState) + "," + String(currentControlState) + "," + String(robotAngle) + "," + String(totalDistance);
       
       // Sends the data all at once as a tcp packet
       streamingClient.println(tcpPacket);

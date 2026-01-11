@@ -62,5 +62,5 @@ void updateSensors() {
 }
 
 String buildSensorMessage() {
-  return String(distance, 2) + "," + String(leftDigitalIRReading) + "," + String(rightDigitalIRReading)+ "," + String(leftAnalogIRReading) + "," + String(rightAnalogIRReading);
+  return String(distance, 2) + "," + String(leftDigitalIRReading) + "," + String(rightDigitalIRReading);
 }

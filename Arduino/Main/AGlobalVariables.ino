@@ -71,7 +71,6 @@ int motorTurningSpeed = motorSpeed*0.8;
 int motorSpeedOutsideLineFollow = motorSpeed;
 
 float robotAngle = 3.14159/2; // angle in Radians (initial is 90 degrees for facing up on the map)
-float robotSpeed = 0; // in metres per second
 float totalDistance = 0; // in metres
 
 
