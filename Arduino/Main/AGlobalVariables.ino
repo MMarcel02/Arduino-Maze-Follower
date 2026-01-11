@@ -72,7 +72,8 @@ int motorSpeedOutsideLineFollow = motorSpeed;
 
 float robotAngle = PI/2; // angle in Radians (initial is 90 degrees for facing up on the map)
 float totalDistance = 0; // in centimetres
-
+float robotX = 0;
+float robotY = 0;
 
 
 // Ultrasonic

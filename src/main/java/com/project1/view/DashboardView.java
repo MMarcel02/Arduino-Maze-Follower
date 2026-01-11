@@ -12,6 +12,8 @@ import com.project1.model.RobotMovementState;
 import com.project1.services.ArduinoHTTPClient;
 import com.project1.services.ArduinoTCPClient;
 
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -23,8 +25,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 
 public class DashboardView {
 
@@ -286,18 +286,12 @@ public class DashboardView {
 
         try {
             String[] parts = tcpData.split(",");
-            if (parts.length >= 7) {
+            if (parts.length >= 9) {
                 double newAngle = Double.parseDouble(parts[5]);
                 double newTotalDistance = Double.parseDouble(parts[6]);
 
-                double changeInDistance = newTotalDistance - robotModel.getTotalDistance();
-                double changeInPixels = changeInDistance * PIXELS_PER_METER;
-
-                double currentX = robotModel.getX();
-                double currentY = robotModel.getY();
-
-                double newX = currentX + (changeInPixels * Math.cos(newAngle));
-                double newY = currentY - (changeInPixels * Math.sin(newAngle));
+                double newX = Double.parseDouble(parts[7]) * PIXELS_PER_METER;
+                double newY = Double.parseDouble(parts[8]) * PIXELS_PER_METER;
 
                 robotModel.setX(newX);
                 robotModel.setY(newY);
