@@ -1,4 +1,4 @@
-void LostRobotAlgo() {
+void lostRobotAlgo() {
 
     switch (lostRobotAlgoState) {
 
@@ -14,7 +14,7 @@ void LostRobotAlgo() {
         break;
 
         case FOUND_THE_LINE:
-        bangLineFollowMaze();
+        leftHandMazeWithoutLoops();
         break;
     }
 }

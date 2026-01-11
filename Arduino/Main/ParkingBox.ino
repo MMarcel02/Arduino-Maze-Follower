@@ -19,7 +19,7 @@ void parkingBox() {
     if (junctionDetectedTimed()) {
       stopAllMotors();
       stateStartTime = currentTime;
-      mazeState = START_OF_PARKING_BOX;
+      parkingBoxState = START_OF_PARKING_BOX;
       break;
     } else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
       setLineFollowingSpeed(motorSpeedOutsideLineFollow);
@@ -27,44 +27,62 @@ void parkingBox() {
     } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 0) {
       moveBackward(); // Or standard turn logic
       stateStartTime = currentTime;
-      mazeState = PARKING_TURNING_LEFT;
+      parkingBoxState = PARKING_TURNING_LEFT;
       break;
     } else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 1) {
       moveBackward(); // Or standard turn logic
       stateStartTime = currentTime;
-      mazeState = PARKING_TURNING_RIGHT;
+      parkingBoxState = PARKING_TURNING_RIGHT;
       break;
     }
     break;
 
   // --- Existing Turn Logic (Preserved for standard corners) ---
   case PARKING_TURNING_LEFT:
+    if (junctionDetectedTimed()) {
+      stopAllMotors();
+      stateStartTime = currentTime;
+      parkingBoxState = START_OF_PARKING_BOX;
+      break;
+    }
     if (currentTime - stateStartTime >= SmallStopAfterSensorDetection) {
       setLineFollowingSpeed(100);
       turnOnSpotLeft();
       if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
         stateStartTime = currentTime;
-        mazeState = PARKING_BLIND_TURN;
+        parkingBoxState = PARKING_BLIND_TURN;
         break;
       }
     }
     break;
 
   case PARKING_TURNING_RIGHT:
+    if (junctionDetectedTimed()) {
+      stopAllMotors();
+      stateStartTime = currentTime;
+      parkingBoxState = START_OF_PARKING_BOX;
+      break;
+    }
     if (currentTime - stateStartTime >= SmallStopAfterSensorDetection) {
       setLineFollowingSpeed(100);
       turnOnSpotRight();
       if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
         stateStartTime = currentTime;
-        mazeState = PARKING_BLIND_TURN;
+        parkingBoxState = PARKING_BLIND_TURN;
         break;
       }
     }
     break;
 
   case PARKING_BLIND_TURN:
+    if (junctionDetectedTimed()) {
+      stopAllMotors();
+      stateStartTime = currentTime;
+      parkingBoxState = START_OF_PARKING_BOX;
+      break;
+    }
     if (currentTime - stateStartTime >= BlindTime) {
-      mazeState = APPROACHING_PARKING_BOX;
+      parkingBoxState = APPROACHING_PARKING_BOX;
       break;
     }
     break;
@@ -72,50 +90,40 @@ void parkingBox() {
     // Parking space starts get to 90 degrees and then move forward a bit 
     case START_OF_PARKING_BOX:
     if (currentTime - stateStartTime >= ObjectFoundTime) {
-      targetTotalDistance = totalDistance + 0.5; // instruct the bot to move max 0.5 meters
-      mazeState = SELF_ALIGN_90_DEGREES;
+      targetTotalDistance = totalDistance + 30; // instruct the bot to move max 0.5 meters
+      parkingBoxState = SELF_ALIGN_90_DEGREES;
       break;
     }
     break;
 
     case SELF_ALIGN_90_DEGREES:{
         // self adjust to strict 90 degrees
-    boolean isTurning = turnToAbsoluteAngle(90);
-    if (!isTurning) {
-      stopAllMotors();
-      mazeState = FIND_THE_END_OF_PARKING_BOX;
-      break;
-    }   
-    }
+      boolean isTurning = turnToAbsoluteAngle(90);
+      if (!isTurning) {
+        stopAllMotors();
+        parkingBoxState = FIND_THE_END_OF_PARKING_BOX;
+        break;
+        }   
+      }
     break;
 
     case FIND_THE_END_OF_PARKING_BOX:
-        boolean isMoving = moveToDistance(targetTotalDistance);
-        if(!isMoving || junctionDetectedTimed()){
+         isMoving = moveToDistance(targetTotalDistance);
+        if(!isMoving){
             stopAllMotors();
-            targetTotalDistance = totalDistance - 0.08; // instruct the bot to move max 0.5 meters
-            mazeState = END_OF_PARKING_BOX;
+            // targetTotalDistance = totalDistance - 5; // instruct the bot to move max 0.5 meters
+            parkingBoxState = END_OF_PARKING_BOX;
             break;
         }
         
         break;
 
     case END_OF_PARKING_BOX:
-    boolean isMoving = moveToDistance(targetTotalDistance);
-    if(!isMoving){
-        stopAllMotors();
-    }
-    break;
-        
-    
-    
-    
-    
-    
-    
-    
-    
-
+      //  isMoving = moveToDistance(targetTotalDistance);
+      // if(!isMoving){
+      //     stopAllMotors();
+      // }
+      break;
       
   }
 }

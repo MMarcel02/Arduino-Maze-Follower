@@ -389,6 +389,7 @@ void manageRobotMovementState() {
 
   if (currentControlState == SOLVE_MAZE_1) {
       // To be implemented
+      leftHandMazeWithoutLoops();
   }
 
   if (currentControlState == SOLVE_MAZE_2) {
@@ -397,6 +398,7 @@ void manageRobotMovementState() {
 
   if (currentControlState == LOST_ROBOT) {
       // To be implemented
+      lostRobotAlgo();
   }
 
   if (currentControlState == REVERSE_STRAIGHT) {
@@ -409,6 +411,7 @@ void manageRobotMovementState() {
 
   if (currentControlState == THREE_POINT_TURN) {
       // To be implemented
+      bangLineFollowEmergencyStop();
   }
 
   if (currentControlState == U_TURN) {
@@ -417,5 +420,6 @@ void manageRobotMovementState() {
 
   if (currentControlState == PARKING_IN_BOX) {
       // To be implemented
+      parkingBox();
   }
 }

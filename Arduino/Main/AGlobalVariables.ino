@@ -113,19 +113,25 @@ double dampening = 1.0;
 //MAZE SOLVING STATES
 enum mazeState {
     FOLLOW_LINE,
-    TURNING_LEFT,
-    BLIND_TURN,
+    TURNING_LEFT, 
+    BLIND_TURN,   
     TURNING_RIGHT,
+    
     OBJECT_DETECTED,
     TURNING_180_DEGREES,
     AFTER_180_RIGHT_SENSOR_SEARCH,
+    
+    
     JUNCTION_FOUND,
-    CLEAR_JUNCTION,
-    SEARCHING_FOR_LINE_90_DEG_LEFT,
-    TURNING_100_DEGREES_LEFT,
-    RETURN_RIGHT,
+    DRIVE_THROUGH_INTERSECTION, 
+    SCAN_LEFT_FOR_LINE,         
+    ALIGN_EXTRA_LEFT,           
+    RECOVER_RIGHT_FIND_BLACK,   
+    RECOVER_RIGHT_FIND_WHITE,   
+    
     LOST_ROBOT1
 };
+
 
 enum lostRobotAlgoState {
     SEARCHING_FOR_THE_LINE,
@@ -148,13 +154,16 @@ enum parkingBoxState {
     END_OF_PARKING_BOX
 };
 
-enum parkingBoxState parkingBoxState = APPROACHING_PARKING_BOX;
+boolean isMoving;
+
+mazeState mazeState = FOLLOW_LINE;
+
+parkingBoxState parkingBoxState = APPROACHING_PARKING_BOX;
 
 bangBangLineFollowState bangBangLineFollowState = BangBangLineFollowing;
 
 lostRobotAlgoState lostRobotAlgoState = SEARCHING_FOR_THE_LINE;
 
-mazeState mazeState = FOLLOW_LINE;
 unsigned long stateStartTime = 0;
 unsigned long lastLeftBlackTime = 0;
 unsigned long lastRightBlackTime = 0;
