@@ -59,10 +59,10 @@ RobotMovementState currentMovementState = STOPPED;
 RobotControlState currentControlState = MANUAL;
 
 // Robot physical constants
-const float WHEEL_RADIUS = 0.0335;   // 3.35 cm in meters
-const float TRACK_WIDTH  = 0.33;     // 22 cm in meters (multiplied by 1.5x to account for slippage)
+const float WHEEL_RADIUS = 3.35;   // 3.35 cm in meters
+const float TRACK_WIDTH  = 33;     // 22 cm in meters (multiplied by 1.5x to account for slippage)
 const int TICKS_PER_REV  = 225;      // Ticks for one full spin
-const float DISTANCE_PER_TICK = (2 * 3.14159 * WHEEL_RADIUS) / TICKS_PER_REV; // ~0.000935 m/tick
+const float DISTANCE_PER_TICK = (2 * PI * WHEEL_RADIUS) / TICKS_PER_REV; // ~0.000935 m/tick
 
 // Robot Position and Speed
 
@@ -70,8 +70,8 @@ int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
 int motorTurningSpeed = motorSpeed*0.8;
 int motorSpeedOutsideLineFollow = motorSpeed;
 
-float robotAngle = 3.14159/2; // angle in Radians (initial is 90 degrees for facing up on the map)
-float totalDistance = 0; // in metres
+float robotAngle = PI/2; // angle in Radians (initial is 90 degrees for facing up on the map)
+float totalDistance = 0; // in centimetres
 
 
 

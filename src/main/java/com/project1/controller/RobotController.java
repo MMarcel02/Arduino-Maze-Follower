@@ -69,6 +69,12 @@ public class RobotController {
         });
     }
 
+    public void resetOdometry() {
+        sendRequest(ArduinoEndpoints.RESET_ODOMETRY, res -> {
+            model.clearHistory();
+        });
+    }
+
     public void setControlState(RobotControlState targetState) {
         String endpoint;
         switch (targetState) {

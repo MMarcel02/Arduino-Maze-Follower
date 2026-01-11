@@ -66,3 +66,17 @@ void handleRightEncoder() {
     rightTick--;
   }
 }
+
+void resetOdometry() {
+
+  noInterrupts();
+  leftTick = 0;
+  rightTick = 0;
+  interrupts();
+
+  prevLeftTick = 0;
+  prevRightTick = 0;
+
+  robotAngle = PI / 2.0;
+  totalDistance = 0;
+}

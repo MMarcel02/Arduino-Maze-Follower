@@ -11,10 +11,10 @@ import com.project1.model.RobotModel;
 import com.project1.model.RobotMovementState;
 import com.project1.services.ArduinoHTTPClient;
 import com.project1.services.ArduinoTCPClient;
-import com.project1.services.MapPhysics;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
@@ -32,8 +32,9 @@ public class DashboardView {
     private final RobotModel robotModel = new RobotModel();
     private final InputHandler inputHandler = new InputHandler();
     private RobotController robotController;
-    private MapPhysics mapPhysics;
     private MapView mapView;
+    private final double PIXELS_PER_METER = 1.0; // 1:1 scale for simplicity
+
     
     // Networking
     private ArduinoHTTPClient httpClient;
@@ -41,9 +42,9 @@ public class DashboardView {
     
     @FXML private Canvas canvas;
     @FXML private TextArea logArea;
-    @FXML private Label activeInputsLabel, speedLabel, xLabel, yLabel, angleLabel, currentMovementStateLabel, currentControlStateLabel;
+    @FXML private Label activeInputsLabel, speedLabel, xLabel, yLabel, angleLabel, currentMovementStateLabel, totalDistanceLabel, currentControlStateLabel;
     @FXML private Label irDigitalLeft, irDigitalRight, irAnalogLeft, irAnalogRight, irAnalogLeftRaw, irAnalogRightRaw, ultraSonic;
-    @FXML private Slider speedSlider, canvasRotationSlider, emergencyStopSlider, sensitivitySlider, dampeningSlider, irLeftThresholdSlider, irRightThresholdSlider;
+    @FXML private Slider speedSlider, emergencyStopSlider, sensitivitySlider, dampeningSlider, irLeftThresholdSlider, irRightThresholdSlider;
     @FXML private Button clearMapButton;
     @FXML private Button upArrow, downArrow, leftArrow, rightArrow, crabWalkLeft, crabWalkRight, stopButton;
     @FXML private Button bigDecrement, smallDecrement, bigIncrement, smallIncrement;
@@ -57,7 +58,7 @@ public class DashboardView {
     @FXML void smallIncreaseSpeed(MouseEvent e) { robotController.setSpeed(robotModel.getSpeed() + 5); }
     @FXML void stopSpeed(MouseEvent e) { robotController.stop(); }
 
-    @FXML void clearMap(MouseEvent e) { mapView.clear(); }
+    @FXML void clearMap(MouseEvent e) { robotController.resetOdometry(); }
     @FXML void toggleEmergencyStop(ActionEvent event) { robotController.toggleEmergencyStop(); }
 
     @FXML
@@ -133,12 +134,12 @@ public class DashboardView {
     public void initialize() {
         httpClient = new ArduinoHTTPClient(this::logToTextArea);
         robotController = new RobotController(httpClient, this::logToTextArea, robotModel);
-        mapPhysics = new MapPhysics(robotModel);
+
         mapView = new MapView(canvas, robotModel);
+        mapView.startRendering();
 
         setupBindings();
         setupSliders();
-        mapPhysics.start();
 
         
         tcpClient = new ArduinoTCPClient(this::logToTextArea, data -> {
@@ -155,42 +156,21 @@ public class DashboardView {
         speedLabel.textProperty().bind(Bindings.concat("Speed: ", robotModel.speedProperty()));
         
         // Map
-        xLabel.textProperty().bind(Bindings.format("X: %.1f", robotModel.xProperty()));
-        yLabel.textProperty().bind(Bindings.format("Y: %.1f", robotModel.yProperty()));
-        angleLabel.textProperty().bind(Bindings.format("Angle: %.2f rad", robotModel.angleProperty()));
+        xLabel.textProperty().bind(Bindings.format("X: %.1f cm", robotModel.xProperty()));
+        yLabel.textProperty().bind(Bindings.format("Y: %.1f cm", robotModel.yProperty()));
+        angleLabel.textProperty().bind(Bindings.format("Angle: %.1f deg", robotModel.angleProperty().multiply(180 / Math.PI)));
+        totalDistanceLabel.textProperty().bind(Bindings.format("Dist: %.1f cm", robotModel.totalDistanceProperty()));
 
         // Sensors
         irDigitalLeft.textProperty().bind(Bindings.concat("IR-D Left: ", robotModel.leftIRDigitalProperty()));
         irDigitalRight.textProperty().bind(Bindings.concat("IR-D Right: ", robotModel.rightIRDigitalProperty()));
 
-        irAnalogLeft.textProperty().bind(Bindings.createStringBinding(() -> {
-            int rawValue = robotModel.leftIRAnalogRawProperty().get();
-            int threshold = robotModel.leftIRThresholdProperty().get();
-            
-            String status = (rawValue > threshold) ? "BLACK" : "WHITE";
-            return "IR-A-L: " + status;
-            
-        }, robotModel.leftIRAnalogRawProperty(), robotModel.leftIRThresholdProperty()));
-
-        irAnalogRight.textProperty().bind(Bindings.createStringBinding(() -> {
-            int rawValue = robotModel.rightIRAnalogRawProperty().get();
-            int threshold = robotModel.rightIRThresholdProperty().get();
-            
-            String status = (rawValue > threshold) ? "BLACK" : "WHITE";
-            return "IR-A-R: " + status;
-            
-        }, robotModel.rightIRAnalogRawProperty(), robotModel.rightIRThresholdProperty()));
-
-
-        irAnalogLeftRaw.textProperty().bind(Bindings.concat("IR-A-L Raw: ", robotModel.leftIRAnalogRawProperty()));
-        irAnalogRightRaw.textProperty().bind(Bindings.concat("IR-A-R Raw: ", robotModel.rightIRAnalogRawProperty()));
-
         ultraSonic.textProperty().bind(Bindings.concat("Ultrasonic: ", robotModel.ultrasonicProperty()));
 
         // States
         emergencyStopToggle.selectedProperty().bindBidirectional(robotModel.emergencyStopEnabledProperty());
-        currentMovementStateLabel.textProperty().bind(Bindings.concat("M:: ", robotModel.movementStateProperty()));
-        currentControlStateLabel.textProperty().bind(Bindings.concat("C:: ", robotModel.controlStateProperty()));
+        currentMovementStateLabel.textProperty().bind(Bindings.concat("M: ", robotModel.movementStateProperty()));
+        currentControlStateLabel.textProperty().bind(Bindings.concat("C: ", robotModel.controlStateProperty()));
     }
     
     private void setupSliders() {
@@ -200,11 +180,6 @@ public class DashboardView {
             if (!isChanging) {
                 robotController.setSpeed((int) speedSlider.getValue());
             }
-        });
-
-        // Map
-        canvasRotationSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            robotModel.setAngleMultiplier(newVal.doubleValue());  
         });
 
         emergencyStopSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
@@ -242,7 +217,6 @@ public class DashboardView {
 
         // Make sliders equal to default values
         speedSlider.setValue(robotModel.getSpeed());
-        canvasRotationSlider.setValue(robotModel.getAngleMultiplier());
         sensitivitySlider.setValue(robotModel.getSensitivity());
         dampeningSlider.setValue(robotModel.getDampening());
         emergencyStopSlider.setValue(robotModel.getEmergencyStopDistance());
@@ -265,7 +239,9 @@ public class DashboardView {
 
     private void logToTextArea(String message) {
         String timestamp = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
-        logArea.appendText("[" + timestamp + "] " + message + "\n");     
+        Platform.runLater(() -> {
+            logArea.appendText("[" + timestamp + "] " + message + "\n");     
+        });
     }
     
     public void setupInputHandlers(Scene scene){
@@ -311,16 +287,32 @@ public class DashboardView {
         try {
             String[] parts = tcpData.split(",");
             if (parts.length >= 7) {
+                double newAngle = Double.parseDouble(parts[5]);
+                double newTotalDistance = Double.parseDouble(parts[6]);
+
+                double changeInDistance = newTotalDistance - robotModel.getTotalDistance();
+                double changeInPixels = changeInDistance * PIXELS_PER_METER;
+
+                double currentX = robotModel.getX();
+                double currentY = robotModel.getY();
+
+                double newX = currentX + (changeInPixels * Math.cos(newAngle));
+                double newY = currentY - (changeInPixels * Math.sin(newAngle));
+
+                robotModel.setX(newX);
+                robotModel.setY(newY);
+
+                robotModel.getPositionHistory().add(new Point2D(newX, newY));
 
                 robotModel.setSensorData(
                     parseDistance(parts[0]), // Ultrasonic distance
                     parseToColour(parts[1]), //Left Digital ("WHITE" or "BLACK")
                     parseToColour(parts[2]), //Right Digital
-                    Integer.parseInt(parts[3]), // Actual Raw value for LEFT IR e.g. 60
-                    Integer.parseInt(parts[4])
+                    newAngle, // Absolute angle in radiancs
+                    newTotalDistance  // Total Distance in centimetres
                 );
-                robotModel.setMovementState(RobotMovementState.values()[Integer.parseInt(parts[5])]);
-                robotModel.setControlState(RobotControlState.values()[Integer.parseInt(parts[6])]);
+                robotModel.setMovementState(RobotMovementState.values()[Integer.parseInt(parts[3])]);
+                robotModel.setControlState(RobotControlState.values()[Integer.parseInt(parts[4])]);
 
             }
         } catch (Exception e) {

@@ -24,7 +24,9 @@ public class MapView {
         this.gc = canvas.getGraphicsContext2D();
         this.centreX = canvas.getWidth() / 2.0;
         this.centreY = canvas.getHeight() / 2.0;
+    }
 
+    public void startRendering() {
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -88,10 +90,4 @@ public class MapView {
         gc.restore();
     }
     
-    public void clear() {
-        model.clearHistory();
-        model.setX(0);
-        model.setY(0);
-        model.setAngle(Math.toRadians(90));
-    }
 }

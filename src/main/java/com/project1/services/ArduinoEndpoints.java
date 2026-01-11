@@ -28,6 +28,9 @@ public final class ArduinoEndpoints {
     public static final String U_TURN               = "/uTurn";
     public static final String PARKING_IN_BOX       = "/parkingInBox";
 
+    public static final String RESET_ODOMETRY           = "/resetOdometry";
+
+
     public static String getSpeedEndpoint(int value) {
         return "/setSpeed?s=" + value;
     }

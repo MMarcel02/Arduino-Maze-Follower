@@ -35,7 +35,7 @@ public class RobotModel {
     private final DoubleProperty x = new SimpleDoubleProperty(0);
     private final DoubleProperty y = new SimpleDoubleProperty(0);
     private final DoubleProperty angle = new SimpleDoubleProperty(Math.toRadians(90)); 
-    private final DoubleProperty angleMultiplier = new SimpleDoubleProperty(1.5); 
+    private final DoubleProperty totalDistance = new SimpleDoubleProperty(0.0);
     private final ObservableList<Point2D> positionHistory = FXCollections.observableArrayList();
 
     public IntegerProperty speedProperty() { return speed; }
@@ -50,7 +50,7 @@ public class RobotModel {
     public DoubleProperty xProperty() { return x; }
     public DoubleProperty yProperty() { return y; }
     public DoubleProperty angleProperty() { return angle; }
-    public DoubleProperty angleMultiplierProperty() { return angleMultiplier; }
+    public DoubleProperty totalDistanceProperty() { return totalDistance; }
     public ObservableList<Point2D> getPositionHistory() { return positionHistory; }
 
     public StringProperty ultrasonicProperty() { return ultrasonic; }
@@ -99,19 +99,20 @@ public class RobotModel {
     public double getAngle() { return angle.get(); }
     public void setAngle(double val) { this.angle.set(val); }
     
-    public double getAngleMultiplier() { return angleMultiplier.get(); }
-    public void setAngleMultiplier(double val) { this.angleMultiplier.set(val); }
+    public double getTotalDistance() { return totalDistance.get(); }
+    public void setTotalDistance(double val) { this.totalDistance.set(val); }
 
     public void clearHistory() {
         positionHistory.clear();
     }
 
-    public void setSensorData(String dist, String irLeftDigital, String irRightDigital, int irLeftRaw, int irRightRaw) {
+    public void setSensorData(String dist, String irLeftDigital, String irRightDigital, double angle, double totalDist) {
         this.ultrasonic.set(dist);
         this.irLeftDigital.set(irLeftDigital);
         this.irRightDigital.set(irRightDigital);
-        this.irAnalogLeftRaw.set(irLeftRaw);
-        this.irAnalogRightRaw.set(irRightRaw);
+        
+        this.angle.set(angle);
+        this.totalDistance.set(totalDist);
     }
     
 }
