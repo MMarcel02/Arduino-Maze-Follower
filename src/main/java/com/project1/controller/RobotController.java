@@ -69,6 +69,16 @@ public class RobotController {
         });
     }
 
+    public void resetOdometry() {
+        sendRequest(ArduinoEndpoints.RESET_ODOMETRY, res -> {
+            model.clearHistory();
+            model.setAngle(Math.PI/2.0);
+            model.setTotalDistance(0);
+            model.setX(0);
+            model.setY(0);
+        });
+    }
+
     public void setControlState(RobotControlState targetState) {
         String endpoint;
         switch (targetState) {

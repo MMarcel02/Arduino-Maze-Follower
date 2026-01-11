@@ -100,7 +100,7 @@ void route(WiFiClient& c, const String& path, const String& q) {
     if (path == "/crabWalkRight") { handleCrabWalkRight(c); return; }
 
     if (path == "/toggleEmergencyStop") { handleToggleEmergencyStop(c); return; }
-
+    
     if (path == "/manual") { handleManual(c); return; }
     
     if (path == "/lineFollowBangBang") { handleLineFollowBangBang(c); return; }
@@ -115,6 +115,8 @@ void route(WiFiClient& c, const String& path, const String& q) {
     if (path == "/threePointTurn") { handleThreePointTurn(c); return; }
     if (path == "/uTurn") { handleUTurn(c); return; }
     if (path == "/parkingInBox") { handleParkingInBox(c); return; }
+    
+    if (path == "/resetOdometry") { handleResetOdometry(c); return; }
 
     // when we change speed we pass down /setSpeed?s=(some value 0-255)
     if (path.startsWith("/setSpeed")) {
@@ -324,6 +326,11 @@ void handleParkingInBox(WiFiClient& client) {
     sendHttpResponse(client, "Control State set to PARKING_IN_BOX");
 }
 
+void handleResetOdometry(WiFiClient& client) {
+    resetOdometry();
+    sendHttpResponse(client, "Odometry Reset. Starting angle: 90.0"); 
+}
+
 // We check for a http connection (one everytime we send a command e.g. /forward)
 void handleHTTPCommands() {
   WiFiClient httpClient = httpServer.available();  
@@ -353,11 +360,11 @@ void handleTCPData() {
   }
   
   if (streamingClient && streamingClient.connected()) {
-    // We check if 100ms has elapsed yet, if it has we send a packet with data
+    // We check if 50ms has elapsed yet, if it has we send a packet with data
     if (currentTime - lastSensorSendTime >= SENSOR_SEND_INTERVAL) {
 
       // Creates String with data separated by commas
-      String tcpPacket = buildSensorMessage() + "," + String(currentMovementState) + "," + String(currentControlState);
+      String tcpPacket = buildSensorMessage() + "," + String(currentMovementState) + "," + String(currentControlState) + "," + String(robotAngle) + "," + String(totalDistance, 2);
       
       // Sends the data all at once as a tcp packet
       streamingClient.println(tcpPacket);

@@ -1,8 +1,6 @@
 com/project1/model/RobotControlState.class
 com/project1/view/DashboardView.class
-com/project1/services/MapPhysics$1.class
 com/project1/model/RobotMovementState.class
-com/project1/services/MapPhysics.class
 com/project1/view/MapView.class
 com/project1/controller/InputHandler.class
 module-info.class
