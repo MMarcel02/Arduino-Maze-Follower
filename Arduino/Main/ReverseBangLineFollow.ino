@@ -1,7 +1,7 @@
 
 void reverseBangLineFollow() {
-    int backingTurningSpeed = 60;
-    int backingForwardSpeed = 50;
+    int backingTurningSpeed = 80;
+    int backingForwardSpeed = 100;
     
     //If doesn't see black at all we assume we are following the line so we go forward
     if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0){
@@ -14,7 +14,7 @@ void reverseBangLineFollow() {
         motorSpeed = backingForwardSpeed;
         motorTurningSpeed = backingTurningSpeed;
         
-        steerBackWheelsRight();
+        steerBackWheelsLeft();
         
         previousDir = -1;
     }
@@ -23,7 +23,7 @@ void reverseBangLineFollow() {
         motorSpeed = backingForwardSpeed;
         motorTurningSpeed = backingTurningSpeed;
         
-        steerBackWheelsLeft();
+        steerBackWheelsRight();
         
         previousDir = 1;
     }
