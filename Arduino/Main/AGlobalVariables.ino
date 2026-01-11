@@ -127,6 +127,13 @@ enum mazeState {
     LOST_ROBOT1
 };
 
+enum lostRobotAlgoState {
+    SEARCHING_FOR_THE_LINE,
+    FOUND_THE_LINE,
+};
+
+lostRobotAlgoState lostRobotAlgoState = SEARCHING_FOR_THE_LINE;
+
 mazeState mazeState = FOLLOW_LINE;
 unsigned long stateStartTime = 0;
 unsigned long lastLeftBlackTime = 0;
