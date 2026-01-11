@@ -365,6 +365,7 @@ void handleTCPData() {
 
       // Creates String with data separated by commas
       String tcpPacket = buildSensorMessage() + "," + String(currentMovementState) + "," + String(currentControlState) + "," + String(robotAngle) + "," + String(totalDistance, 2);
+      tcpPacket += "," + String(robotX) + "," + String(robotY);
       
       // Sends the data all at once as a tcp packet
       streamingClient.println(tcpPacket);
