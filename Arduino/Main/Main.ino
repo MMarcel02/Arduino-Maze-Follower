@@ -40,7 +40,7 @@ void loop() {
 
   // Check distance and angle every 50ms
   updateOdometry();
-  bangLineFollowMaze();
+  leftHandMazeWithoutLoops();
   
   // Checks for emergency stop and line following etc.
   // manageRobotMovementState();
