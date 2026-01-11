@@ -132,6 +132,13 @@ enum lostRobotAlgoState {
     FOUND_THE_LINE,
 };
 
+enum bangBangLineFollowState {
+    BangBangLineFollowing,
+    ObstacleInFront,
+};
+
+bangBangLineFollowState bangBangLineFollowState = BangBangLineFollowing;
+
 lostRobotAlgoState lostRobotAlgoState = SEARCHING_FOR_THE_LINE;
 
 mazeState mazeState = FOLLOW_LINE;

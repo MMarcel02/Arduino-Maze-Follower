@@ -16,7 +16,7 @@ void leftHandMazeWithoutLoops() {
       break;
     } 
     // Standard Line Following Logic
-    else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
+      else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
       setLineFollowingSpeed(motorSpeedOutsideLineFollow);
       moveForward();
     } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 0) {

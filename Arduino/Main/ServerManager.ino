@@ -380,7 +380,7 @@ void manageRobotMovementState() {
   }
   
   if (currentControlState == LINE_FOLLOW_BANGBANG) {
-    bangLineFollow();
+    bangLineFollowEmergencyStop();
   }
 
   if (currentControlState == LINE_FOLLOW_PD) {
