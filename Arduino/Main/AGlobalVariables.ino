@@ -110,6 +110,14 @@ double sensitivity = 5.0;
 double dampening = 1.0;
 
 
+enum lostRobotAlgoState {
+    SEARCHING_FOR_THE_LINE,
+    FOUND_THE_LINE,
+};
+
+lostRobotAlgoState lostRobotAlgoState = SEARCHING_FOR_THE_LINE;
+
+mazeState mazeState = FOLLOW_LINE;
 unsigned long stateStartTime = 0;
 unsigned long lastLeftBlackTime = 0;
 unsigned long lastRightBlackTime = 0;
