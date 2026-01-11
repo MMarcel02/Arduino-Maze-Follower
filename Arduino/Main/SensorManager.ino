@@ -99,7 +99,7 @@ bool detectEndOfLine() {
   unsigned long now = millis();
   
   if (lostLine) {
-    
+    bool noLine;
     switch (lostLineState) {
       case SCANNING_LEFT:
         if(!turnToAbsoluteAngle(initialAngle - angleScanOffset)) {
@@ -107,7 +107,7 @@ bool detectEndOfLine() {
           lostLineState = SCANNING_RIGHT;  
         }
         
-        bool noLine = (leftDigitalIRReading == 0 && rightDigitalIRReading == 0);
+        noLine = (leftDigitalIRReading == 0 && rightDigitalIRReading == 0);
         if (noLine) break;
         
         // Found the line
@@ -121,7 +121,7 @@ bool detectEndOfLine() {
           lostLineState = RETURNING;  
         }
         
-        bool noLine = (leftDigitalIRReading == 0 && rightDigitalIRReading == 0);
+        noLine = (leftDigitalIRReading == 0 && rightDigitalIRReading == 0);
         if (noLine) break;
         
         // Found the line
@@ -136,7 +136,7 @@ bool detectEndOfLine() {
         }
         
         // In case the sweep missed the line, lets check it in returning as well
-        bool noLine = (leftDigitalIRReading == 0 && rightDigitalIRReading == 0);
+        noLine = (leftDigitalIRReading == 0 && rightDigitalIRReading == 0);
         if (noLine) break;
         
         // Found the line
