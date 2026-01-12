@@ -147,6 +147,31 @@ void sendHttpResponse(WiFiClient& client, const String& body) {
     delay(1);
 }
 
+void changeControlState(RobotControlState newState) {
+  currentControlState = newState;
+
+  mazeState = FOLLOW_LINE;
+  lostRobotState = SEARCHING_FOR_THE_LINE;
+  emergencyStopState = BANG_LINE_FOLLOWING;
+  parkingBoxState = APPROACHING_PARKING_BOX;
+
+  targetAngleStart = 0;
+  targetAngleEnd = 0;
+  targetTotalDistance = 0;
+
+  stateStartTime = 0;
+  lastLeftBlackTime = 0;
+  lastRightBlackTime = 0;
+
+  isMoving = false;
+  
+  stopAllMotors();
+
+  if (newState != MANUAL) {
+      resetOdometry();
+  }
+}
+
 void handleRoot(WiFiClient& client) {
     sendHttpResponse(client, "Initial Page");
 }
@@ -302,31 +327,6 @@ void handleTCPData() {
   }
 }
 
-void changeControlState(RobotControlState newState) {
-  currentControlState = newState;
-
-  mazeState = FOLLOW_LINE;
-  lostRobotState = SEARCHING_FOR_THE_LINE;
-  emergencyStopState = BANG_LINE_FOLLOWING;
-  parkingBoxState = APPROACHING_PARKING_BOX;
-
-  targetAngleStart = 0;
-  targetAngleEnd = 0;
-  targetTotalDistance = 0;
-
-  stateStartTime = 0;
-  lastLeftBlackTime = 0;
-  lastRightBlackTime = 0;
-
-  isMoving = false;
-  
-  stopAllMotors();
-
-  if (newState != MANUAL) {
-      resetOdometry();
-  }
-}
-
 void manageRobotMovementState() {
   switch (currentControlState) {
     case (MANUAL):
@@ -353,7 +353,7 @@ void manageRobotMovementState() {
       break;
 
     case (U_TURN):
-      uTurn();
+      // uTurn();
       break;
     
     case (PARKING_IN_BOX):

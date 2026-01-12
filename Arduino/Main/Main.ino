@@ -1,5 +1,6 @@
 
 #include <WiFi101.h>
+#include "Enums.h"
 
 
 void setupWifiPins(); 
@@ -14,7 +15,7 @@ void manageRobotMovementState();
 void handleHTTPCommands();
 void handleTCPData();
 void setUpEncoders();
-
+void updateOdometry();
 
 void setup() {
   Serial.begin(115200); 

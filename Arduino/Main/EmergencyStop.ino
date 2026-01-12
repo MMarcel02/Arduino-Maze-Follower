@@ -1,18 +1,18 @@
 
 void emergencyStop() {
 
-  switch (bangBangLineFollowState) {
+  switch (emergencyStopState) {
 
   case (BANG_LINE_FOLLOWING):
     bangLineFollow();
 
     if (obstacleFound()) {
       stopAllMotors();
-      bangBangLineFollowState = STOPPED;
-      break;
+      emergencyStopState = EMERGENCY_STOPPED;
     }
+    break;
 
-  case (STOPPED):
+  case (EMERGENCY_STOPPED):
     stopAllMotors();
     break;
   }

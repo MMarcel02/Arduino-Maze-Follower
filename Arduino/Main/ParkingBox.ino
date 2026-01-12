@@ -1,11 +1,11 @@
 void parkingBox() {
 
-    if ( (parkingBoxState == APPROACHING_PARKING_BOX || parkingBoxState == TURNING_LEFT || parkingBoxState == TURNING_RIGHT || parkingBoxState == BLIND_TURN ) 
+    if ( (parkingBoxState == APPROACHING_PARKING_BOX || parkingBoxState == PARKING_TURNING_LEFT || parkingBoxState == PARKING_TURNING_RIGHT || parkingBoxState == PARKING_BLIND_TURN ) 
         && junctionDetectedTimed() ) {
 
         stopAllMotors();
         stateStartTime = currentTime;
-        mazeState = SELF_ALIGN_90_DEGREES;
+        parkingBoxState = SELF_ALIGN_90_DEGREES;
     }
 
   switch (parkingBoxState) {
@@ -27,31 +27,31 @@ void parkingBox() {
     }
     break;
 
-  case TURNING_LEFT:
+  case PARKING_TURNING_LEFT:
     if (currentTime - stateStartTime >= TURN_START_REVERSE_DURATION) {
       setLineFollowingSpeed(100);
       turnOnSpotLeft();
       if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
         stateStartTime = currentTime;
-        parkingBoxState = BLIND_TURN;
+        parkingBoxState = PARKING_BLIND_TURN;
         break;
       }
     }
     break;
 
-  case TURNING_RIGHT:
+  case PARKING_TURNING_RIGHT:
     if (currentTime - stateStartTime >= TURN_START_REVERSE_DURATION) {
       setLineFollowingSpeed(100);
       turnOnSpotRight();
       if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
         stateStartTime = currentTime;
-        parkingBoxState = BLIND_TURN;
+        parkingBoxState = PARKING_BLIND_TURN;
         break;
       }
     }
     break;
 
-  case BLIND_TURN:
+  case PARKING_BLIND_TURN:
     if (currentTime - stateStartTime >= MINIMUM_TURN_DURATION) {
       parkingBoxState = APPROACHING_PARKING_BOX;
       break;
