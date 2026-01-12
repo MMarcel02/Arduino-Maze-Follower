@@ -86,7 +86,6 @@ void serve(WiFiClient& c) {
     route(c,pth,qry);
   }
 
-
 void route(WiFiClient& c, const String& path, const String& q) {
     if (path == "/" || path == "") { handleRoot(c); return; }
     if (path == "/forward") { handleForward(c); return; }
@@ -99,20 +98,15 @@ void route(WiFiClient& c, const String& path, const String& q) {
     if (path == "/crabWalkLeft") { handleCrabWalkLeft(c); return; }
     if (path == "/crabWalkRight") { handleCrabWalkRight(c); return; }
 
-    if (path == "/toggleEmergencyStop") { handleToggleEmergencyStop(c); return; }
     
     if (path == "/manual") { handleManual(c); return; }
-    
     if (path == "/lineFollowBangBang") { handleLineFollowBangBang(c); return; }
-    if (path == "/lineFollowPD") { handleLineFollowPD(c); return; }
-
+    
     if (path == "/solveMaze1") { handleSolveMaze1(c); return; }
     if (path == "/solveMaze2") { handleSolveMaze2(c); return; }
     if (path == "/lostRobot") { handleLostRobot(c); return; }
-
-    if (path == "/reverseStraight") { handleReverseStraight(c); return; }
-    if (path == "/reverseCorner") { handleReverseCorner(c); return; }
-    if (path == "/threePointTurn") { handleThreePointTurn(c); return; }
+    
+    if (path == "/emergencyStop") { handleEmergencyStop(c); return; }
     if (path == "/uTurn") { handleUTurn(c); return; }
     if (path == "/parkingInBox") { handleParkingInBox(c); return; }
     
@@ -125,34 +119,40 @@ void route(WiFiClient& c, const String& path, const String& q) {
       return;
     }
 
+    if (path.startsWith("/setRotationSpeed")) {
+      int val = parseIntEndpoint(q);
+      handleSetRotationSpeed(c, val);
+      return;
+    }
+
     if (path.startsWith("/setEmergencyStopDistance")) {
-      int distance = parseIntEndpoint(q);
-      handleSetEmergencyStopDistance(c, distance);
+      int ultrasonicDistance = parseIntEndpoint(q);
+      handleSetEmergencyStopDistance(c, ultrasonicDistance);
       return;
     }
 
-    if (path.startsWith("/setSensitivity")) {
-      double sensitivity = parseDoubleEndpoint(q);
-      handleSetSensitivity(c, sensitivity);
+    if (path.startsWith("/setReverseDuration")) {
+      int val = parseIntEndpoint(q);
+      handleSetReverseDuration(c, val);
       return;
     }
 
-    if (path.startsWith("/setDampening")) {
-      double dampening = parseDoubleEndpoint(q);
-      handleSetDampening(c, dampening);
+    if (path.startsWith("/setTurnDuration")) {
+      int val = parseIntEndpoint(q);
+      handleSetTurnDuration(c, val);
       return;
     }
 
-    if (path.startsWith("/setLeftIR")) {
-      int leftIRLimit = parseIntEndpoint(q);
-      handleSetLeftIRThreshold(c, leftIRLimit);
+    if (path.startsWith("/setJunctionDuration")) {
+      int val = parseIntEndpoint(q);
+      handleSetJunctionDuration(c, val);
+      return;
+
+    if (path.startsWith("/setOdometryFudge")) {
+      double val = parseDoubleEndpoint(q);
+      handleSetOdometryFudge(c, val);
       return;
     }
-
-    if (path.startsWith("/setRightIR")) {
-      int rightIRLimit = parseIntEndpoint(q);
-      handleSetRightIRThreshold(c, rightIRLimit);
-      return;
     }
 }
 
@@ -177,60 +177,85 @@ void sendHttpResponse(WiFiClient& client, const String& body) {
     delay(1);
 }
 
+void changeControlState(RobotControlState newState) {
+  currentControlState = newState;
+
+  mazeState = FOLLOW_LINE;
+  lostRobotState = SEARCHING_FOR_THE_LINE;
+  emergencyStopState = BANG_LINE_FOLLOWING;
+  parkingBoxState = APPROACHING_PARKING_BOX;
+
+  targetAngleStart = 0;
+  targetAngleEnd = 0;
+  targetTotalDistance = 0;
+
+  stateStartTime = currentTime;
+  lastLeftBlackTime = 0;
+  lastRightBlackTime = 0;
+
+  isMoving = false;
+  
+  stopAllMotors();
+
+  if (newState != MANUAL) {
+      resetOdometry();
+  }
+}
+
 void handleRoot(WiFiClient& client) {
     sendHttpResponse(client, "Initial Page");
 }
 
 void handleForward(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     moveForward();
     sendHttpResponse(client, "Moved Forward");
 }
 
 void handleBackward(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     moveBackward();
     sendHttpResponse(client, "Moved Backward");
 }
 
 void handleTurnOnSpotRight(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     turnOnSpotRight();
     sendHttpResponse(client, "Turned Right on Spot");
 }
 
 void handleTurnOnSpotLeft(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     turnOnSpotLeft();
     sendHttpResponse(client, "Turned Left on Spot");
 }
 
 void handleLeft(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     moveLeft();
     sendHttpResponse(client, "Moved Left");
 }
 
 void handleRight(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     moveRight();
     sendHttpResponse(client, "Moved Right");
 }
 
 void handleStop(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     stopAllMotors();
     sendHttpResponse(client, "Stopped");
 }
 
 void handleCrabWalkLeft(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     crabWalkLeft();
     sendHttpResponse(client, "Crab Walk Left");
 }
 
 void handleCrabWalkRight(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     crabWalkRight();
     sendHttpResponse(client, "Crab Walk Right");
 }
@@ -240,89 +265,73 @@ void handleSetSpeed(WiFiClient& client, int speed) {
     sendHttpResponse(client, "Speed set to " + String(speed));
 }
 
-void handleSetEmergencyStopDistance(WiFiClient& client, int distance) {
-    emergencyStopDistance = distance;
+void handleSetEmergencyStopDistance(WiFiClient& client, int ultrasonicDistance) {
+    emergencyStopDistance = ultrasonicDistance;
     sendHttpResponse(client, "Emergency Stop distance set to " + String(emergencyStopDistance));
 }
 
-void handleSetSensitivity (WiFiClient& client, double value) {
-    sensitivity = value;
-    sendHttpResponse(client, "Sensitivity set to " + String(sensitivity, 1));
+void handleSetRotationSpeed(WiFiClient& client, int value) {
+    rotationSpeed = value;
+    sendHttpResponse(client, "Rotation Speed set to " + String(rotationSpeed));
 }
 
-void handleSetDampening(WiFiClient& client, double value) {
-  dampening = value;
-  sendHttpResponse(client, "Dampening set to " + String(dampening, 1));
+void handleSetReverseDuration(WiFiClient& client, int value) {
+    TURN_START_REVERSE_DURATION = value;
+    sendHttpResponse(client, "Reverse Duration set to " + String(TURN_START_REVERSE_DURATION));
 }
 
-void handleSetLeftIRThreshold(WiFiClient& client, int value) {
-  leftIRThreshold = value;
-  sendHttpResponse(client, "Left IR threshold set to " + String(value));
+void handleSetTurnDuration(WiFiClient& client, int value) {
+    MINIMUM_TURN_DURATION = value;
+    sendHttpResponse(client, "Turn Duration set to " + String(MINIMUM_TURN_DURATION));
 }
 
-void handleSetRightIRThreshold(WiFiClient& client, int value) {
-  rightIRThreshold = value;
-  sendHttpResponse(client, "Right IR threshold set to " + String(value));
+void handleSetJunctionDuration(WiFiClient& client, int value) {
+    JUNCTION_TIME_DELTA = value;
+    sendHttpResponse(client, "Junction Delta set to " + String(JUNCTION_TIME_DELTA));
 }
 
-void handleToggleEmergencyStop(WiFiClient& client) {
-    emergencyStop = !emergencyStop;
-    sendHttpResponse(client, ("Emergency stop set to " + boolToString(emergencyStop))); 
-}   
+void handleSetOdometryFudge(WiFiClient& client, double value) {
+    odometryFudge = value;
+    sendHttpResponse(client, "Odometry Fudge set to " + String(odometryFudge));
+}
 
 void handleManual(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     sendHttpResponse(client, "Control State set to MANUAL"); 
 }
 
 void handleLineFollowBangBang(WiFiClient& client) {
-    currentControlState = LINE_FOLLOW_BANGBANG;
+    changeControlState(LINE_FOLLOW_BANGBANG);
     sendHttpResponse(client, "Control State set to LINE_FOLLOW_BANGBANG"); 
 }
 
-void handleLineFollowPD(WiFiClient& client) {
-    currentControlState = LINE_FOLLOW_PD;
-    sendHttpResponse(client, "Control State set to LINE_FOLLOW_PD"); 
-}  
-
-
 void handleSolveMaze1(WiFiClient& client) {
-    currentControlState = SOLVE_MAZE_1;
+    changeControlState(SOLVE_MAZE_1);
     sendHttpResponse(client, "Control State set to SOLVE_MAZE_1");
 }
 
 void handleSolveMaze2(WiFiClient& client) {
-    currentControlState = SOLVE_MAZE_2;
+    changeControlState(SOLVE_MAZE_2);
     sendHttpResponse(client, "Control State set to SOLVE_MAZE_2");
 }
 
 void handleLostRobot(WiFiClient& client) {
-    currentControlState = LOST_ROBOT;
+    changeControlState(LOST_ROBOT);
     sendHttpResponse(client, "Control State set to LOST_ROBOT");
 }
 
-void handleReverseStraight(WiFiClient& client) {
-    currentControlState = REVERSE_STRAIGHT;
-    sendHttpResponse(client, "Control State set to REVERSE_STRAIGHT");
-}
-
-void handleReverseCorner(WiFiClient& client) {
-    currentControlState = REVERSE_CORNER;
-    sendHttpResponse(client, "Control State set to REVERSE_CORNER");
-}
-
-void handleThreePointTurn(WiFiClient& client) {
-    currentControlState = THREE_POINT_TURN;
-    sendHttpResponse(client, "Control State set to THREE_POINT_TURN");
-}
+void handleEmergencyStop(WiFiClient& client) {
+    changeControlState(EMERGENCY_STOP);
+    sendHttpResponse(client, ("Control State set to EMERGENCY_STOP")); 
+}   
 
 void handleUTurn(WiFiClient& client) {
-    currentControlState = U_TURN;
+    changeControlState(U_TURN);
     sendHttpResponse(client, "Control State set to U_TURN");
 }
 
 void handleParkingInBox(WiFiClient& client) {
-    currentControlState = PARKING_IN_BOX;
+    changeControlState(PARKING_IN_BOX);
     sendHttpResponse(client, "Control State set to PARKING_IN_BOX");
 }
 
@@ -375,48 +384,37 @@ void handleTCPData() {
 }
 
 void manageRobotMovementState() {
-  // Should only stop IF we're trying to move generally forward, otherwise it will block when we try to reverse or rotate
-  if (currentControlState == MANUAL && currentMovementState == FORWARD && emergencyStop) {
-    checkEmergencyStop();   
-  }
-  
-  if (currentControlState == LINE_FOLLOW_BANGBANG) {
-    bangLineFollow();
-  }
+  switch (currentControlState) {
+    case (MANUAL):
+      break;
 
-  if (currentControlState == LINE_FOLLOW_PD) {
-    pdLineFollow();
-  }
+    case (LINE_FOLLOW_BANGBANG):
+      bangLineFollow();
+      break;
 
-  if (currentControlState == SOLVE_MAZE_1) {
-      // To be implemented
-  }
+    case (SOLVE_MAZE_1):
+      leftHandMazeWithoutLoops();
+      break;
 
-  if (currentControlState == SOLVE_MAZE_2) {
-      // To be implemented
-  }
+    case (SOLVE_MAZE_2):
+      depthFirstSearch();
+      break;
+    
+    case (LOST_ROBOT):
+      lostRobot();
+      break;
+    
+    case (EMERGENCY_STOP):
+      emergencyStop();
+      break;
 
-  if (currentControlState == LOST_ROBOT) {
-      // To be implemented
-  }
-
-  if (currentControlState == REVERSE_STRAIGHT) {
-      // To be implemented
-  }
-
-  if (currentControlState == REVERSE_CORNER) {
-      // To be implemented
-  }
-
-  if (currentControlState == THREE_POINT_TURN) {
-      // To be implemented
-  }
-
-  if (currentControlState == U_TURN) {
-      // To be implemented
-  }
-
-  if (currentControlState == PARKING_IN_BOX) {
-      // To be implemented
+    case (U_TURN):
+      uTurn();
+      break;
+    
+    case (PARKING_IN_BOX):
+      parkingBox();
+      break;
+    
   }
 }

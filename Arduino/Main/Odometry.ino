@@ -20,6 +20,10 @@ float degToRad(float degrees) {
   return degrees * (PI / 180.0);
 }
 
+float radToDeg(float radians) {
+  return radians * (180.0 / PI);
+}
+
 void updateOdometry() {
   if (currentTime - prevTime < 10) return; 
 
@@ -33,7 +37,7 @@ void updateOdometry() {
   long distLeftTicks = currentLeft - prevLeftTick;
   long distRightTicks = currentRight - prevRightTick;
 
-  // We convert the ticks to meters
+  // We convert the ticks to centimetres
   float distLeft = distLeftTicks * DISTANCE_PER_TICK;
   float distRight = distRightTicks * DISTANCE_PER_TICK;
 
@@ -41,7 +45,7 @@ void updateOdometry() {
   float distAverage = (distLeft + distRight) / 2.0;
   totalDistance += distAverage;
 
-  float changeInAngle = (distRight - distLeft) / TRACK_WIDTH;
+  float changeInAngle = (distRight - distLeft) / (TRACK_WIDTH * odometryFudge);
   
   // We use the center of the angle turned,
   // because the robot is constantly changing angle as it moves

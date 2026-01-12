@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.canvas.Canvas?>
@@ -7,7 +8,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -39,7 +39,7 @@
                                           <Color red="0.624" green="0.624" blue="0.624" fx:id="x2" />
                                        </textFill>
                                     </Label>
-                                    <VBox spacing="15.0">
+                                    <VBox prefWidth="346.0" spacing="15.0">
                                        <children>
                                           <HBox>
                                              <children>
@@ -57,34 +57,6 @@
                                           </HBox>
                                           <HBox>
                                              <children>
-                                                <Label fx:id="irAnalogLeft" prefHeight="20.0" prefWidth="173.0" text="IR-A Left:  ————">
-                                                   <font>
-                                                      <Font size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label fx:id="irAnalogRight" prefWidth="173.0" text="IR-A Right:  ————">
-                                                   <font>
-                                                      <Font size="14.0" />
-                                                   </font>
-                                                </Label>
-                                             </children>
-                                          </HBox>
-                                          <HBox>
-                                             <children>
-                                                <Label fx:id="irAnalogLeftRaw" prefHeight="20.0" prefWidth="173.0" text="IR-A-L Raw  ————">
-                                                   <font>
-                                                      <Font size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label fx:id="irAnalogRightRaw" prefWidth="173.0" text="IR-A-R Raw  ————">
-                                                   <font>
-                                                      <Font size="14.0" />
-                                                   </font>
-                                                </Label>
-                                             </children>
-                                          </HBox>
-                                          <HBox>
-                                             <children>
                                                 <Label fx:id="ultraSonic" text="Ultrasonic:">
                                                    <font>
                                                       <Font size="14.0" />
@@ -93,17 +65,15 @@
                                              </children>
                                           </HBox>
                                        </children>
+                                       <VBox.margin>
+                                          <Insets top="10.0" />
+                                       </VBox.margin>
                                     </VBox>
-                                    <VBox alignment="CENTER" prefHeight="150.0" prefWidth="331.0" spacing="15.0">
+                                    <VBox alignment="CENTER" prefHeight="95.0" prefWidth="346.0" spacing="15.0">
                                        <children>
-                                          <Slider fx:id="speedSlider" blockIncrement="5.0" max="255.0" minorTickCount="2" prefHeight="24.0" prefWidth="245.0" value="80.0">
-                                             <VBox.margin>
-                                                <Insets top="10.0" />
-                                             </VBox.margin>
-                                          </Slider>
                                           <Label fx:id="speedLabel" text="Speed: 80">
                                              <font>
-                                                <Font size="14.0" />
+                                                <Font size="16.0" />
                                              </font>
                                           </Label>
                                           <GridPane alignment="TOP_CENTER" hgap="4.0" prefHeight="63.0" prefWidth="331.0" vgap="4.0">
@@ -133,6 +103,48 @@
                                                    </graphic>
                                                 </Button>
                                                 <Button fx:id="bigIncrement" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#bigIncreaseSpeed" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="3">
+                                                   <graphic>
+                                                      <FontIcon iconLiteral="fas-plus" styleClass="buttonIcon" />
+                                                   </graphic>
+                                                </Button>
+                                             </children>
+                                          </GridPane>
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" prefHeight="95.0" prefWidth="331.0" spacing="15.0">
+                                       <children>
+                                          <Label fx:id="rotationSpeedLabel" text="Rotation Speed: 100">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <GridPane alignment="TOP_CENTER" hgap="4.0" prefHeight="63.0" prefWidth="331.0" vgap="4.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Button fx:id="bDecRotationSpeed" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#bigDecreaseRotationSpeed" prefHeight="0.0" prefWidth="73.0">
+                                                   <graphic>
+                                                      <FontIcon iconLiteral="fas-minus" styleClass="buttonIcon" />
+                                                   </graphic>
+                                                </Button>
+                                                <Button fx:id="sDecRotationSpeed" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#smallDecreaseRotationSpeed" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="1">
+                                                   <graphic>
+                                                      <FontIcon iconLiteral="fas-minus" styleClass="smallButtonIcon" />
+                                                   </graphic>
+                                                </Button>
+                                                <Button fx:id="smallIncRecSpeed" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#smallIncreaseRotationSpeed" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="2">
+                                                   <graphic>
+                                                      <FontIcon iconLiteral="fas-plus" styleClass="smallButtonIcon" />
+                                                   </graphic>
+                                                </Button>
+                                                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#bigIncreaseRotationSpeed" prefHeight="0.0" prefWidth="73.0" GridPane.columnIndex="3">
                                                    <graphic>
                                                       <FontIcon iconLiteral="fas-plus" styleClass="buttonIcon" />
                                                    </graphic>
@@ -247,12 +259,12 @@
                      <children>
                         <Label prefHeight="53.0" prefWidth="137.0" text="X:" wrapText="true" fx:id="xLabel">
                            <font>
-                              <Font size="14.0" />
+                              <Font size="16.0" />
                            </font>
                         </Label>
                         <Label fx:id="yLabel" maxHeight="53.0" maxWidth="218.0" prefHeight="53.0" prefWidth="137.0" text="Y: " wrapText="true">
                            <font>
-                              <Font size="14.0" />
+                              <Font size="16.0" />
                            </font>
                         </Label>
                      </children>
@@ -261,7 +273,7 @@
                      <children>
                         <Label fx:id="angleLabel" prefHeight="34.0" prefWidth="275.0" text="Angle: " wrapText="true">
                            <font>
-                              <Font size="14.0" />
+                              <Font size="16.0" />
                            </font>
                         </Label>
                      </children>
@@ -270,12 +282,12 @@
                      <children>
                         <Label fx:id="totalDistanceLabel" prefWidth="275.0" text="Total Distance:">
                            <font>
-                              <Font size="14.0" />
+                              <Font size="16.0" />
                            </font>
                         </Label>
                      </children>
                   </HBox>
-                  <Button fx:id="clearMapButton" mnemonicParsing="false" onMousePressed="#clearMap" prefHeight="25.0" prefWidth="275.0" text="Reset Odometry">
+                  <Button fx:id="clearMapButton" mnemonicParsing="false" onMousePressed="#clearMap" prefHeight="45.0" prefWidth="275.0" text="Reset Odometry">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin></Button>
@@ -284,7 +296,7 @@
                   <Insets />
                </HBox.margin>
             </VBox>
-            <VBox alignment="TOP_CENTER" prefHeight="572.0" prefWidth="274.0" spacing="10.0">
+            <VBox alignment="TOP_CENTER" prefHeight="572.0" prefWidth="274.0" spacing="15.0">
                <children>
                   <Label alignment="CENTER" style="&#10;" text="Adjustments" textAlignment="CENTER" wrapText="false">
                      <font>
@@ -293,22 +305,6 @@
                      <textFill>
                         <Color red="0.624" green="0.624" blue="0.624" fx:id="x23" />
                      </textFill>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </Label>
-                  <Label fx:id="currentMovementStateLabel" prefHeight="17.0" prefWidth="243.0" text="Movement: ">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets bottom="10.0" top="10.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label fx:id="currentControlStateLabel" prefHeight="17.0" prefWidth="243.0" text="Control: ">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
@@ -322,59 +318,172 @@
                      </VBox.margin>
                   </Label>
                   <Slider fx:id="emergencyStopSlider" blockIncrement="1.0" majorTickUnit="10.0" max="50.0" showTickLabels="true" value="20.0" />
-                  <ToggleButton fx:id="emergencyStopToggle" mnemonicParsing="false" onAction="#toggleEmergencyStop" prefHeight="25.0" prefWidth="275.0" text="Emergency Stop">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin></ToggleButton>
-                  <Label alignment="CENTER" prefHeight="20.0" prefWidth="269.0" text="PD Line Following">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets top="10.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label text="Sensitivity">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <Slider fx:id="sensitivitySlider" blockIncrement="0.1" disable="true" majorTickUnit="2.5" max="10.0" minorTickCount="0" showTickLabels="true" value="5.0" />
-                  <Label text="Dampening">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <Slider fx:id="dampeningSlider" blockIncrement="0.1" disable="true" majorTickUnit="1.0" max="5.0" minorTickCount="2" showTickLabels="true" value="1.0" />
-                  <Label text="IR-A Black Detected Threshold">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </Label>
-                  <VBox alignment="CENTER">
+                  <VBox alignment="CENTER" prefHeight="95.0" prefWidth="331.0" spacing="10.0">
                      <children>
-                        <Slider fx:id="irLeftThresholdSlider" blockIncrement="1.0" disable="true" max="75.0" minorTickCount="1" showTickLabels="true" snapToTicks="true" value="37.0" />
-                        <Label text="Left">
+                        <Label fx:id="reverseDurationLabel" alignment="CENTER" contentDisplay="CENTER" prefWidth="270.0" text="Reverse Duration:">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Label>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="small" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#decreaseReverseDuration" prefHeight="58.0" prefWidth="135.0">
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-minus">
+                                       <styleClass>
+                                          <String fx:value="smallButtonIcon" />
+                                          <String fx:value="buttonIcon" />
+                                       </styleClass>
+                                    </FontIcon>
+                                 </graphic>
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="smallIncrementR131" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#increaseReverseDuration" prefHeight="0.0" prefWidth="135.0">
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-plus">
+                                       <styleClass>
+                                          <String fx:value="smallButtonIcon" />
+                                          <String fx:value="buttonIcon" />
+                                       </styleClass>
+                                    </FontIcon>
+                                 </graphic>
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                           <padding>
+                              <Insets left="10.0" right="10.0" top="5.0" />
+                           </padding>
+                        </HBox>
                      </children>
                   </VBox>
-                  <VBox alignment="CENTER">
+                  <VBox alignment="CENTER" prefHeight="95.0" prefWidth="331.0" spacing="10.0">
                      <children>
-                        <Slider fx:id="irRightThresholdSlider" blockIncrement="1.0" disable="true" max="75.0" minorTickCount="1" showTickLabels="true" snapToTicks="true" value="37.0" />
-                        <Label text="Right">
+                        <Label fx:id="turnDurationLabel" alignment="CENTER" contentDisplay="CENTER" prefWidth="270.0" text="Turn Duration: ">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Label>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="smallDecrementR132" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#decreaseTurnDuration" prefHeight="58.0" prefWidth="135.0">
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-minus">
+                                       <styleClass>
+                                          <String fx:value="smallButtonIcon" />
+                                          <String fx:value="buttonIcon" />
+                                       </styleClass>
+                                    </FontIcon>
+                                 </graphic>
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="smallIncrementR132" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#increaseTurnDuration" prefHeight="0.0" prefWidth="135.0">
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-plus">
+                                       <styleClass>
+                                          <String fx:value="smallButtonIcon" />
+                                          <String fx:value="buttonIcon" />
+                                       </styleClass>
+                                    </FontIcon>
+                                 </graphic>
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                           <padding>
+                              <Insets left="10.0" right="10.0" top="5.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="95.0" prefWidth="331.0" spacing="10.0">
+                     <children>
+                        <Label fx:id="junctionDurationLabel" alignment="CENTER" contentDisplay="CENTER" prefWidth="270.0" text="Junction Detection: ">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="smallDecrementR133" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#decreaseJunctionDetection" prefHeight="58.0" prefWidth="135.0">
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-minus">
+                                       <styleClass>
+                                          <String fx:value="smallButtonIcon" />
+                                          <String fx:value="buttonIcon" />
+                                       </styleClass>
+                                    </FontIcon>
+                                 </graphic>
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="smallIncrementR133" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#increaseJunctionDetection" prefHeight="0.0" prefWidth="135.0">
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-plus">
+                                       <styleClass>
+                                          <String fx:value="smallButtonIcon" />
+                                          <String fx:value="buttonIcon" />
+                                       </styleClass>
+                                    </FontIcon>
+                                 </graphic>
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                           <padding>
+                              <Insets left="10.0" right="10.0" top="5.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="95.0" prefWidth="331.0" spacing="10.0">
+                     <children>
+                        <Label fx:id="odometryFudgeLabel" alignment="CENTER" prefWidth="270.0" text="Odometry Fudge Factor:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="smallDecrementR13" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#decreaseOdometryFudge" prefHeight="58.0" prefWidth="135.0">
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-minus">
+                                       <styleClass>
+                                          <String fx:value="smallButtonIcon" />
+                                          <String fx:value="buttonIcon" />
+                                       </styleClass>
+                                    </FontIcon>
+                                 </graphic>
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="smallIncrementR13" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#increaseOdometryFudge" prefHeight="0.0" prefWidth="135.0">
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-plus">
+                                       <styleClass>
+                                          <String fx:value="smallButtonIcon" />
+                                          <String fx:value="buttonIcon" />
+                                       </styleClass>
+                                    </FontIcon>
+                                 </graphic>
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                           <padding>
+                              <Insets left="10.0" right="10.0" top="5.0" />
+                           </padding>
+                        </HBox>
                      </children>
                   </VBox>
                </children>
@@ -389,63 +498,72 @@
                <children>
                   <Label alignment="TOP_CENTER" font="$x1" style="&#10;" text="Maneuvers" textAlignment="CENTER" textFill="$x2" wrapText="false">
                      <VBox.margin>
-                        <Insets bottom="15.0" />
+                        <Insets bottom="8.0" />
                      </VBox.margin>
                   </Label>
-                  <Button fx:id="bangLineFollow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleBangLineFollow" prefHeight="45.0" prefWidth="73.0" text="Bang Bang Line Following">
+                  <Label fx:id="currentMovementStateLabel" prefHeight="17.0" prefWidth="243.0" text="Movement: ">
                      <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="pdLineFollow" mnemonicParsing="false" onMousePressed="#handlePDLineFollow" prefHeight="45.0" prefWidth="256.0" text="PD Line Following">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="solveMaze1" mnemonicParsing="false" onMousePressed="#handleSolveMaze1" prefHeight="45.0" prefWidth="256.0" text="Maze Algo #1">
-                     <font>
-                        <Font size="14.0" />
+                        <Font size="16.0" />
                      </font>
                      <VBox.margin>
-                        <Insets top="12.0" />
+                        <Insets bottom="8.0" />
                      </VBox.margin>
-                  </Button>
-                  <Button fx:id="solveMaze2" mnemonicParsing="false" onMousePressed="#handleSolveMaze2" prefHeight="45.0" prefWidth="256.0" text="Maze Algo #2">
+                  </Label>
+                  <Label fx:id="currentControlStateLabel" prefHeight="17.0" prefWidth="243.0" text="Control: ">
                      <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="lostRobot" mnemonicParsing="false" onMousePressed="#handleLostRobot" prefHeight="45.0" prefWidth="256.0" text="Lost Robot">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="reverseStraight" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleReverseStraight" prefHeight="45.0" prefWidth="256.0" text="Reverse Straight">
-                     <font>
-                        <Font size="14.0" />
+                        <Font size="16.0" />
                      </font>
                      <VBox.margin>
-                        <Insets top="12.0" />
+                        <Insets />
+                     </VBox.margin>
+                  </Label>
+                  <Button fx:id="bangLineFollow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleBangLineFollow" prefHeight="50.0" prefWidth="73.0" text="Bang Bang Line ">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="8.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="reverseCorner" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleReverseCorner" prefHeight="45.0" prefWidth="73.0" text="Reverse Corner">
+                  <Button fx:id="blindedBangLine" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleBlindedBang" prefHeight="50.0" prefWidth="73.0" text="Blinded Bang Line">
                      <font>
-                        <Font size="14.0" />
+                        <Font size="16.0" />
                      </font>
                   </Button>
-                  <Button fx:id="threePointTurn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleThreePointTurn" prefHeight="45.0" prefWidth="73.0" text="Three-Point Turn">
+                  <Button fx:id="solveMaze1" mnemonicParsing="false" onMousePressed="#handleSolveMaze1" prefHeight="50.0" prefWidth="256.0" text="Left Hand Maze">
                      <font>
-                        <Font size="14.0" />
+                        <Font size="16.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="8.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="solveMaze2" mnemonicParsing="false" onMousePressed="#handleSolveMaze2" prefHeight="50.0" prefWidth="256.0" text="Depth First Search Maze">
+                     <font>
+                        <Font size="16.0" />
                      </font>
                   </Button>
-                  <Button fx:id="uTurn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleUTurn" prefHeight="45.0" prefWidth="73.0" text="U-Turn">
+                  <Button fx:id="lostRobot" mnemonicParsing="false" onMousePressed="#handleLostRobot" prefHeight="50.0" prefWidth="256.0" text="Lost Robot">
                      <font>
-                        <Font size="14.0" />
+                        <Font size="16.0" />
                      </font>
                   </Button>
-                  <Button fx:id="parkingInBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleParkingInBox" prefHeight="45.0" prefWidth="73.0" text="Parking in a box">
+                  <Button fx:id="emergencyStop" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleEmergencyStop" prefHeight="50.0" prefWidth="73.0" text="Emergency Stop">
                      <font>
-                        <Font size="14.0" />
+                        <Font size="16.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="8.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="uTurn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleUTurn" prefHeight="50.0" prefWidth="73.0" text="U-Turn">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="parkingInBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleParkingInBox" prefHeight="50.0" prefWidth="73.0" text="Parking in a box">
+                     <font>
+                        <Font size="16.0" />
                      </font>
                   </Button>
                </children>

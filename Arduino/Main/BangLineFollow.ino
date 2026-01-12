@@ -1,4 +1,6 @@
 
+int previousDir = 0;
+
 void bangLineFollow() {
     //If doesn't see black at all we assume we are following the line so we go forward
     if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0){

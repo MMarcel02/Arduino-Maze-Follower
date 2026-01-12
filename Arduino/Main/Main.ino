@@ -1,5 +1,6 @@
 
 #include <WiFi101.h>
+#include "Enums.h"
 
 
 void setupWifiPins(); 
@@ -14,7 +15,7 @@ void manageRobotMovementState();
 void handleHTTPCommands();
 void handleTCPData();
 void setUpEncoders();
-
+void updateOdometry();
 
 void setup() {
   Serial.begin(115200); 
@@ -41,7 +42,7 @@ void loop() {
   // Check distance and angle every 50ms
   updateOdometry();
   
-  // Checks for emergency stop and line following etc.
+  //Checks for emergency stop and line following etc.
   manageRobotMovementState();
 
   // Checks if received a new HTTP command, e.g. /forward

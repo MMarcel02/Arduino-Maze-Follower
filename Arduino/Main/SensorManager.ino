@@ -8,10 +8,6 @@ void setupUltraSonicSensor () {
 void setupIRSensors () {
 	pinMode(IR_DIGITAL_LEFT_SENSOR_PIN, INPUT);  
 	pinMode(IR_DIGITAL_RIGHT_SENSOR_PIN, INPUT);  
-
-  // Commented out for now since not using analog because of Encoders (no pins left)
-  // pinMode(IR_ANALOG_LEFT_SENSOR_PIN, INPUT);
-  // pinMode(IR_ANALOG_RIGHT_SENSOR_PIN, INPUT);
 }
 
 void readUltrasonicSensor() {
@@ -21,16 +17,16 @@ void readUltrasonicSensor() {
 	delayMicroseconds(10);  
 	digitalWrite(TRIG_PIN, LOW);  
 
-  // Time out after 5000 gives us a distance of about 80cm
+  // Time out after 5000 gives us a ultrasonicDistance of about 80cm
   duration = pulseIn(ECHO_PIN, HIGH, 5000);  
 
   // 0.343 speed of sound in centimeters per microsecond
-  distance = (duration*.0343)/2; 
+  ultrasonicDistance = (duration*.0343)/2; 
 }
 
 void checkEmergencyStop() {
   // we check for more than 0 because it displays 0 if it times out
-  if (0 < distance && distance < emergencyStopDistance) {
+  if (0 < ultrasonicDistance && ultrasonicDistance < emergencyStopDistance) {
     stopAllMotors();
   }
 }
@@ -38,21 +34,12 @@ void checkEmergencyStop() {
 void readIRSensors() {
   leftDigitalIRReading = digitalRead(IR_DIGITAL_LEFT_SENSOR_PIN);
   rightDigitalIRReading = digitalRead(IR_DIGITAL_RIGHT_SENSOR_PIN);
-
-  // Commented out for now since not using analog because of Encoders (no pins left)
-  // leftAnalogIRReading = analogRead(IR_ANALOG_LEFT_SENSOR_PIN);
-  // rightAnalogIRReading = analogRead(IR_ANALOG_RIGHT_SENSOR_PIN);
-}
-
-// Not used for now as got rid of analog, keeping in case we bring it back
-void checkIRAnalogOverThreshold() {
-  leftIRAnalog = (leftAnalogIRReading > leftIRThreshold);
-  rightIRAnalog = (rightAnalogIRReading > rightIRThreshold);
 }
 
 void updateSensors() {
   // Read IR every cycle (for proper line following)
   readIRSensors();
+  updateLineSensorTimes();
 
   // We need to wait for the previous Ultrasonic waves to clear the area before reading again to get cleaner data
   if (currentTime - lastUltrasonicReadTime >= ULTRASONIC_READ_INTERVAL) {
@@ -60,7 +47,108 @@ void updateSensors() {
     lastUltrasonicReadTime = currentTime;
   }
 }
+// new helper functions for junctions id
+
+void updateLineSensorTimes() {
+  if (leftDigitalIRReading == 1) {
+    lastLeftBlackTime = currentTime;
+  }
+  if (rightDigitalIRReading == 1) {
+    lastRightBlackTime = currentTime;
+  }
+}
+
+bool junctionDetectedTimed() {
+  boolean doubleSensorDetectedDelta = abs(lastLeftBlackTime - lastRightBlackTime) < JUNCTION_TIME_DELTA;
+  boolean isRecent = (currentTime - lastLeftBlackTime < JUNCTION_TIME_DELTA || currentTime - lastRightBlackTime < JUNCTION_TIME_DELTA);
+  return (doubleSensorDetectedDelta && isRecent);
+}
 
 String buildSensorMessage() {
-  return String(distance, 2) + "," + String(leftDigitalIRReading) + "," + String(rightDigitalIRReading);
+  return String(ultrasonicDistance, 2) + "," + String(leftDigitalIRReading) + "," + String(rightDigitalIRReading);
 }
+
+boolean obstacleFound(){
+  if (0 < ultrasonicDistance && ultrasonicDistance < MAZE_OBSTACLE_DISTANCE) {
+    return true;
+  }
+  return false;
+}
+
+#pragma region END_OF_LINE_DETECTION
+
+const unsigned long MIN_STRAIGHT_TIME = 500; // 500ms
+// e.g. compare against last 10 bounces
+const int AVERAGE_BOUNCE_COUNT = 50;
+unsigned long bounceTimes[AVERAGE_BOUNCE_COUNT];
+int bounceIndex = 0;
+int bounceFilled = 0;
+
+unsigned long lastBounceTime = 0;
+unsigned long straightStartTime = 0;
+
+unsigned long getAvgBounceTime() {
+  unsigned long sum = 0;
+  for (int i = 0; i < bounceFilled; i++) {
+    sum += bounceTimes[i];
+  }
+  return (bounceFilled > 0) ? (sum / bounceFilled) : 0;
+}
+
+bool detectEndOfLine() {
+  unsigned long now = millis();
+
+  bool isStraight = (leftDigitalIRReading == 0 && rightDigitalIRReading == 0);
+  bool isBounce   = !isStraight;
+  
+  // We bang banged
+  if (isBounce) {
+
+    // measure the time and calculate the average time between bounces
+    if (lastBounceTime != 0) {
+      unsigned long dt = now - lastBounceTime;
+      
+      // don't store micro movements
+      if (dt >= 70) {
+        bounceTimes[bounceIndex] = dt;
+        bounceIndex = (bounceIndex + 1) % AVERAGE_BOUNCE_COUNT;
+        
+        if (bounceFilled < AVERAGE_BOUNCE_COUNT) {
+          ++bounceFilled;
+        }  
+      }
+    }
+
+    lastBounceTime = now;
+    straightStartTime = 0; // reset straight timer
+  }
+  
+  else {
+
+    if (straightStartTime == 0)
+      straightStartTime = now;
+
+    unsigned long avgBounceTime = getAvgBounceTime();
+      
+    // require at least 5 bounces for now
+    if (bounceFilled >= 5 && avgBounceTime > 0) {
+      // we check if the current time without bouncing
+      // is more than 15 times the calculated average
+      if ((now - straightStartTime) > (avgBounceTime * 3)) {
+        return true;
+      }
+    }
+  }
+  
+  return false;
+}
+
+void resetEndOfLineDetection() {
+  lastBounceTime = 0;
+  straightStartTime = 0;
+
+  bounceIndex = 0;
+  bounceFilled = 0;
+}
+
+#pragma endregion

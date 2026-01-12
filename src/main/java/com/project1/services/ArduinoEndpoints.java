@@ -13,22 +13,17 @@ public final class ArduinoEndpoints {
     public static final String STOP               = "/stop";
     public static final String CRAB_WALK_LEFT     = "/crabWalkLeft";
     public static final String CRAB_WALK_RIGHT    = "/crabWalkRight";
-    public static final String TOGGLE_EMERGENCY_STOP    = "/toggleEmergencyStop";
-    public static final String TOGGLE_LINE_FOLLOWING    = "/toggleLineFollowing";
-
+    
     public static final String MANUAL               = "/manual";
     public static final String LINE_FOLLOW_BANGBANG = "/lineFollowBangBang";
-    public static final String LINE_FOLLOW_PD       = "/lineFollowPD";
     public static final String SOLVE_MAZE_1         = "/solveMaze1";
     public static final String SOLVE_MAZE_2         = "/solveMaze2";
     public static final String LOST_ROBOT           = "/lostRobot";
-    public static final String REVERSE_STRAIGHT     = "/reverseStraight";
-    public static final String REVERSE_CORNER       = "/reverseCorner";
-    public static final String THREE_POINT_TURN     = "/threePointTurn";
+    public static final String EMERGENCY_STOP       = "/emergencyStop";
     public static final String U_TURN               = "/uTurn";
     public static final String PARKING_IN_BOX       = "/parkingInBox";
 
-    public static final String RESET_ODOMETRY           = "/resetOdometry";
+    public static final String RESET_ODOMETRY       = "/resetOdometry";
 
 
     public static String getSpeedEndpoint(int value) {
@@ -39,20 +34,24 @@ public final class ArduinoEndpoints {
         return "/setEmergencyStopDistance?s=" + value;
     }
 
-    public static String getSensitivityEndpoint(double value) {
-        return "/setSensitivity?s=" + value;
+    public static String getRotationSpeedEndpoint(int value) {
+        return "/setRotationSpeed?s=" + value;
     }
 
-    public static String getDampeningEndpoint(double value) {
-        return "/setDampening?s=" + value;
+    public static String getReverseDurationEndpoint(int value) {
+        return "/setReverseDuration?s=" + value;
     }
 
-    public static String getLeftIRThresholdEndpoint(int value) {
-        return "/setLeftIR?s=" + value;
+    public static String getTurnDurationEndpoint(int value) {
+        return "/setTurnDuration?s=" + value;
     }
 
-    public static String getRightIRThresholdEndpoint(int value) {
-        return "/setRightIR?s=" + value;
+    public static String getJunctionDurationEndpoint(int value) {
+        return "/setJunctionDuration?s=" + value;
+    }
+
+    public static String getOdometryFudgeEndpoint(double value) {
+        return "/setOdometryFudge?s=" + value;
     }
     
 }

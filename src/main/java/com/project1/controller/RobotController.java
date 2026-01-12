@@ -32,40 +32,39 @@ public class RobotController {
         });
     }
 
-    public void setSensitivity(double targetVal) {
-        sendRequest(ArduinoEndpoints.getSensitivityEndpoint(targetVal), res -> {
-            model.setSensitivity(targetVal);
-        });
-    }
-
-    public void setDampening(double targetVal) {
-        sendRequest(ArduinoEndpoints.getDampeningEndpoint(targetVal), res -> {
-            model.setDampening(targetVal);
-        });
-    }
-
     public void setEmergencyStopDistance(int targetDist) {
         sendRequest(ArduinoEndpoints.getEmergencyStopDistanceEndpoint(targetDist), res -> {
             model.setEmergencyStopDistance(targetDist);
         });
     }
-    
-    public void toggleEmergencyStop() {
-        sendRequest(ArduinoEndpoints.TOGGLE_EMERGENCY_STOP, res -> {
-            boolean newState = !model.isEmergencyStopEnabled();
-            model.setEmergencyStopEnabled(newState);
+
+    public void setRotationSpeed(int targetSpeed) {
+        sendRequest(ArduinoEndpoints.getRotationSpeedEndpoint(targetSpeed), res -> {
+            model.setRotationSpeed(targetSpeed);
         });
     }
 
-    public void setLeftIRThreshold(int targetVal) {
-        sendRequest(ArduinoEndpoints.getLeftIRThresholdEndpoint(targetVal), res -> {
-            model.setLeftIRThreshold(targetVal);
+    public void setReverseDuration(int targetDuration) {
+        sendRequest(ArduinoEndpoints.getReverseDurationEndpoint(targetDuration), res -> {
+            model.setReverseDuration(targetDuration);
         });
     }
 
-    public void setRightIRThreshold(int targetVal) {
-        sendRequest(ArduinoEndpoints.getRightIRThresholdEndpoint(targetVal), res -> {
-            model.setRightIRThreshold(targetVal);
+    public void setTurnDuration(int targetDuration) {
+        sendRequest(ArduinoEndpoints.getTurnDurationEndpoint(targetDuration), res -> {
+            model.setTurnDuration(targetDuration);
+        });
+    }
+
+    public void setJunctionDuration(int targetDuration) {
+        sendRequest(ArduinoEndpoints.getJunctionDurationEndpoint(targetDuration), res -> {
+            model.setJunctionDuration(targetDuration);
+        });
+    }
+
+    public void setOdometryFudge(double targetFudge) {
+        sendRequest(ArduinoEndpoints.getOdometryFudgeEndpoint(targetFudge), res -> {
+            model.setOdometryFudge(targetFudge);
         });
     }
 
@@ -84,13 +83,10 @@ public class RobotController {
         switch (targetState) {
             case MANUAL:                 endpoint = ArduinoEndpoints.MANUAL;               break; 
             case LINE_FOLLOW_BANGBANG:   endpoint = ArduinoEndpoints.LINE_FOLLOW_BANGBANG; break;
-            case LINE_FOLLOW_PD:         endpoint = ArduinoEndpoints.LINE_FOLLOW_PD;       break;
             case SOLVE_MAZE_1:           endpoint = ArduinoEndpoints.SOLVE_MAZE_1;         break;
             case SOLVE_MAZE_2:           endpoint = ArduinoEndpoints.SOLVE_MAZE_2;         break;
             case LOST_ROBOT:             endpoint = ArduinoEndpoints.LOST_ROBOT;           break;
-            case REVERSE_STRAIGHT:       endpoint = ArduinoEndpoints.REVERSE_STRAIGHT;     break;
-            case REVERSE_CORNER:         endpoint = ArduinoEndpoints.REVERSE_CORNER;       break;
-            case THREE_POINT_TURN:       endpoint = ArduinoEndpoints.THREE_POINT_TURN;     break;
+            case EMERGENCY_STOP:         endpoint = ArduinoEndpoints.EMERGENCY_STOP;       break;
             case U_TURN:                 endpoint = ArduinoEndpoints.U_TURN;               break;
             case PARKING_IN_BOX:         endpoint = ArduinoEndpoints.PARKING_IN_BOX;       break;
             default: return;
@@ -124,20 +120,20 @@ public class RobotController {
 
         if (forward && !left && !right) {
             endpoint = ArduinoEndpoints.FORWARD;
+        } else if (backward) {
+            endpoint = ArduinoEndpoints.BACKWARD;
         } else if (forward && left) {
             endpoint = ArduinoEndpoints.LEFT;
         } else if (forward && right) {
             endpoint = ArduinoEndpoints.RIGHT;
-        } else if (left && !right) {
-            endpoint = ArduinoEndpoints.TURN_ON_SPOT_LEFT;
-        } else if (right && !left) {
-            endpoint = ArduinoEndpoints.TURN_ON_SPOT_RIGHT;
-        } else if (backward) {
-            endpoint = ArduinoEndpoints.BACKWARD;
         } else if ((shift && left && !right) || shiftLeft) { 
             endpoint = ArduinoEndpoints.CRAB_WALK_LEFT;
         } else if ((shift && right && !left) || shiftRight) {
             endpoint = ArduinoEndpoints.CRAB_WALK_RIGHT;
+        } else if (left && !right) {
+            endpoint = ArduinoEndpoints.TURN_ON_SPOT_LEFT;
+        } else if (right && !left) {
+            endpoint = ArduinoEndpoints.TURN_ON_SPOT_RIGHT;
         } else {
             endpoint = ArduinoEndpoints.STOP;
         }

@@ -69,19 +69,21 @@ void moveLeft () {
   setMotor(BL_PWM, BL_DIR, motorTurningSpeed, true);
   setMotor(BR_PWM, BR_DIR, motorSpeed, true);
 }
+
 void turnOnSpotRight () {
   currentMovementState = TURN_SPOT_RIGHT;
-  setMotor(FL_PWM, FL_DIR, motorSpeed, true);
-  setMotor(FR_PWM, FR_DIR, motorSpeed, false);
-  setMotor(BL_PWM, BL_DIR, motorSpeed, true);
-  setMotor(BR_PWM, BR_DIR, motorSpeed, false);
+  setMotor(FL_PWM, FL_DIR, rotationSpeed, true);
+  setMotor(FR_PWM, FR_DIR, rotationSpeed, false);
+  setMotor(BL_PWM, BL_DIR, rotationSpeed, true);
+  setMotor(BR_PWM, BR_DIR, rotationSpeed, false);
 }
+
 void turnOnSpotLeft () {
   currentMovementState = TURN_SPOT_LEFT;
-  setMotor(FL_PWM, FL_DIR, motorSpeed, false);
-  setMotor(FR_PWM, FR_DIR, motorSpeed, true);
-  setMotor(BL_PWM, BL_DIR, motorSpeed, false);
-  setMotor(BR_PWM, BR_DIR, motorSpeed, true);
+  setMotor(FL_PWM, FL_DIR, rotationSpeed, false);
+  setMotor(FR_PWM, FR_DIR, rotationSpeed, true);
+  setMotor(BL_PWM, BL_DIR, rotationSpeed, false);
+  setMotor(BR_PWM, BR_DIR, rotationSpeed, true);
 }
 void crabWalkRight () {
   currentMovementState = CW_RIGHT;
@@ -121,10 +123,10 @@ boolean turnToAbsoluteAngle(float targetAngle) {
 // totalTargetDistance should be calculated in the earlier state before this state
 boolean moveToDistance(float totalTargetDistance) {
   boolean isMoving = false;
-  if (totalDistance < (totalTargetDistance - 0.01)) {
+  if (totalDistance < (totalTargetDistance - 1)) {
     moveForward();
     isMoving = true;
-  } else if (totalDistance > (totalTargetDistance + 0.01)) {
+  } else if (totalDistance > (totalTargetDistance + 1)) {
     moveBackward();
     isMoving = true;
   } else {
