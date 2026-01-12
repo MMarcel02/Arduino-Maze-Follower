@@ -86,7 +86,6 @@ void serve(WiFiClient& c) {
     route(c,pth,qry);
   }
 
-
 void route(WiFiClient& c, const String& path, const String& q) {
     if (path == "/" || path == "") { handleRoot(c); return; }
     if (path == "/forward") { handleForward(c); return; }
@@ -99,20 +98,15 @@ void route(WiFiClient& c, const String& path, const String& q) {
     if (path == "/crabWalkLeft") { handleCrabWalkLeft(c); return; }
     if (path == "/crabWalkRight") { handleCrabWalkRight(c); return; }
 
-    if (path == "/toggleEmergencyStop") { handleToggleEmergencyStop(c); return; }
     
     if (path == "/manual") { handleManual(c); return; }
-    
     if (path == "/lineFollowBangBang") { handleLineFollowBangBang(c); return; }
-    if (path == "/lineFollowPD") { handleLineFollowPD(c); return; }
-
+    
     if (path == "/solveMaze1") { handleSolveMaze1(c); return; }
     if (path == "/solveMaze2") { handleSolveMaze2(c); return; }
     if (path == "/lostRobot") { handleLostRobot(c); return; }
-
-    if (path == "/reverseStraight") { handleReverseStraight(c); return; }
-    if (path == "/reverseCorner") { handleReverseCorner(c); return; }
-    if (path == "/threePointTurn") { handleThreePointTurn(c); return; }
+    
+    if (path == "/emergencyStop") { handleEmergencyStop(c); return; }
     if (path == "/uTurn") { handleUTurn(c); return; }
     if (path == "/parkingInBox") { handleParkingInBox(c); return; }
     
@@ -126,8 +120,8 @@ void route(WiFiClient& c, const String& path, const String& q) {
     }
 
     if (path.startsWith("/setEmergencyStopDistance")) {
-      int distance = parseIntEndpoint(q);
-      handleSetEmergencyStopDistance(c, distance);
+      int ultrasonicDistance = parseIntEndpoint(q);
+      handleSetEmergencyStopDistance(c, ultrasonicDistance);
       return;
     }
 
@@ -240,35 +234,10 @@ void handleSetSpeed(WiFiClient& client, int speed) {
     sendHttpResponse(client, "Speed set to " + String(speed));
 }
 
-void handleSetEmergencyStopDistance(WiFiClient& client, int distance) {
-    emergencyStopDistance = distance;
+void handleSetEmergencyStopDistance(WiFiClient& client, int ultrasonicDistance) {
+    emergencyStopDistance = ultrasonicDistance;
     sendHttpResponse(client, "Emergency Stop distance set to " + String(emergencyStopDistance));
 }
-
-void handleSetSensitivity (WiFiClient& client, double value) {
-    sensitivity = value;
-    sendHttpResponse(client, "Sensitivity set to " + String(sensitivity, 1));
-}
-
-void handleSetDampening(WiFiClient& client, double value) {
-  dampening = value;
-  sendHttpResponse(client, "Dampening set to " + String(dampening, 1));
-}
-
-void handleSetLeftIRThreshold(WiFiClient& client, int value) {
-  leftIRThreshold = value;
-  sendHttpResponse(client, "Left IR threshold set to " + String(value));
-}
-
-void handleSetRightIRThreshold(WiFiClient& client, int value) {
-  rightIRThreshold = value;
-  sendHttpResponse(client, "Right IR threshold set to " + String(value));
-}
-
-void handleToggleEmergencyStop(WiFiClient& client) {
-    emergencyStop = !emergencyStop;
-    sendHttpResponse(client, ("Emergency stop set to " + boolToString(emergencyStop))); 
-}   
 
 void handleManual(WiFiClient& client) {
     currentControlState = MANUAL;
@@ -279,12 +248,6 @@ void handleLineFollowBangBang(WiFiClient& client) {
     currentControlState = LINE_FOLLOW_BANGBANG;
     sendHttpResponse(client, "Control State set to LINE_FOLLOW_BANGBANG"); 
 }
-
-void handleLineFollowPD(WiFiClient& client) {
-    currentControlState = LINE_FOLLOW_PD;
-    sendHttpResponse(client, "Control State set to LINE_FOLLOW_PD"); 
-}  
-
 
 void handleSolveMaze1(WiFiClient& client) {
     currentControlState = SOLVE_MAZE_1;
@@ -301,20 +264,10 @@ void handleLostRobot(WiFiClient& client) {
     sendHttpResponse(client, "Control State set to LOST_ROBOT");
 }
 
-void handleReverseStraight(WiFiClient& client) {
-    currentControlState = REVERSE_STRAIGHT;
-    sendHttpResponse(client, "Control State set to REVERSE_STRAIGHT");
-}
-
-void handleReverseCorner(WiFiClient& client) {
-    currentControlState = REVERSE_CORNER;
-    sendHttpResponse(client, "Control State set to REVERSE_CORNER");
-}
-
-void handleThreePointTurn(WiFiClient& client) {
-    currentControlState = THREE_POINT_TURN;
-    sendHttpResponse(client, "Control State set to THREE_POINT_TURN");
-}
+void handleEmergencyStop(WiFiClient& client) {
+    currentControlState = EMERGENCY_STOP;
+    sendHttpResponse(client, ("Control State set to EMERGENCY_STOP")); 
+}   
 
 void handleUTurn(WiFiClient& client) {
     currentControlState = U_TURN;
@@ -374,52 +327,37 @@ void handleTCPData() {
 }
 
 void manageRobotMovementState() {
-  // Should only stop IF we're trying to move generally forward, otherwise it will block when we try to reverse or rotate
-  if (currentControlState == MANUAL && currentMovementState == FORWARD && emergencyStop) {
-    checkEmergencyStop();   
-  }
-  
-  if (currentControlState == LINE_FOLLOW_BANGBANG) {
-    bangLineFollowEmergencyStop();
-  }
+  switch (currentControlState) {
+    case (MANUAL):
+      break;
 
-  if (currentControlState == LINE_FOLLOW_PD) {
-    pdLineFollow();
-  }
+    case (LINE_FOLLOW_BANGBANG):
+      bangLineFollow();
+      break;
 
-  if (currentControlState == SOLVE_MAZE_1) {
-      // To be implemented
+    case (SOLVE_MAZE_1):
       leftHandMazeWithoutLoops();
-  }
+      break;
 
-  if (currentControlState == SOLVE_MAZE_2) {
-      // To be implemented
-  }
+    case (SOLVE_MAZE_2):
+      leftHandMazeWithoutLoops();
+      break;
+    
+    case (LOST_ROBOT):
+      leftHandMazeWithoutLoops();
+      break;
+    
+    case (EMERGENCY_STOP):
+      leftHandMazeWithoutLoops();
+      break;
 
-  if (currentControlState == LOST_ROBOT) {
-      // To be implemented
-      lostRobotAlgo();
-  }
-
-  if (currentControlState == REVERSE_STRAIGHT) {
-      // To be implemented
-  }
-
-  if (currentControlState == REVERSE_CORNER) {
-      // To be implemented
-  }
-
-  if (currentControlState == THREE_POINT_TURN) {
-      // To be implemented
-      bangLineFollowEmergencyStop();
-  }
-
-  if (currentControlState == U_TURN) {
-      // To be implemented
-  }
-
-  if (currentControlState == PARKING_IN_BOX) {
-      // To be implemented
+    case (U_TURN):
+      leftHandMazeWithoutLoops();
+      break;
+    
+    case (PARKING_IN_BOX):
       parkingBox();
+      break;
+    
   }
 }

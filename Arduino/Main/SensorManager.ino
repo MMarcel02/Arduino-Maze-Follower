@@ -21,16 +21,16 @@ void readUltrasonicSensor() {
 	delayMicroseconds(10);  
 	digitalWrite(TRIG_PIN, LOW);  
 
-  // Time out after 5000 gives us a distance of about 80cm
+  // Time out after 5000 gives us a ultrasonicDistance of about 80cm
   duration = pulseIn(ECHO_PIN, HIGH, 5000);  
 
   // 0.343 speed of sound in centimeters per microsecond
-  distance = (duration*.0343)/2; 
+  ultrasonicDistance = (duration*.0343)/2; 
 }
 
 void checkEmergencyStop() {
   // we check for more than 0 because it displays 0 if it times out
-  if (0 < distance && distance < emergencyStopDistance) {
+  if (0 < ultrasonicDistance && ultrasonicDistance < emergencyStopDistance) {
     stopAllMotors();
   }
 }
@@ -79,11 +79,11 @@ bool junctionDetectedTimed() {
 }
 
 String buildSensorMessage() {
-  return String(distance, 2) + "," + String(leftDigitalIRReading) + "," + String(rightDigitalIRReading);
+  return String(ultrasonicDistance, 2) + "," + String(leftDigitalIRReading) + "," + String(rightDigitalIRReading);
 }
 
 boolean obstacleFound(){
-  if (0 < distance && distance < emergencyStopDistance) {
+  if (0 < ultrasonicDistance && ultrasonicDistance < emergencyStopDistance) {
     return true;
   }
   return false;

@@ -27,6 +27,47 @@ const int rightEncB = 20; // Pin SDA
 const int TRIG_PIN = 0;
 const int ECHO_PIN = 1; 
 
+// Robot physical constants
+const float WHEEL_RADIUS = 3.25;   // 3.25 cm 
+const float TRACK_WIDTH  = 33;     // 22 cm (multiplied by 1.5x to account for slippage)
+const int TICKS_PER_REV  = 225;      // Ticks for one full spin
+const float DISTANCE_PER_TICK = (2 * PI * WHEEL_RADIUS) / TICKS_PER_REV; 
+
+// Robot Position and Speed
+int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
+int motorTurningSpeed = motorSpeed*0.8;
+int motorSpeedOutsideLineFollow = motorSpeed;
+
+// Ultrasonic
+float duration, ultrasonicDistance;  
+
+// We have HC-SR04 sensor, 60 ms is needed to avoid bad data from ghost echoes
+const int ULTRASONIC_READ_INTERVAL = 60;
+unsigned long lastUltrasonicReadTime = 0;
+
+// IR
+int leftDigitalIRReading, rightDigitalIRReading;
+
+float robotAngle = PI/2; // angle in Radians (initial is 90 degrees for facing up on the map)
+float totalDistance = 0; // in centimetres
+
+// Target values  
+float targetAngleEnd = 0;
+float targetAngleStart = 0;
+float targetTotalDistance = 0;
+
+boolean isMoving;
+
+unsigned long stateStartTime = 0;
+unsigned long lastLeftBlackTime = 0;
+unsigned long lastRightBlackTime = 0;
+
+const unsigned int SmallStopAfterSensorDetection = 100;
+const unsigned int BlindTime = 150;
+const unsigned int ObjectFoundTime = 500;
+const unsigned long JUNCTION_TIME_DELTA = 200;
+
+// These states are here because they are also passed to the GUI
 // enum assigns numbers to these words (less mistakes than using strings (typos) and easier and faster to compare numbers) 
 enum RobotMovementState {
   STOPPED, // Compiler assigns this = 0
@@ -39,111 +80,52 @@ enum RobotMovementState {
   CW_LEFT,
   CW_RIGHT
 };
+RobotMovementState currentMovementState = STOPPED;
 
 enum RobotControlState {
   MANUAL,
   LINE_FOLLOW_BANGBANG,
-  LINE_FOLLOW_PD,
   SOLVE_MAZE_1,
   SOLVE_MAZE_2,
   LOST_ROBOT,
-  REVERSE_STRAIGHT,
-  REVERSE_CORNER,
-  THREE_POINT_TURN,
+  EMERGENCY_STOP,
   U_TURN,
   PARKING_IN_BOX
 };
-
-// Default at start
-RobotMovementState currentMovementState = STOPPED;
 RobotControlState currentControlState = MANUAL;
 
-// Robot physical constants
-const float WHEEL_RADIUS = 3.35;   // 3.35 cm in meters
-const float TRACK_WIDTH  = 33;     // 22 cm in meters (multiplied by 1.5x to account for slippage)
-const int TICKS_PER_REV  = 225;      // Ticks for one full spin
-const float DISTANCE_PER_TICK = (2 * PI * WHEEL_RADIUS) / TICKS_PER_REV; // ~0.000935 m/tick
+enum mazeState {
+  FOLLOW_LINE,
+  TURNING_LEFT, 
+  BLIND_TURN,   
+  TURNING_RIGHT,
+  OBJECT_DETECTED,
+  TURNING_180_DEGREES,
+  AFTER_180_RIGHT_SENSOR_SEARCH,
+  JUNCTION_FOUND,
+  DRIVE_THROUGH_INTERSECTION, 
+  SCAN_LEFT_FOR_LINE,         
+  ALIGN_EXTRA_LEFT,           
+  RECOVER_RIGHT_FIND_BLACK,   
+  RECOVER_RIGHT_FIND_WHITE,   
+  LOST_ROBOT1
+};
+mazeState mazeState = FOLLOW_LINE;
 
-// Robot Position and Speed
+enum LostRobotState {
+  SEARCHING_FOR_THE_LINE,
+  FOUND_THE_LINE,
+};
+LostRobotState lostRobotState = SEARCHING_FOR_THE_LINE;
 
-int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
-int motorTurningSpeed = motorSpeed*0.8;
-int motorSpeedOutsideLineFollow = motorSpeed;
-
-float robotAngle = PI/2; // angle in Radians (initial is 90 degrees for facing up on the map)
-float totalDistance = 0; // in centimetres
-
-// Target angles  
-float targetAngleEnd = 0;
-float targetAngleEnd2 = 0;
-float targetAngleStart = 0;
-float targetTotalDistance = 0;
-
-
-
-// Ultrasonic
-float duration, distance;  
-
-// we have HC-SR04 sensor, 60 ms is needed to avoid bad data from ghost echoes
-const int ULTRASONIC_READ_INTERVAL = 60;
-unsigned long lastUltrasonicReadTime = 0;
-
-// IR
-int leftDigitalIRReading, rightDigitalIRReading;
-int leftAnalogIRReading, rightAnalogIRReading;
-
-
-
-
-int leftIRThreshold = 37;
-int rightIRThreshold = 37;
-boolean leftIRAnalog, rightIRAnalog;
-
-// These are the default values, GUI overwrites
-bool emergencyStop = false;
+enum EmergencyStopState {
+  BangBangLineFollowing,
+  Stopped
+};
+EmergencyStopState emergencyStopState = BangBangLineFollowing;
 int emergencyStopDistance = 20;
 
-int previousDir = 0;
-
-// For PD algorithm (not used anymore)
-double sensitivity = 5.0;
-double dampening = 1.0;
-
-
-//MAZE SOLVING STATES
-enum mazeState {
-    FOLLOW_LINE,
-    TURNING_LEFT, 
-    BLIND_TURN,   
-    TURNING_RIGHT,
-    
-    OBJECT_DETECTED,
-    TURNING_180_DEGREES,
-    AFTER_180_RIGHT_SENSOR_SEARCH,
-    
-    
-    JUNCTION_FOUND,
-    DRIVE_THROUGH_INTERSECTION, 
-    SCAN_LEFT_FOR_LINE,         
-    ALIGN_EXTRA_LEFT,           
-    RECOVER_RIGHT_FIND_BLACK,   
-    RECOVER_RIGHT_FIND_WHITE,   
-    
-    LOST_ROBOT1
-};
-
-
-enum lostRobotAlgoState {
-    SEARCHING_FOR_THE_LINE,
-    FOUND_THE_LINE,
-};
-
-enum bangBangLineFollowState {
-    BangBangLineFollowing,
-    ObstacleInFront,
-};
-
-enum parkingBoxState {
+enum ParkingBoxState {
     APPROACHING_PARKING_BOX,
     PARKING_TURNING_LEFT,
     PARKING_TURNING_RIGHT,
@@ -153,27 +135,7 @@ enum parkingBoxState {
     FIND_THE_END_OF_PARKING_BOX,
     END_OF_PARKING_BOX
 };
-
-boolean isMoving;
-
-mazeState mazeState = FOLLOW_LINE;
-
-parkingBoxState parkingBoxState = APPROACHING_PARKING_BOX;
-
-bangBangLineFollowState bangBangLineFollowState = BangBangLineFollowing;
-
-lostRobotAlgoState lostRobotAlgoState = SEARCHING_FOR_THE_LINE;
-
-unsigned long stateStartTime = 0;
-unsigned long lastLeftBlackTime = 0;
-unsigned long lastRightBlackTime = 0;
-
-
-
-const unsigned int SmallStopAfterSensorDetection = 100;
-const unsigned int BlindTime = 150;
-const unsigned int ObjectFoundTime = 500;
-const unsigned long JUNCTION_TIME_DELTA = 200;
+ParkingBoxState parkingBoxState = APPROACHING_PARKING_BOX;
 
     
     

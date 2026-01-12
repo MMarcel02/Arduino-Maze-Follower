@@ -2,19 +2,6 @@ void parkingBox() {
 
   switch (parkingBoxState) {
 
-
-    /*case 
-    APPROACHING_PARKING_BOX
-    PARKING_TURNING_LEFT
-    PARKING_TURNING_RIGHT
-    PARKING_BLIND_TURN
-    START_OF_PARKING_BOX
-    SELF_ALIGN_90_DEGREES
-    FIND_THE_END_OF_PARKING_BOX
-    END_OF_PARKING_BOX
-
-    */
-
   case APPROACHING_PARKING_BOX:
     if (junctionDetectedTimed()) {
       stopAllMotors();

@@ -37,7 +37,7 @@ void updateOdometry() {
   long distLeftTicks = currentLeft - prevLeftTick;
   long distRightTicks = currentRight - prevRightTick;
 
-  // We convert the ticks to meters
+  // We convert the ticks to centimetres
   float distLeft = distLeftTicks * DISTANCE_PER_TICK;
   float distRight = distRightTicks * DISTANCE_PER_TICK;
 
