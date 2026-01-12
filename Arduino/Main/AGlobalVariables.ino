@@ -119,10 +119,10 @@ enum LostRobotState {
 LostRobotState lostRobotState = SEARCHING_FOR_THE_LINE;
 
 enum EmergencyStopState {
-  BangBangLineFollowing,
-  Stopped
+  BANG_LINE_FOLLOWING,
+  STOPPED
 };
-EmergencyStopState emergencyStopState = BangBangLineFollowing;
+EmergencyStopState emergencyStopState = BANG_LINE_FOLLOWING;
 int emergencyStopDistance = 20;
 
 enum ParkingBoxState {

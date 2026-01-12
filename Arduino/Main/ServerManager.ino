@@ -176,55 +176,55 @@ void handleRoot(WiFiClient& client) {
 }
 
 void handleForward(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     moveForward();
     sendHttpResponse(client, "Moved Forward");
 }
 
 void handleBackward(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     moveBackward();
     sendHttpResponse(client, "Moved Backward");
 }
 
 void handleTurnOnSpotRight(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     turnOnSpotRight();
     sendHttpResponse(client, "Turned Right on Spot");
 }
 
 void handleTurnOnSpotLeft(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     turnOnSpotLeft();
     sendHttpResponse(client, "Turned Left on Spot");
 }
 
 void handleLeft(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     moveLeft();
     sendHttpResponse(client, "Moved Left");
 }
 
 void handleRight(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     moveRight();
     sendHttpResponse(client, "Moved Right");
 }
 
 void handleStop(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     stopAllMotors();
     sendHttpResponse(client, "Stopped");
 }
 
 void handleCrabWalkLeft(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     crabWalkLeft();
     sendHttpResponse(client, "Crab Walk Left");
 }
 
 void handleCrabWalkRight(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     crabWalkRight();
     sendHttpResponse(client, "Crab Walk Right");
 }
@@ -240,42 +240,42 @@ void handleSetEmergencyStopDistance(WiFiClient& client, int ultrasonicDistance) 
 }
 
 void handleManual(WiFiClient& client) {
-    currentControlState = MANUAL;
+    changeControlState(MANUAL);
     sendHttpResponse(client, "Control State set to MANUAL"); 
 }
 
 void handleLineFollowBangBang(WiFiClient& client) {
-    currentControlState = LINE_FOLLOW_BANGBANG;
+    changeControlState(LINE_FOLLOW_BANGBANG);
     sendHttpResponse(client, "Control State set to LINE_FOLLOW_BANGBANG"); 
 }
 
 void handleSolveMaze1(WiFiClient& client) {
-    currentControlState = SOLVE_MAZE_1;
+    changeControlState(SOLVE_MAZE_1);
     sendHttpResponse(client, "Control State set to SOLVE_MAZE_1");
 }
 
 void handleSolveMaze2(WiFiClient& client) {
-    currentControlState = SOLVE_MAZE_2;
+    changeControlState(SOLVE_MAZE_2);
     sendHttpResponse(client, "Control State set to SOLVE_MAZE_2");
 }
 
 void handleLostRobot(WiFiClient& client) {
-    currentControlState = LOST_ROBOT;
+    changeControlState(LOST_ROBOT);
     sendHttpResponse(client, "Control State set to LOST_ROBOT");
 }
 
 void handleEmergencyStop(WiFiClient& client) {
-    currentControlState = EMERGENCY_STOP;
+    changeControlState(EMERGENCY_STOP);
     sendHttpResponse(client, ("Control State set to EMERGENCY_STOP")); 
 }   
 
 void handleUTurn(WiFiClient& client) {
-    currentControlState = U_TURN;
+    changeControlState(U_TURN);
     sendHttpResponse(client, "Control State set to U_TURN");
 }
 
 void handleParkingInBox(WiFiClient& client) {
-    currentControlState = PARKING_IN_BOX;
+    changeControlState(PARKING_IN_BOX);
     sendHttpResponse(client, "Control State set to PARKING_IN_BOX");
 }
 
@@ -326,6 +326,25 @@ void handleTCPData() {
   }
 }
 
+void changeControlState(RobotControlState newState) {
+  currentControlState = newState;
+
+  mazeState = FOLLOW_LINE;
+  lostRobotState = SEARCHING_FOR_THE_LINE;
+  emergencyStopState = BANG_LINE_FOLLOWING;
+  parkingBoxState = APPROACHING_PARKING_BOX;
+
+  stateStartTime = millis(); 
+  targetTotalDistance = 0;
+  isMoving = false;
+  
+  stopAllMotors();
+
+  if (newState != MANUAL) {
+      resetOdometry();
+  }
+}
+
 void manageRobotMovementState() {
   switch (currentControlState) {
     case (MANUAL):
@@ -340,19 +359,19 @@ void manageRobotMovementState() {
       break;
 
     case (SOLVE_MAZE_2):
-      leftHandMazeWithoutLoops();
+
       break;
     
     case (LOST_ROBOT):
-      leftHandMazeWithoutLoops();
+      lostRobot();
       break;
     
     case (EMERGENCY_STOP):
-      leftHandMazeWithoutLoops();
+      emergencyStop();
       break;
 
     case (U_TURN):
-      leftHandMazeWithoutLoops();
+      uTurn();
       break;
     
     case (PARKING_IN_BOX):
