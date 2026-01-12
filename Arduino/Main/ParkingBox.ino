@@ -12,7 +12,6 @@ void parkingBox() {
 
   case APPROACHING_PARKING_BOX:
     if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
-      setLineFollowingSpeed(motorSpeedOutsideLineFollow);
       moveForward();
     } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 0) {
       moveBackward();
@@ -29,7 +28,6 @@ void parkingBox() {
 
   case PARKING_TURNING_LEFT:
     if (currentTime - stateStartTime >= TURN_START_REVERSE_DURATION) {
-      setLineFollowingSpeed(100);
       turnOnSpotLeft();
       if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
         stateStartTime = currentTime;
@@ -41,7 +39,6 @@ void parkingBox() {
 
   case PARKING_TURNING_RIGHT:
     if (currentTime - stateStartTime >= TURN_START_REVERSE_DURATION) {
-      setLineFollowingSpeed(100);
       turnOnSpotRight();
       if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
         stateStartTime = currentTime;
@@ -69,7 +66,6 @@ void parkingBox() {
   }
 
     case PARKING_SEARCH_START_LINE:
-      setLineFollowingSpeed(motorSpeedOutsideLineFollow);
       moveForward();
 
       if (junctionDetectedTimed()) {
@@ -83,7 +79,6 @@ void parkingBox() {
       break;
 
   case PARKING_DRIVE_INTO_BOX:
-      setLineFollowingSpeed(motorSpeedOutsideLineFollow);
       moveForward();
 
       if (totalDistance >= targetTotalDistance) {
@@ -93,7 +88,6 @@ void parkingBox() {
       break;
 
       case PARKING_FALLBACK_SEARCH_FOR_END:
-      setLineFollowingSpeed(motorSpeedOutsideLineFollow);
       moveForward();
 
       if (junctionDetectedTimed()) {

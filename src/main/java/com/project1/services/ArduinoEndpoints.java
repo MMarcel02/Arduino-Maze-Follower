@@ -33,5 +33,25 @@ public final class ArduinoEndpoints {
     public static String getEmergencyStopDistanceEndpoint(int value) {
         return "/setEmergencyStopDistance?s=" + value;
     }
+
+    public static String getRotationSpeedEndpoint(int value) {
+        return "/setRotationSpeed?s=" + value;
+    }
+
+    public static String getReverseDurationEndpoint(int value) {
+        return "/setReverseDuration?s=" + value;
+    }
+
+    public static String getTurnDurationEndpoint(int value) {
+        return "/setTurnDuration?s=" + value;
+    }
+
+    public static String getJunctionDurationEndpoint(int value) {
+        return "/setJunctionDuration?s=" + value;
+    }
+
+    public static String getOdometryFudgeEndpoint(double value) {
+        return "/setOdometryFudge?s=" + value;
+    }
     
 }

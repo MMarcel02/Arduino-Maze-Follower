@@ -13,6 +13,12 @@ public class RobotModel {
     private final IntegerProperty speed = new SimpleIntegerProperty(80);
     private final IntegerProperty emergencyStopDistance = new SimpleIntegerProperty(20);
     
+    private final IntegerProperty rotationSpeed = new SimpleIntegerProperty(100);
+    private final IntegerProperty reverseDuration = new SimpleIntegerProperty(75);
+    private final IntegerProperty turnDuration = new SimpleIntegerProperty(150);
+    private final IntegerProperty junctionDuration = new SimpleIntegerProperty(200);
+    private final DoubleProperty odometryFudge = new SimpleDoubleProperty(1.5);
+
     // State
     private final ObjectProperty<RobotMovementState> movementState = new SimpleObjectProperty<>(RobotMovementState.STOPPED);
     private final ObjectProperty<RobotControlState> controlState = new SimpleObjectProperty<>(RobotControlState.MANUAL);
@@ -29,9 +35,16 @@ public class RobotModel {
     private final DoubleProperty totalDistance = new SimpleDoubleProperty(0.0);
     private final ObservableList<Point2D> positionHistory = FXCollections.observableArrayList();
 
+    // Property Accessors
     public IntegerProperty speedProperty() { return speed; }
     public IntegerProperty emergencyStopDistanceProperty() { return emergencyStopDistance; }
     
+    public IntegerProperty rotationSpeedProperty() { return rotationSpeed; }
+    public IntegerProperty reverseDurationProperty() { return reverseDuration; }
+    public IntegerProperty turnDurationProperty() { return turnDuration; }
+    public IntegerProperty junctionDurationProperty() { return junctionDuration; }
+    public DoubleProperty odometryFudgeProperty() { return odometryFudge; }
+
     public ObjectProperty<RobotMovementState> movementStateProperty() { return movementState; }
     public ObjectProperty<RobotControlState> controlStateProperty() { return controlState; }
 
@@ -45,11 +58,27 @@ public class RobotModel {
     public StringProperty leftIRDigitalProperty() { return irLeftDigital; }
     public StringProperty rightIRDigitalProperty() { return irRightDigital; }
 
+    // Getters and Setters
     public int getSpeed() { return speed.get(); }
     public void setSpeed(int val) { this.speed.set(val); }
 
     public int getEmergencyStopDistance() { return emergencyStopDistance.get(); }
     public void setEmergencyStopDistance(int val) { this.emergencyStopDistance.set(val); }
+
+    public int getRotationSpeed() { return rotationSpeed.get(); }
+    public void setRotationSpeed(int val) { this.rotationSpeed.set(val); }
+
+    public int getReverseDuration() { return reverseDuration.get(); }
+    public void setReverseDuration(int val) { this.reverseDuration.set(val); }
+
+    public int getTurnDuration() { return turnDuration.get(); }
+    public void setTurnDuration(int val) { this.turnDuration.set(val); }
+
+    public int getJunctionDuration() { return junctionDuration.get(); }
+    public void setJunctionDuration(int val) { this.junctionDuration.set(val); }
+
+    public double getOdometryFudge() { return odometryFudge.get(); }
+    public void setOdometryFudge(double val) { this.odometryFudge.set(val); }
     
     public RobotMovementState getMovementState() { return movementState.get(); }
     public void setMovementState(RobotMovementState val) { this.movementState.set(val); }

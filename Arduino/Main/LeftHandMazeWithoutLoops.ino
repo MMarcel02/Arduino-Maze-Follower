@@ -20,7 +20,6 @@ void leftHandMazeWithoutLoops() {
         break;
       } 
       if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
-        setLineFollowingSpeed(motorSpeedOutsideLineFollow);
         moveForward();
       } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 0) {
         moveBackward(); 
@@ -37,7 +36,6 @@ void leftHandMazeWithoutLoops() {
 
     case TURNING_LEFT:
       if (currentTime - stateStartTime >= TURN_START_REVERSE_DURATION) { 
-        setLineFollowingSpeed(100);
         turnOnSpotLeft();
         if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
           stateStartTime = currentTime;
@@ -49,7 +47,6 @@ void leftHandMazeWithoutLoops() {
 
     case TURNING_RIGHT:
       if (currentTime - stateStartTime >= TURN_START_REVERSE_DURATION) {
-        setLineFollowingSpeed(100);
         turnOnSpotRight();
         if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
           stateStartTime = currentTime;

@@ -45,7 +45,7 @@ void updateOdometry() {
   float distAverage = (distLeft + distRight) / 2.0;
   totalDistance += distAverage;
 
-  float changeInAngle = (distRight - distLeft) / TRACK_WIDTH;
+  float changeInAngle = (distRight - distLeft) / (TRACK_WIDTH * odometryFudge);
   
   // We use the center of the angle turned,
   // because the robot is constantly changing angle as it moves

@@ -38,6 +38,36 @@ public class RobotController {
         });
     }
 
+    public void setRotationSpeed(int targetSpeed) {
+        sendRequest(ArduinoEndpoints.getRotationSpeedEndpoint(targetSpeed), res -> {
+            model.setRotationSpeed(targetSpeed);
+        });
+    }
+
+    public void setReverseDuration(int targetDuration) {
+        sendRequest(ArduinoEndpoints.getReverseDurationEndpoint(targetDuration), res -> {
+            model.setReverseDuration(targetDuration);
+        });
+    }
+
+    public void setTurnDuration(int targetDuration) {
+        sendRequest(ArduinoEndpoints.getTurnDurationEndpoint(targetDuration), res -> {
+            model.setTurnDuration(targetDuration);
+        });
+    }
+
+    public void setJunctionDuration(int targetDuration) {
+        sendRequest(ArduinoEndpoints.getJunctionDurationEndpoint(targetDuration), res -> {
+            model.setJunctionDuration(targetDuration);
+        });
+    }
+
+    public void setOdometryFudge(double targetFudge) {
+        sendRequest(ArduinoEndpoints.getOdometryFudgeEndpoint(targetFudge), res -> {
+            model.setOdometryFudge(targetFudge);
+        });
+    }
+
     public void resetOdometry() {
         sendRequest(ArduinoEndpoints.RESET_ODOMETRY, res -> {
             model.clearHistory();

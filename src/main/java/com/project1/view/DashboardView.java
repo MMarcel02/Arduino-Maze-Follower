@@ -41,6 +41,7 @@ public class DashboardView {
     @FXML private TextArea logArea;
     @FXML private Label activeInputsLabel, speedLabel, xLabel, yLabel, angleLabel, currentMovementStateLabel, totalDistanceLabel, currentControlStateLabel;
     @FXML private Label irDigitalLeft, irDigitalRight, ultraSonic;
+    @FXML private Label rotationSpeedLabel, reverseDurationLabel, turnDurationLabel, junctionDurationLabel, odometryFudgeLabel;
     @FXML private Slider speedSlider, emergencyStopSlider;
     @FXML private Button upArrow, downArrow, leftArrow, rightArrow, crabWalkLeft, crabWalkRight, stopButton;
 
@@ -49,11 +50,34 @@ public class DashboardView {
     @FXML void bigIncreaseSpeed() { robotController.setSpeed(robotModel.getSpeed() + 20); }
     @FXML void smallDecreaseSpeed() { robotController.setSpeed(robotModel.getSpeed() - 5); }
     @FXML void smallIncreaseSpeed() { robotController.setSpeed(robotModel.getSpeed() + 5); }
-    @FXML void stopSpeed() { robotController.stop(); }
+    
+    // Rotation Speed
+    @FXML void bigDecreaseRotationSpeed() { robotController.setRotationSpeed(robotModel.getRotationSpeed() - 20); }
+    @FXML void smallDecreaseRotationSpeed() { robotController.setRotationSpeed(robotModel.getRotationSpeed() - 5); }
+    @FXML void smallIncreaseRotationSpeed() { robotController.setRotationSpeed(robotModel.getRotationSpeed() + 5); }
+    @FXML void bigIncreaseRotationSpeed() { robotController.setRotationSpeed(robotModel.getRotationSpeed() + 20); }
 
+    // Reverse Duration
+    @FXML void decreaseReverseDuration() { robotController.setReverseDuration(robotModel.getReverseDuration() - 5); }
+    @FXML void increaseReverseDuration() { robotController.setReverseDuration(robotModel.getReverseDuration() + 5); }
+
+    // Turn Duration
+    @FXML void decreaseTurnDuration() { robotController.setTurnDuration(robotModel.getTurnDuration() - 5); }
+    @FXML void increaseTurnDuration() { robotController.setTurnDuration(robotModel.getTurnDuration() + 5); }
+
+    // Junction Detection
+    @FXML void decreaseJunctionDetection() { robotController.setJunctionDuration(robotModel.getJunctionDuration() - 5); }
+    @FXML void increaseJunctionDetection() { robotController.setJunctionDuration(robotModel.getJunctionDuration() + 5); }
+
+    // Odometry Fudge
+    @FXML void decreaseOdometryFudge() { robotController.setOdometryFudge(robotModel.getOdometryFudge() - 0.05); }
+    @FXML void increaseOdometryFudge() { robotController.setOdometryFudge(robotModel.getOdometryFudge() + 0.05); }
+    
     // Map
     @FXML void clearMap() { robotController.resetOdometry(); }
-
+    
+    @FXML void stopSpeed() { robotController.stop(); }
+    
     // Control State
     @FXML void handleBangLineFollow() { robotController.setControlState(RobotControlState.LINE_FOLLOW_BANGBANG); }
     @FXML void handleSolveMaze1() { robotController.setControlState(RobotControlState.SOLVE_MAZE_1); }
@@ -107,6 +131,13 @@ public class DashboardView {
         
         speedLabel.textProperty().bind(Bindings.concat("Speed: ", robotModel.speedProperty()));
         
+        // New Bindings
+        rotationSpeedLabel.textProperty().bind(Bindings.concat("Rot Speed: ", robotModel.rotationSpeedProperty()));
+        reverseDurationLabel.textProperty().bind(Bindings.concat("Rev Dur: ", robotModel.reverseDurationProperty()));
+        turnDurationLabel.textProperty().bind(Bindings.concat("Turn Dur: ", robotModel.turnDurationProperty()));
+        junctionDurationLabel.textProperty().bind(Bindings.concat("Junc Dur: ", robotModel.junctionDurationProperty()));
+        odometryFudgeLabel.textProperty().bind(Bindings.format("Odo Fudge: %.2f", robotModel.odometryFudgeProperty()));
+
         // Map
         xLabel.textProperty().bind(Bindings.format("X: %.1f cm", robotModel.xProperty()));
         yLabel.textProperty().bind(Bindings.format("Y: %.1f cm", robotModel.yProperty().multiply(-1)));
@@ -209,8 +240,8 @@ public class DashboardView {
                 double newAngle = Double.parseDouble(parts[5]);
                 double newTotalDistance = Double.parseDouble(parts[6]);
 
-                double newX = Double.parseDouble(parts[7]) * PIXELS_PER_METER;
-                double newY = Double.parseDouble(parts[8]) * PIXELS_PER_METER;
+                double newX = Double.parseDouble(parts[7]) * PIXELS_PER_CM;
+                double newY = Double.parseDouble(parts[8]) * PIXELS_PER_CM;
 
                 robotModel.setX(newX);
                 robotModel.setY(-newY);
@@ -241,4 +272,3 @@ public class DashboardView {
         return colour.equals("1") ? "BLACK" : "WHITE";
     }
 }
-

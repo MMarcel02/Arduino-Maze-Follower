@@ -119,10 +119,40 @@ void route(WiFiClient& c, const String& path, const String& q) {
       return;
     }
 
+    if (path.startsWith("/setRotationSpeed")) {
+      int val = parseIntEndpoint(q);
+      handleSetRotationSpeed(c, val);
+      return;
+    }
+
     if (path.startsWith("/setEmergencyStopDistance")) {
       int ultrasonicDistance = parseIntEndpoint(q);
       handleSetEmergencyStopDistance(c, ultrasonicDistance);
       return;
+    }
+
+    if (path.startsWith("/setReverseDuration")) {
+      int val = parseIntEndpoint(q);
+      handleSetReverseDuration(c, val);
+      return;
+    }
+
+    if (path.startsWith("/setTurnDuration")) {
+      int val = parseIntEndpoint(q);
+      handleSetTurnDuration(c, val);
+      return;
+    }
+
+    if (path.startsWith("/setJunctionDuration")) {
+      int val = parseIntEndpoint(q);
+      handleSetJunctionDuration(c, val);
+      return;
+
+    if (path.startsWith("/setOdometryFudge")) {
+      double val = parseDoubleEndpoint(q);
+      handleSetOdometryFudge(c, val);
+      return;
+    }
     }
 }
 
@@ -238,6 +268,31 @@ void handleSetSpeed(WiFiClient& client, int speed) {
 void handleSetEmergencyStopDistance(WiFiClient& client, int ultrasonicDistance) {
     emergencyStopDistance = ultrasonicDistance;
     sendHttpResponse(client, "Emergency Stop distance set to " + String(emergencyStopDistance));
+}
+
+void handleSetRotationSpeed(WiFiClient& client, int value) {
+    rotationSpeed = value;
+    sendHttpResponse(client, "Rotation Speed set to " + String(rotationSpeed));
+}
+
+void handleSetReverseDuration(WiFiClient& client, int value) {
+    TURN_START_REVERSE_DURATION = value;
+    sendHttpResponse(client, "Reverse Duration set to " + String(TURN_START_REVERSE_DURATION));
+}
+
+void handleSetTurnDuration(WiFiClient& client, int value) {
+    MINIMUM_TURN_DURATION = value;
+    sendHttpResponse(client, "Turn Duration set to " + String(MINIMUM_TURN_DURATION));
+}
+
+void handleSetJunctionDuration(WiFiClient& client, int value) {
+    JUNCTION_TIME_DELTA = value;
+    sendHttpResponse(client, "Junction Delta set to " + String(JUNCTION_TIME_DELTA));
+}
+
+void handleSetOdometryFudge(WiFiClient& client, double value) {
+    odometryFudge = value;
+    sendHttpResponse(client, "Odometry Fudge set to " + String(odometryFudge));
 }
 
 void handleManual(WiFiClient& client) {

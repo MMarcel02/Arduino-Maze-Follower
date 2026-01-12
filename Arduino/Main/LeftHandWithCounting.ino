@@ -40,7 +40,6 @@ void leftHandWithCounting()
     }
     if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0)
     {
-      setLineFollowingSpeed(motorSpeedOutsideLineFollow);
       moveForward();
     }
     else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 0)
@@ -62,7 +61,6 @@ void leftHandWithCounting()
   case TURNING_LEFT:
     if (currentTime - stateStartTime >= SmallStopAfterSensorDetection)
     {
-      setLineFollowingSpeed(100);
       turnOnSpotLeft();
       if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0)
       {
@@ -76,7 +74,6 @@ void leftHandWithCounting()
   case TURNING_RIGHT:
     if (currentTime - stateStartTime >= SmallStopAfterSensorDetection)
     {
-      setLineFollowingSpeed(100);
       turnOnSpotRight();
       if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0)
       {
@@ -172,7 +169,6 @@ void leftHandWithCounting()
 
   case SCAN_LEFT_FOR_LINE:
   {
-    setLineFollowingSpeed(100);
     turnOnSpotLeft();
 
     float currentDeg = radToDeg(robotAngle);
@@ -202,7 +198,6 @@ void leftHandWithCounting()
   break;
 
   case RECOVER_RIGHT_FIND_BLACK:
-    setLineFollowingSpeed(100);
     turnOnSpotRight();
     if (rightDigitalIRReading == 1)
     {
@@ -240,7 +235,6 @@ void leftHandWithCounting()
   break;
 
   case AFTER_180_RIGHT_SENSOR_SEARCH:
-    setLineFollowingSpeed(100);
     turnOnSpotLeft();
     if (rightDigitalIRReading == 1)
     {
