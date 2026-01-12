@@ -341,7 +341,7 @@ void manageRobotMovementState() {
       break;
 
     case (SOLVE_MAZE_2):
-
+      leftHandWithCounting();
       break;
     
     case (LOST_ROBOT):
