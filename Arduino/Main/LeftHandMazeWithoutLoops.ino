@@ -79,7 +79,6 @@ void leftHandMazeWithoutLoops() {
         targetAngleStart = radToDeg(robotAngle); 
         
         if (consecutive90Left >= 3) {
-             consecutive90Left = 0; 
              mazeState = SCAN_RIGHT_FOR_LINE; 
         } else {
              mazeState = SCAN_LEFT_FOR_LINE;
@@ -99,7 +98,6 @@ void leftHandMazeWithoutLoops() {
       } 
       else if (angleDiff > 120) {
           stopAllMotors();
-          consecutive90Left = 0;
           mazeState = RECOVER_RIGHT_FIND_BLACK;
       }
     } break;
@@ -114,9 +112,8 @@ void leftHandMazeWithoutLoops() {
           consecutive90Left = 0;
           mazeState = ALIGN_EXTRA_RIGHT;
       } 
-      else if (angleDiff < 120) {
+      else if (angleDiff > 120) {
           stopAllMotors();
-          consecutive90Left++;
           mazeState = RECOVER_LEFT_FIND_BLACK;
       }
     } break;
@@ -140,6 +137,7 @@ void leftHandMazeWithoutLoops() {
     case RECOVER_RIGHT_FIND_BLACK:
       turnOnSpotRight();
       if (rightDigitalIRReading == 1) {
+          consecutive90Left = 0;
           mazeState = RECOVER_RIGHT_FIND_WHITE;
       }
       break;
@@ -155,6 +153,7 @@ void leftHandMazeWithoutLoops() {
     case RECOVER_LEFT_FIND_BLACK:
       turnOnSpotLeft();
       if (leftDigitalIRReading == 1) {
+          consecutive90Left++;
           mazeState = RECOVER_LEFT_FIND_WHITE;
       }
       break;
