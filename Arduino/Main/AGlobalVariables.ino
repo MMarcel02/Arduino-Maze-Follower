@@ -78,3 +78,4 @@ const long STOP_TIME_AT_INTERSECTION = 500;
 long JUNCTION_TIME_DELTA = 200;  
 
 int emergencyStopDistance = 20;
+const int MAZE_OBSTACLE_DISTANCE = 13;

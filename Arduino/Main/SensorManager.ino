@@ -69,7 +69,7 @@ String buildSensorMessage() {
 }
 
 boolean obstacleFound(){
-  if (0 < ultrasonicDistance && ultrasonicDistance < emergencyStopDistance) {
+  if (0 < ultrasonicDistance && ultrasonicDistance < MAZE_OBSTACLE_DISTANCE) {
     return true;
   }
   return false;

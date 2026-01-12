@@ -189,7 +189,7 @@ void changeControlState(RobotControlState newState) {
   targetAngleEnd = 0;
   targetTotalDistance = 0;
 
-  stateStartTime = 0;
+  stateStartTime = currentTime;
   lastLeftBlackTime = 0;
   lastRightBlackTime = 0;
 
@@ -397,7 +397,7 @@ void manageRobotMovementState() {
       break;
 
     case (SOLVE_MAZE_2):
-      leftHandWithCounting();
+      depthFirstSearch();
       break;
     
     case (LOST_ROBOT):

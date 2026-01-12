@@ -42,7 +42,7 @@ public class DashboardView {
     @FXML private Label activeInputsLabel, speedLabel, xLabel, yLabel, angleLabel, currentMovementStateLabel, totalDistanceLabel, currentControlStateLabel;
     @FXML private Label irDigitalLeft, irDigitalRight, ultraSonic;
     @FXML private Label rotationSpeedLabel, reverseDurationLabel, turnDurationLabel, junctionDurationLabel, odometryFudgeLabel;
-    @FXML private Slider speedSlider, emergencyStopSlider;
+    @FXML private Slider emergencyStopSlider;
     @FXML private Button upArrow, downArrow, leftArrow, rightArrow, crabWalkLeft, crabWalkRight, stopButton;
 
     // Speed
@@ -77,9 +77,10 @@ public class DashboardView {
     @FXML void clearMap() { robotController.resetOdometry(); }
     
     @FXML void stopSpeed() { robotController.stop(); }
-    
+
     // Control State
     @FXML void handleBangLineFollow() { robotController.setControlState(RobotControlState.LINE_FOLLOW_BANGBANG); }
+    @FXML void handleBlindedBang() { robotController.setControlState(RobotControlState.LINE_FOLLOW_BANGBANG); }
     @FXML void handleSolveMaze1() { robotController.setControlState(RobotControlState.SOLVE_MAZE_1); }
     @FXML void handleSolveMaze2() { robotController.setControlState(RobotControlState.SOLVE_MAZE_2); }
     @FXML void handleLostRobot() { robotController.setControlState(RobotControlState.LOST_ROBOT); }
@@ -132,17 +133,17 @@ public class DashboardView {
         speedLabel.textProperty().bind(Bindings.concat("Speed: ", robotModel.speedProperty()));
         
         // New Bindings
-        rotationSpeedLabel.textProperty().bind(Bindings.concat("Rot Speed: ", robotModel.rotationSpeedProperty()));
-        reverseDurationLabel.textProperty().bind(Bindings.concat("Rev Dur: ", robotModel.reverseDurationProperty()));
-        turnDurationLabel.textProperty().bind(Bindings.concat("Turn Dur: ", robotModel.turnDurationProperty()));
-        junctionDurationLabel.textProperty().bind(Bindings.concat("Junc Dur: ", robotModel.junctionDurationProperty()));
-        odometryFudgeLabel.textProperty().bind(Bindings.format("Odo Fudge: %.2f", robotModel.odometryFudgeProperty()));
+        rotationSpeedLabel.textProperty().bind(Bindings.concat("Rotation Speed: ", robotModel.rotationSpeedProperty()));
+        reverseDurationLabel.textProperty().bind(Bindings.concat("Rev Duration: ", robotModel.reverseDurationProperty()));
+        turnDurationLabel.textProperty().bind(Bindings.concat("Turn Duration: ", robotModel.turnDurationProperty()));
+        junctionDurationLabel.textProperty().bind(Bindings.concat("Junction Duration: ", robotModel.junctionDurationProperty()));
+        odometryFudgeLabel.textProperty().bind(Bindings.format("Odometry Fudge: %.2f", robotModel.odometryFudgeProperty()));
 
         // Map
         xLabel.textProperty().bind(Bindings.format("X: %.1f cm", robotModel.xProperty()));
         yLabel.textProperty().bind(Bindings.format("Y: %.1f cm", robotModel.yProperty().multiply(-1)));
         angleLabel.textProperty().bind(Bindings.format("Angle: %.1f deg", robotModel.angleProperty().multiply(180 / Math.PI)));
-        totalDistanceLabel.textProperty().bind(Bindings.format("Dist: %.1f cm", robotModel.totalDistanceProperty()));
+        totalDistanceLabel.textProperty().bind(Bindings.format("Distance: %.1f cm", robotModel.totalDistanceProperty()));
 
         // Sensors
         irDigitalLeft.textProperty().bind(Bindings.concat("IR-D Left: ", robotModel.leftIRDigitalProperty()));
@@ -157,11 +158,6 @@ public class DashboardView {
     
     private void setupSliders() {
         // Listener fires when dragging stops, this sends HTTP req
-        speedSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
-            if (!isChanging) {
-                robotController.setSpeed((int) speedSlider.getValue());
-            }
-        });
 
         emergencyStopSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
             if (!isChanging) {
@@ -170,7 +166,6 @@ public class DashboardView {
         });
 
         // Make sliders equal to default values
-        speedSlider.setValue(robotModel.getSpeed());
         emergencyStopSlider.setValue(robotModel.getEmergencyStopDistance());
 
     }

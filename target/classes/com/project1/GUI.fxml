@@ -525,12 +525,12 @@
                         <Insets top="8.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="bangReverseLine" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleBangReverse" prefHeight="50.0" prefWidth="73.0" text="Bang and Reverse Line">
+                  <Button fx:id="blindedBangLine" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onMousePressed="#handleBlindedBang" prefHeight="50.0" prefWidth="73.0" text="Blinded Bang Line">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Button>
-                  <Button fx:id="solveMaze1" mnemonicParsing="false" onMousePressed="#handleSolveMaze1" prefHeight="50.0" prefWidth="256.0" text="Left Hand">
+                  <Button fx:id="solveMaze1" mnemonicParsing="false" onMousePressed="#handleSolveMaze1" prefHeight="50.0" prefWidth="256.0" text="Left Hand Maze">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -538,7 +538,7 @@
                         <Insets top="8.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="solveMaze2" mnemonicParsing="false" onMousePressed="#handleSolveMaze2" prefHeight="50.0" prefWidth="256.0" text="Pledge Algorithm">
+                  <Button fx:id="solveMaze2" mnemonicParsing="false" onMousePressed="#handleSolveMaze2" prefHeight="50.0" prefWidth="256.0" text="Depth First Search Maze">
                      <font>
                         <Font size="16.0" />
                      </font>

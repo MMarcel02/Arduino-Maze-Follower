@@ -1,4 +1,4 @@
-
+int consecutive90Left = 0;
 
 void leftHandMazeWithoutLoops() {
 
@@ -65,58 +65,59 @@ void leftHandMazeWithoutLoops() {
 
   case JUNCTION_FOUND:
       if (currentTime - stateStartTime >= STOP_TIME_AT_INTERSECTION) { 
-        // CHANGE 1: Don't drive yet. Go to squaring state first.
-        mazeState = SQUARE_UP_JUNCTION;
-        stateStartTime = currentTime; // Reset timer for the next state if needed
+        targetTotalDistance = totalDistance + 8;
+        mazeState = DRIVE_THROUGH_INTERSECTION;
+        stateStartTime = currentTime;
       }
       break;
 
-    case SQUARE_UP_JUNCTION: {
-      // 1. Perfect Alignment: Both sensors on the line
-      if (leftDigitalIRReading == 1 && rightDigitalIRReading == 1) {
-          stopAllMotors();
-          targetTotalDistance = totalDistance + ROBOT_LENGTH/2; 
-          mazeState = DRIVE_THROUGH_INTERSECTION;
-      }
-      // 2. Twisted Left: Right sensor is on line, Left is off
-      else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 1) {
-          setLineFollowingSpeed(90); // Use a slower speed for precision
-          turnOnSpotRight(); 
-      }
-      // 3. Twisted Right: Left sensor is on line, Right is off
-      else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 0) {
-          setLineFollowingSpeed(90);
-          turnOnSpotLeft();
-      }
-      // 4. THE FIX: We slid off the line! (Both are 0)
-      // Since we were just at a junction, we definitely overshot it slightly.
-      else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
-          setLineFollowingSpeed(80); // Very slow reverse
-          moveBackward(); 
-      }
-
-    case DRIVE_THROUGH_INTERSECTION: {
+   case DRIVE_THROUGH_INTERSECTION: {
       boolean isMoving = moveToDistance(targetTotalDistance);
+      
       if (!isMoving) {
         stopAllMotors();
         targetAngleStart = radToDeg(robotAngle); 
-        mazeState = SCAN_LEFT_FOR_LINE;
+        
+        if (consecutive90Left >= 3) {
+             consecutive90Left = 0; 
+             mazeState = SCAN_RIGHT_FOR_LINE; 
+        } else {
+             mazeState = SCAN_LEFT_FOR_LINE;
+        }
       }
     } break;
 
     case SCAN_LEFT_FOR_LINE: {
-      setLineFollowingSpeed(100); 
       turnOnSpotLeft();
 
       float currentDeg = radToDeg(robotAngle);
-      float angleDiff = currentDeg - targetAngleStart;
+      float angleDiff = abs(currentDeg - targetAngleStart);
 
       if (leftDigitalIRReading == 1) { 
+          consecutive90Left++;
           mazeState = ALIGN_EXTRA_LEFT;
       } 
       else if (angleDiff > 120) {
           stopAllMotors();
+          consecutive90Left = 0;
           mazeState = RECOVER_RIGHT_FIND_BLACK;
+      }
+    } break;
+
+    case SCAN_RIGHT_FOR_LINE: {
+      turnOnSpotRight();
+
+      float currentDeg = radToDeg(robotAngle);
+      float angleDiff = abs(currentDeg - targetAngleStart);
+
+      if (rightDigitalIRReading == 1) { 
+          consecutive90Left = 0;
+          mazeState = ALIGN_EXTRA_RIGHT;
+      } 
+      else if (angleDiff < 120) {
+          stopAllMotors();
+          consecutive90Left++;
+          mazeState = RECOVER_LEFT_FIND_BLACK;
       }
     } break;
 
@@ -128,8 +129,15 @@ void leftHandMazeWithoutLoops() {
       }
     } break;
 
+    case ALIGN_EXTRA_RIGHT: {
+      turnOnSpotRight();
+      if (leftDigitalIRReading == 1) {
+          stopAllMotors();
+          mazeState = FOLLOW_LINE;
+      }
+    } break;
+
     case RECOVER_RIGHT_FIND_BLACK:
-      setLineFollowingSpeed(100);
       turnOnSpotRight();
       if (rightDigitalIRReading == 1) {
           mazeState = RECOVER_RIGHT_FIND_WHITE;
@@ -138,7 +146,22 @@ void leftHandMazeWithoutLoops() {
 
     case RECOVER_RIGHT_FIND_WHITE:
       turnOnSpotRight();
+      if (rightDigitalIRReading == 0) {
+          stopAllMotors();
+          mazeState = FOLLOW_LINE;
+      }
+      break;
+
+    case RECOVER_LEFT_FIND_BLACK:
+      turnOnSpotLeft();
       if (leftDigitalIRReading == 1) {
+          mazeState = RECOVER_LEFT_FIND_WHITE;
+      }
+      break;
+
+    case RECOVER_LEFT_FIND_WHITE:
+      turnOnSpotLeft();
+      if (leftDigitalIRReading == 0) {
           stopAllMotors();
           mazeState = FOLLOW_LINE;
       }
@@ -147,6 +170,7 @@ void leftHandMazeWithoutLoops() {
     case OBJECT_DETECTED:
       if (currentTime - stateStartTime >= STOP_TIME_AT_INTERSECTION) {
         targetAngleEnd = radToDeg(robotAngle) + 180;
+        consecutive90Left = 0;
         mazeState = TURNING_180_DEGREES;
         break;
       }
@@ -161,7 +185,6 @@ void leftHandMazeWithoutLoops() {
     } break;
 
     case AFTER_180_RIGHT_SENSOR_SEARCH:
-      setLineFollowingSpeed(100);
       turnOnSpotLeft();
       if (rightDigitalIRReading == 1) {
         mazeState = FOLLOW_LINE;

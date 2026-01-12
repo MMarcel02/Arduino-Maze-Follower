@@ -19,7 +19,7 @@ void pushJunction()
   junctionStack[junctionStackTop].triedRight = false;
 }
 
-void leftHandWithCounting()
+void depthFirstSearch()
 {
   if ((mazeState == FOLLOW_LINE || mazeState == TURNING_LEFT || mazeState == TURNING_RIGHT || mazeState == BLIND_TURN) && junctionDetectedTimed())
   {
@@ -59,7 +59,7 @@ void leftHandWithCounting()
     break;
 
   case TURNING_LEFT:
-    if (currentTime - stateStartTime >= SmallStopAfterSensorDetection)
+    if (currentTime - stateStartTime >= TURN_START_REVERSE_DURATION)
     {
       turnOnSpotLeft();
       if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0)
@@ -72,7 +72,7 @@ void leftHandWithCounting()
     break;
 
   case TURNING_RIGHT:
-    if (currentTime - stateStartTime >= SmallStopAfterSensorDetection)
+    if (currentTime - stateStartTime >= TURN_START_REVERSE_DURATION)
     {
       turnOnSpotRight();
       if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0)
@@ -85,7 +85,7 @@ void leftHandWithCounting()
     break;
 
   case BLIND_TURN:
-    if (currentTime - stateStartTime >= BlindTime)
+    if (currentTime - stateStartTime >= MINIMUM_TURN_DURATION)
     {
       mazeState = FOLLOW_LINE;
       break;
@@ -93,7 +93,7 @@ void leftHandWithCounting()
     break;
 
   case JUNCTION_FOUND:
-    if (currentTime - stateStartTime >= ObjectFoundTime)
+    if (currentTime - stateStartTime >= STOP_TIME_AT_INTERSECTION)
     {
       targetTotalDistance = totalDistance + 8;
       mazeState = DRIVE_THROUGH_INTERSECTION;
@@ -215,7 +215,7 @@ void leftHandWithCounting()
     break;
 
   case OBJECT_DETECTED:
-    if (currentTime - stateStartTime >= ObjectFoundTime)
+    if (currentTime - stateStartTime >= STOP_TIME_AT_INTERSECTION)
     {
       targetAngleEnd = radToDeg(robotAngle) + 170;
       mazeState = TURNING_180_DEGREES;

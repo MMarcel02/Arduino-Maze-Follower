@@ -11,7 +11,7 @@ public class RobotModel {
 
     // We use these JavaFX property objects so we can bind our GUI to these values
     private final IntegerProperty speed = new SimpleIntegerProperty(80);
-    private final IntegerProperty emergencyStopDistance = new SimpleIntegerProperty(20);
+    private final IntegerProperty emergencyStopDistance = new SimpleIntegerProperty(30);
     
     private final IntegerProperty rotationSpeed = new SimpleIntegerProperty(100);
     private final IntegerProperty reverseDuration = new SimpleIntegerProperty(75);

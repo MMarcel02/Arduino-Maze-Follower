@@ -1,12 +1,12 @@
 
-int outerWheelSpeed = 100; 
+int outerWheelSpeed = 150; 
 
-int startInnerWheelSpeed = -100;
-int endInnerWheelSpeed = 100; 
+int startInnerWheelSpeed = -150;
+int endInnerWheelSpeed = 150; 
 int speedRange = endInnerWheelSpeed - startInnerWheelSpeed;
 
-// Inner speed ramps up from 0-180 in 5 seconds, to make a wider spiral, after that it  just goes straight
-long spiralDuration = 5000;
+// Inner speed ramps up from 0-180 in 60 seconds, to make a wider spiral, after that it  just goes straight
+long spiralDuration = 60000;
 
 void lostRobot() {
     switch (lostRobotState) {
