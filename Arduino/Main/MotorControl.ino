@@ -98,13 +98,6 @@ void crabWalkLeft () {
   setMotor(BR_PWM, BR_DIR, motorSpeed, false);
 }
 
-void spinLeftLostRobot() {
-  setMotor(FL_PWM, FL_DIR, 70, true);
-  setMotor(FR_PWM, FR_DIR, 150, true);
-  setMotor(BL_PWM, BL_DIR, 70, true);
-  setMotor(BR_PWM, BR_DIR, 150, true);
-}
-
 // angle of 90 degrees is the start, the angle moves counter-clockwise
 boolean turnToAbsoluteAngle(float targetAngle) {
   boolean isTurning = false;
