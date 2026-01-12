@@ -353,7 +353,7 @@ void manageRobotMovementState() {
       break;
 
     case (U_TURN):
-      // uTurn();
+      uTurn();
       break;
     
     case (PARKING_IN_BOX):
