@@ -52,15 +52,15 @@ float robotAngle = PI/2; // angle in Radians (initial is 90 degrees for facing u
 float totalDistance = 0; // in centimetres
 
 // Target values  
-float targetAngleEnd = 0;
 float targetAngleStart = 0;
+float targetAngleEnd = 0;
 float targetTotalDistance = 0;
 
-boolean isMoving;
+long stateStartTime = 0;
+long lastLeftBlackTime = 0;
+long lastRightBlackTime = 0;
 
-unsigned long stateStartTime = 0;
-unsigned long lastLeftBlackTime = 0;
-unsigned long lastRightBlackTime = 0;
+boolean isMoving;
 
 const unsigned int SmallStopAfterSensorDetection = 100;
 const unsigned int BlindTime = 150;

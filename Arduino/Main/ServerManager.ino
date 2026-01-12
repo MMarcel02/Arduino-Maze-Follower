@@ -334,8 +334,14 @@ void changeControlState(RobotControlState newState) {
   emergencyStopState = BANG_LINE_FOLLOWING;
   parkingBoxState = APPROACHING_PARKING_BOX;
 
-  stateStartTime = millis(); 
+  targetAngleStart = 0;
+  targetAngleEnd = 0;
   targetTotalDistance = 0;
+
+  stateStartTime = 0;
+  lastLeftBlackTime = 0;
+  lastRightBlackTime = 0;
+  
   isMoving = false;
   
   stopAllMotors();
