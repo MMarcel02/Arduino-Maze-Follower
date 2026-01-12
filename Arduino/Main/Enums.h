@@ -1,8 +1,9 @@
-// These states are here because they are also passed to the GUI
-// enum assigns numbers to these words (less mistakes than using strings (typos) and easier and faster to compare numbers) 
+#ifndef ENUMS_H
+#define ENUMS_H
+
 enum RobotMovementState {
-  STOPPED, // Compiler assigns this = 0
-  FORWARD, // Compiler assigns this = 1
+  STOPPED,
+  FORWARD,
   BACKWARD,
   LEFT,
   RIGHT,
@@ -11,7 +12,6 @@ enum RobotMovementState {
   CW_LEFT,
   CW_RIGHT
 };
-RobotMovementState currentMovementState = STOPPED;
 
 enum RobotControlState {
   MANUAL,
@@ -23,7 +23,6 @@ enum RobotControlState {
   U_TURN,
   PARKING_IN_BOX
 };
-RobotControlState currentControlState = MANUAL;
 
 enum MazeState {
   FOLLOW_LINE,
@@ -36,25 +35,30 @@ enum MazeState {
   JUNCTION_FOUND,
   SQUARE_UP_JUNCTION,
   DRIVE_THROUGH_INTERSECTION, 
+  
   SCAN_LEFT_FOR_LINE,         
   ALIGN_EXTRA_LEFT,           
+  
+  SCAN_RIGHT_FOR_LINE,
+  ALIGN_EXTRA_RIGHT,
+
   RECOVER_RIGHT_FIND_BLACK,   
-  RECOVER_RIGHT_FIND_WHITE,   
+  RECOVER_RIGHT_FIND_WHITE,
+  RECOVER_LEFT_FIND_BLACK,    
+  RECOVER_LEFT_FIND_WHITE,    
+  
   LOST_ROBOT1
 };
-MazeState mazeState = FOLLOW_LINE;
 
 enum LostRobotState {
   SEARCHING_FOR_THE_LINE,
   FOUND_THE_LINE,
 };
-LostRobotState lostRobotState = SEARCHING_FOR_THE_LINE;
 
 enum EmergencyStopState {
   BANG_LINE_FOLLOWING,
   EMERGENCY_STOPPED
 };
-EmergencyStopState emergencyStopState = BANG_LINE_FOLLOWING;
 
 enum ParkingBoxState {
     APPROACHING_PARKING_BOX,
@@ -67,4 +71,5 @@ enum ParkingBoxState {
     PARKING_FALLBACK_SEARCH_FOR_END,
     END_OF_PARKING_BOX
 };
-ParkingBoxState parkingBoxState = APPROACHING_PARKING_BOX;
+
+#endif

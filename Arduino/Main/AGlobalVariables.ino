@@ -1,5 +1,5 @@
+#include "RobotConfig.h"
 // Has A at front so we know we compile this right after Main
-
 // Pins that describe the WIFI module.
 // Pins used from the Arduino Wi-Fi library
 const int WINC_CS  = 8, WINC_IRQ = 7, WINC_RST = 4, WINC_EN = 2;
@@ -79,3 +79,10 @@ long JUNCTION_TIME_DELTA = 200;
 
 int emergencyStopDistance = 20;
 const int MAZE_OBSTACLE_DISTANCE = 13;
+
+RobotMovementState currentMovementState = STOPPED;
+RobotControlState currentControlState = MANUAL;
+MazeState mazeState = FOLLOW_LINE;
+LostRobotState lostRobotState = SEARCHING_FOR_THE_LINE;
+EmergencyStopState emergencyStopState = BANG_LINE_FOLLOWING;
+ParkingBoxState parkingBoxState = APPROACHING_PARKING_BOX;

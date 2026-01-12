@@ -195,6 +195,6 @@ void leftHandMazeWithoutLoops() {
     case LOST_ROBOT1:
       stopAllMotors();
       break;
-    }
+    
   }
 }
