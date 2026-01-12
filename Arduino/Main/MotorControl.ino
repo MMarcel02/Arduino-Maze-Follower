@@ -128,10 +128,10 @@ boolean turnToAbsoluteAngle(float targetAngle) {
 // totalTargetDistance should be calculated in the earlier state before this state
 boolean moveToDistance(float totalTargetDistance) {
   boolean isMoving = false;
-  if (totalDistance < (totalTargetDistance - 0.01)) {
+  if (totalDistance < (totalTargetDistance - 1)) {
     moveForward();
     isMoving = true;
-  } else if (totalDistance > (totalTargetDistance + 0.01)) {
+  } else if (totalDistance > (totalTargetDistance + 1)) {
     moveBackward();
     isMoving = true;
   } else {

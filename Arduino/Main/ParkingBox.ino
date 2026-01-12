@@ -1,116 +1,109 @@
 void parkingBox() {
 
+    if ( (parkingBoxState == APPROACHING_PARKING_BOX || parkingBoxState == TURNING_LEFT || parkingBoxState == TURNING_RIGHT || parkingBoxState == BLIND_TURN ) 
+        && junctionDetectedTimed() ) {
+
+        stopAllMotors();
+        stateStartTime = currentTime;
+        mazeState = SELF_ALIGN_90_DEGREES;
+    }
+
   switch (parkingBoxState) {
 
   case APPROACHING_PARKING_BOX:
-    if (junctionDetectedTimed()) {
-      stopAllMotors();
-      stateStartTime = currentTime;
-      parkingBoxState = START_OF_PARKING_BOX;
-      break;
-    } else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
+    if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
       setLineFollowingSpeed(motorSpeedOutsideLineFollow);
       moveForward();
     } else if (leftDigitalIRReading == 1 && rightDigitalIRReading == 0) {
-      moveBackward(); // Or standard turn logic
+      moveBackward();
       stateStartTime = currentTime;
       parkingBoxState = PARKING_TURNING_LEFT;
       break;
     } else if (leftDigitalIRReading == 0 && rightDigitalIRReading == 1) {
-      moveBackward(); // Or standard turn logic
+      moveBackward();
       stateStartTime = currentTime;
       parkingBoxState = PARKING_TURNING_RIGHT;
       break;
     }
     break;
 
-  // --- Existing Turn Logic (Preserved for standard corners) ---
-  case PARKING_TURNING_LEFT:
-    if (junctionDetectedTimed()) {
-      stopAllMotors();
-      stateStartTime = currentTime;
-      parkingBoxState = START_OF_PARKING_BOX;
-      break;
-    }
-    if (currentTime - stateStartTime >= SmallStopAfterSensorDetection) {
+  case TURNING_LEFT:
+    if (currentTime - stateStartTime >= TURN_START_REVERSE_DURATION) {
       setLineFollowingSpeed(100);
       turnOnSpotLeft();
       if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
         stateStartTime = currentTime;
-        parkingBoxState = PARKING_BLIND_TURN;
+        parkingBoxState = BLIND_TURN;
         break;
       }
     }
     break;
 
-  case PARKING_TURNING_RIGHT:
-    if (junctionDetectedTimed()) {
-      stopAllMotors();
-      stateStartTime = currentTime;
-      parkingBoxState = START_OF_PARKING_BOX;
-      break;
-    }
-    if (currentTime - stateStartTime >= SmallStopAfterSensorDetection) {
+  case TURNING_RIGHT:
+    if (currentTime - stateStartTime >= TURN_START_REVERSE_DURATION) {
       setLineFollowingSpeed(100);
       turnOnSpotRight();
       if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
         stateStartTime = currentTime;
-        parkingBoxState = PARKING_BLIND_TURN;
+        parkingBoxState = BLIND_TURN;
         break;
       }
     }
     break;
 
-  case PARKING_BLIND_TURN:
-    if (junctionDetectedTimed()) {
-      stopAllMotors();
-      stateStartTime = currentTime;
-      parkingBoxState = START_OF_PARKING_BOX;
-      break;
-    }
-    if (currentTime - stateStartTime >= BlindTime) {
+  case BLIND_TURN:
+    if (currentTime - stateStartTime >= MINIMUM_TURN_DURATION) {
       parkingBoxState = APPROACHING_PARKING_BOX;
       break;
     }
     break;
 
-    // Parking space starts get to 90 degrees and then move forward a bit 
-    case START_OF_PARKING_BOX:
-    if (currentTime - stateStartTime >= ObjectFoundTime) {
-      targetTotalDistance = totalDistance + 30; // instruct the bot to move max 0.5 meters
-      parkingBoxState = SELF_ALIGN_90_DEGREES;
-      break;
-    }
-    break;
-
-    case SELF_ALIGN_90_DEGREES:{
-        // self adjust to strict 90 degrees
+  case SELF_ALIGN_90_DEGREES: {
       boolean isTurning = turnToAbsoluteAngle(90);
       if (!isTurning) {
         stopAllMotors();
-        parkingBoxState = FIND_THE_END_OF_PARKING_BOX;
-        break;
-        }   
+        targetTotalDistance = totalDistance + 10; // Going to scan 10cm ahead after alligning to locate the intersection again
+        parkingBoxState = PARKING_SEARCH_START_LINE;
       }
-    break;
-
-    case FIND_THE_END_OF_PARKING_BOX:
-         isMoving = moveToDistance(targetTotalDistance);
-        if(!isMoving){
-            stopAllMotors();
-            // targetTotalDistance = totalDistance - 5; // instruct the bot to move max 0.5 meters
-            parkingBoxState = END_OF_PARKING_BOX;
-            break;
-        }
-        
-        break;
-
-    case END_OF_PARKING_BOX:
-      //  isMoving = moveToDistance(targetTotalDistance);
-      // if(!isMoving){
-      //     stopAllMotors();
-      // }
       break;
+  }
+
+    case PARKING_SEARCH_START_LINE:
+      setLineFollowingSpeed(motorSpeedOutsideLineFollow);
+      moveForward();
+
+      if (junctionDetectedTimed()) {
+          targetTotalDistance = totalDistance + ROBOT_LENGTH;
+          parkingBoxState = PARKING_DRIVE_INTO_BOX;
+      }
       
+      else if (totalDistance >= targetTotalDistance) {
+          parkingBoxState = PARKING_FALLBACK_SEARCH_FOR_END;
+      }
+      break;
+
+  case PARKING_DRIVE_INTO_BOX:
+      setLineFollowingSpeed(motorSpeedOutsideLineFollow);
+      moveForward();
+
+      if (totalDistance >= targetTotalDistance) {
+          stopAllMotors();
+          parkingBoxState = END_OF_PARKING_BOX;
+      }
+      break;
+
+      case PARKING_FALLBACK_SEARCH_FOR_END:
+      setLineFollowingSpeed(motorSpeedOutsideLineFollow);
+      moveForward();
+
+      if (junctionDetectedTimed()) {
+          stopAllMotors();
+          parkingBoxState = END_OF_PARKING_BOX;
+      }
+      break;
+
+  case END_OF_PARKING_BOX:
+      stopAllMotors();
+      break;
   }
 }

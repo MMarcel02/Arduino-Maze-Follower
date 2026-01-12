@@ -30,7 +30,8 @@ const int ECHO_PIN = 1;
 // Robot physical constants
 const float WHEEL_RADIUS = 3.25;   // 3.25 cm 
 const float TRACK_WIDTH  = 33;     // 22 cm (multiplied by 1.5x to account for slippage)
-const int TICKS_PER_REV  = 225;      // Ticks for one full spin
+const float ROBOT_LENGTH = 30;     // 
+const int TICKS_PER_REV  = 225;    // Ticks for one full spin
 const float DISTANCE_PER_TICK = (2 * PI * WHEEL_RADIUS) / TICKS_PER_REV; 
 
 // Robot Position and Speed
@@ -62,10 +63,10 @@ long lastRightBlackTime = 0;
 
 boolean isMoving;
 
-const unsigned int SmallStopAfterSensorDetection = 100;
-const unsigned int BlindTime = 150;
+const unsigned int TURN_START_REVERSE_DURATION = 100; // To counter the momentum that could send us over the line if we started turning as soon as we found a line
+const unsigned int MINIMUM_TURN_DURATION = 150; // So that we dont immediately trigger on the sensor again after turning, this makes us commit to a turn for a bit for better allignment
 const unsigned int ObjectFoundTime = 500;
-const unsigned long JUNCTION_TIME_DELTA = 200;
+const unsigned long JUNCTION_TIME_DELTA = 200;  
 
 // These states are here because they are also passed to the GUI
 // enum assigns numbers to these words (less mistakes than using strings (typos) and easier and faster to compare numbers) 
@@ -130,9 +131,10 @@ enum ParkingBoxState {
     PARKING_TURNING_LEFT,
     PARKING_TURNING_RIGHT,
     PARKING_BLIND_TURN,
-    START_OF_PARKING_BOX,
     SELF_ALIGN_90_DEGREES,
-    FIND_THE_END_OF_PARKING_BOX,
+    PARKING_SEARCH_START_LINE,
+    PARKING_DRIVE_INTO_BOX,
+    PARKING_FALLBACK_SEARCH_FOR_END,
     END_OF_PARKING_BOX
 };
 ParkingBoxState parkingBoxState = APPROACHING_PARKING_BOX;

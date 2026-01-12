@@ -35,7 +35,7 @@ void leftHandMazeWithoutLoops() {
     break;
 
   case TURNING_LEFT:
-    if (currentTime - stateStartTime >= SmallStopAfterSensorDetection) { 
+    if (currentTime - stateStartTime >= TURN_START_REVERSE_DURATION) { 
       setLineFollowingSpeed(100);
       turnOnSpotLeft();
       if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
@@ -47,7 +47,7 @@ void leftHandMazeWithoutLoops() {
     break;
 
   case TURNING_RIGHT:
-    if (currentTime - stateStartTime >= SmallStopAfterSensorDetection) {
+    if (currentTime - stateStartTime >= TURN_START_REVERSE_DURATION) {
       setLineFollowingSpeed(100);
       turnOnSpotRight();
       if (leftDigitalIRReading == 0 && rightDigitalIRReading == 0) {
@@ -59,7 +59,7 @@ void leftHandMazeWithoutLoops() {
     break;
 
   case BLIND_TURN:
-    if (currentTime - stateStartTime >= BlindTime) {
+    if (currentTime - stateStartTime >= MINIMUM_TURN_DURATION) {
       mazeState = FOLLOW_LINE;
       break;
     }
