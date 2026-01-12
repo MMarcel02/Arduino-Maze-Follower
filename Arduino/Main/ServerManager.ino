@@ -124,30 +124,6 @@ void route(WiFiClient& c, const String& path, const String& q) {
       handleSetEmergencyStopDistance(c, ultrasonicDistance);
       return;
     }
-
-    if (path.startsWith("/setSensitivity")) {
-      double sensitivity = parseDoubleEndpoint(q);
-      handleSetSensitivity(c, sensitivity);
-      return;
-    }
-
-    if (path.startsWith("/setDampening")) {
-      double dampening = parseDoubleEndpoint(q);
-      handleSetDampening(c, dampening);
-      return;
-    }
-
-    if (path.startsWith("/setLeftIR")) {
-      int leftIRLimit = parseIntEndpoint(q);
-      handleSetLeftIRThreshold(c, leftIRLimit);
-      return;
-    }
-
-    if (path.startsWith("/setRightIR")) {
-      int rightIRLimit = parseIntEndpoint(q);
-      handleSetRightIRThreshold(c, rightIRLimit);
-      return;
-    }
 }
 
 // Helper to get string after s= 
@@ -341,7 +317,7 @@ void changeControlState(RobotControlState newState) {
   stateStartTime = 0;
   lastLeftBlackTime = 0;
   lastRightBlackTime = 0;
-  
+
   isMoving = false;
   
   stopAllMotors();

@@ -8,10 +8,6 @@ void setupUltraSonicSensor () {
 void setupIRSensors () {
 	pinMode(IR_DIGITAL_LEFT_SENSOR_PIN, INPUT);  
 	pinMode(IR_DIGITAL_RIGHT_SENSOR_PIN, INPUT);  
-
-  // Commented out for now since not using analog because of Encoders (no pins left)
-  // pinMode(IR_ANALOG_LEFT_SENSOR_PIN, INPUT);
-  // pinMode(IR_ANALOG_RIGHT_SENSOR_PIN, INPUT);
 }
 
 void readUltrasonicSensor() {
@@ -38,16 +34,6 @@ void checkEmergencyStop() {
 void readIRSensors() {
   leftDigitalIRReading = digitalRead(IR_DIGITAL_LEFT_SENSOR_PIN);
   rightDigitalIRReading = digitalRead(IR_DIGITAL_RIGHT_SENSOR_PIN);
-
-  // Commented out for now since not using analog because of Encoders (no pins left)
-  // leftAnalogIRReading = analogRead(IR_ANALOG_LEFT_SENSOR_PIN);
-  // rightAnalogIRReading = analogRead(IR_ANALOG_RIGHT_SENSOR_PIN);
-}
-
-// Not used for now as got rid of analog, keeping in case we bring it back
-void checkIRAnalogOverThreshold() {
-  leftIRAnalog = (leftAnalogIRReading > leftIRThreshold);
-  rightIRAnalog = (rightAnalogIRReading > rightIRThreshold);
 }
 
 void updateSensors() {

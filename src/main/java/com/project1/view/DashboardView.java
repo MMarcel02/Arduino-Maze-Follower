@@ -12,7 +12,6 @@ import com.project1.model.RobotMovementState;
 import com.project1.services.ArduinoHTTPClient;
 import com.project1.services.ArduinoTCPClient;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
@@ -21,97 +20,49 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 
 public class DashboardView {
 
-    // Helping controllers
+    private final double PIXELS_PER_CM = 1.0; // 1:1 scale for simplicity
+
     private final RobotModel robotModel = new RobotModel();
     private final InputHandler inputHandler = new InputHandler();
     private RobotController robotController;
     private MapView mapView;
-    private final double PIXELS_PER_METER = 1.0; // 1:1 scale for simplicity
-
     
-    // Networking
     private ArduinoHTTPClient httpClient;
     private ArduinoTCPClient tcpClient;
     
     @FXML private Canvas canvas;
     @FXML private TextArea logArea;
     @FXML private Label activeInputsLabel, speedLabel, xLabel, yLabel, angleLabel, currentMovementStateLabel, totalDistanceLabel, currentControlStateLabel;
-    @FXML private Label irDigitalLeft, irDigitalRight, irAnalogLeft, irAnalogRight, irAnalogLeftRaw, irAnalogRightRaw, ultraSonic;
-    @FXML private Slider speedSlider, emergencyStopSlider, sensitivitySlider, dampeningSlider, irLeftThresholdSlider, irRightThresholdSlider;
-    @FXML private Button clearMapButton;
+    @FXML private Label irDigitalLeft, irDigitalRight, ultraSonic;
+    @FXML private Slider speedSlider, emergencyStopSlider;
     @FXML private Button upArrow, downArrow, leftArrow, rightArrow, crabWalkLeft, crabWalkRight, stopButton;
-    @FXML private Button bigDecrement, smallDecrement, bigIncrement, smallIncrement;
-    @FXML private ToggleButton emergencyStopToggle;
-    @FXML private Button bangLineFollow, pdLineFollow, solveMaze1, solveMaze2, lostRobot, parkingInBox, reverseCorner, reverseStraight, threePointTurn, uTurn, extraSpace;
 
+    // Speed
+    @FXML void bigDecreaseSpeed() { robotController.setSpeed(robotModel.getSpeed() - 20); }
+    @FXML void bigIncreaseSpeed() { robotController.setSpeed(robotModel.getSpeed() + 20); }
+    @FXML void smallDecreaseSpeed() { robotController.setSpeed(robotModel.getSpeed() - 5); }
+    @FXML void smallIncreaseSpeed() { robotController.setSpeed(robotModel.getSpeed() + 5); }
+    @FXML void stopSpeed() { robotController.stop(); }
 
-    @FXML void bigDecreaseSpeed(MouseEvent e) { robotController.setSpeed(robotModel.getSpeed() - 20); }
-    @FXML void bigIncreaseSpeed(MouseEvent e) { robotController.setSpeed(robotModel.getSpeed() + 20); }
-    @FXML void smallDecreaseSpeed(MouseEvent e) { robotController.setSpeed(robotModel.getSpeed() - 5); }
-    @FXML void smallIncreaseSpeed(MouseEvent e) { robotController.setSpeed(robotModel.getSpeed() + 5); }
-    @FXML void stopSpeed(MouseEvent e) { robotController.stop(); }
+    // Map
+    @FXML void clearMap() { robotController.resetOdometry(); }
 
-    @FXML void clearMap(MouseEvent e) { robotController.resetOdometry(); }
-    @FXML void toggleEmergencyStop(ActionEvent event) { robotController.toggleEmergencyStop(); }
+    // Control State
+    @FXML void handleBangLineFollow() { robotController.setControlState(RobotControlState.LINE_FOLLOW_BANGBANG); }
+    @FXML void handleSolveMaze1() { robotController.setControlState(RobotControlState.SOLVE_MAZE_1); }
+    @FXML void handleSolveMaze2() { robotController.setControlState(RobotControlState.SOLVE_MAZE_2); }
+    @FXML void handleLostRobot() { robotController.setControlState(RobotControlState.LOST_ROBOT); }
+    @FXML void handleEmergencyStop() { robotController.setControlState(RobotControlState.EMERGENCY_STOP); }
+    @FXML void handleUTurn() { robotController.setControlState(RobotControlState.U_TURN); }
+    @FXML void handleParkingInBox() { robotController.setControlState(RobotControlState.PARKING_IN_BOX); }
 
-    @FXML
-    public void handleBangLineFollow(MouseEvent event) {
-        robotController.setControlState(RobotControlState.LINE_FOLLOW_BANGBANG);
-    }
-
-    @FXML
-    public void handlePDLineFollow(MouseEvent event) {
-        robotController.setControlState(RobotControlState.LINE_FOLLOW_PD);
-    }
-
-    @FXML
-    public void handleSolveMaze1(MouseEvent event) {
-        robotController.setControlState(RobotControlState.SOLVE_MAZE_1);
-    }
-
-    @FXML
-    public void handleSolveMaze2(MouseEvent event) {
-        robotController.setControlState(RobotControlState.SOLVE_MAZE_2);
-    }
-
-    @FXML
-    public void handleLostRobot(MouseEvent event) {
-        robotController.setControlState(RobotControlState.LOST_ROBOT);
-    }
-
-    @FXML
-    public void handleReverseStraight(MouseEvent event) {
-        robotController.setControlState(RobotControlState.REVERSE_STRAIGHT);
-    }
-
-    @FXML
-    public void handleReverseCorner(MouseEvent event) {
-        robotController.setControlState(RobotControlState.REVERSE_CORNER);
-    }
-
-    @FXML
-    public void handleThreePointTurn(MouseEvent event) {
-        robotController.setControlState(RobotControlState.THREE_POINT_TURN);
-    }
-
-    @FXML
-    public void handleUTurn(MouseEvent event) {
-        robotController.setControlState(RobotControlState.U_TURN);
-    }
-
-    @FXML
-    public void handleParkingInBox(MouseEvent event) {
-        robotController.setControlState(RobotControlState.PARKING_IN_BOX);
-    }
-
-
+    // Only for arrow buttons, so that robot only drives when we're holding the button down
     @FXML
     void onButtonPressed(MouseEvent event) {
        Button source = (Button) event.getSource(); // Gives us the button that is being pressed
@@ -168,13 +119,11 @@ public class DashboardView {
         ultraSonic.textProperty().bind(Bindings.concat("Ultrasonic: ", robotModel.ultrasonicProperty()));
 
         // States
-        emergencyStopToggle.selectedProperty().bindBidirectional(robotModel.emergencyStopEnabledProperty());
         currentMovementStateLabel.textProperty().bind(Bindings.concat("M: ", robotModel.movementStateProperty()));
         currentControlStateLabel.textProperty().bind(Bindings.concat("C: ", robotModel.controlStateProperty()));
     }
     
     private void setupSliders() {
-
         // Listener fires when dragging stops, this sends HTTP req
         speedSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
             if (!isChanging) {
@@ -188,40 +137,9 @@ public class DashboardView {
             }
         });
 
-        sensitivitySlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
-            if (!isChanging) {
-                double roundedValue = Math.round(sensitivitySlider.getValue() * 10.0) / 10.0;
-                robotController.setSensitivity(roundedValue);
-            }
-        });
-
-        dampeningSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
-            if (!isChanging) {
-                double roundedValue = Math.round(dampeningSlider.getValue() * 10.0) / 10.0;
-                robotController.setDampening(roundedValue);
-            }
-        });
-
-        irLeftThresholdSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
-            if (!isChanging) {
-                robotController.setLeftIRThreshold((int) irLeftThresholdSlider.getValue());
-            }
-        });
-
-        irRightThresholdSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
-            if (!isChanging) {
-                robotController.setRightIRThreshold((int) irRightThresholdSlider.getValue());
-            }
-        });
-
-
         // Make sliders equal to default values
         speedSlider.setValue(robotModel.getSpeed());
-        sensitivitySlider.setValue(robotModel.getSensitivity());
-        dampeningSlider.setValue(robotModel.getDampening());
         emergencyStopSlider.setValue(robotModel.getEmergencyStopDistance());
-        irLeftThresholdSlider.setValue(robotModel.getLeftIRThreshold());
-        irRightThresholdSlider.setValue(robotModel.getRightIRThreshold());
 
     }
 
@@ -291,7 +209,7 @@ public class DashboardView {
                 double newTotalDistance = Double.parseDouble(parts[6]);
 
                 double changeInDistance = newTotalDistance - robotModel.getTotalDistance();
-                double changeInPixels = changeInDistance * PIXELS_PER_METER;
+                double changeInPixels = changeInDistance * PIXELS_PER_CM;
 
                 double currentX = robotModel.getX();
                 double currentY = robotModel.getY();
