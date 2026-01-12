@@ -46,6 +46,14 @@ void updateOdometry() {
   totalDistance += distAverage;
 
   float changeInAngle = (distRight - distLeft) / TRACK_WIDTH;
+  
+  // We use the center of the angle turned,
+  // because the robot is constantly changing angle as it moves
+  // so we take an average of the starting and ending angle for this time period
+  float midAngle = robotAngle + (changeInAngle / 2.0);
+  
+  robotX += distAverage * cos(midAngle);
+  robotY += distAverage * sin(midAngle);
   robotAngle += changeInAngle;
 
   prevTime = currentTime;
@@ -80,6 +88,9 @@ void resetOdometry() {
 
   prevLeftTick = 0;
   prevRightTick = 0;
+
+  robotX = 0;
+  robotY = 0;
 
   robotAngle = PI / 2.0;
   totalDistance = 0;

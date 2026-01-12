@@ -39,6 +39,12 @@ int motorSpeed = 80;           // Default speed for all motors (range: 0–255)
 int motorTurningSpeed = motorSpeed*0.8;
 int motorSpeedOutsideLineFollow = motorSpeed;
 
+float robotAngle = PI/2; // angle in Radians (initial is 90 degrees for facing up on the map)
+float totalDistance = 0; // in centimetres
+float robotX = 0;
+float robotY = 0;
+
+
 // Ultrasonic
 float duration, ultrasonicDistance;  
 
