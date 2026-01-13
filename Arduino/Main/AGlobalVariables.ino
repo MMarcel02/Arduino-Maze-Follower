@@ -1,4 +1,3 @@
-#include "RobotConfig.h"
 // Has A at front so we know we compile this right after Main
 // Pins that describe the WIFI module.
 // Pins used from the Arduino Wi-Fi library
