@@ -538,7 +538,7 @@
                         <Insets top="8.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="solveMaze2" mnemonicParsing="false" onMousePressed="#handleSolveMaze2" prefHeight="50.0" prefWidth="256.0" text="Depth First Search Maze">
+                  <Button fx:id="solveMaze2" mnemonicParsing="false" onMousePressed="#handleSolveMaze2" prefHeight="50.0" prefWidth="256.0" text="Left Hand With Counting">
                      <font>
                         <Font size="16.0" />
                      </font>

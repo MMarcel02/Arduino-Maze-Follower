@@ -19,7 +19,7 @@ void pushJunction()
   junctionStack[junctionStackTop].triedRight = false;
 }
 
-void depthFirstSearch()
+void leftHandWithCounting()
 {
   if ((mazeState == FOLLOW_LINE || mazeState == TURNING_LEFT || mazeState == TURNING_RIGHT || mazeState == BLIND_TURN) && junctionDetectedTimed())
   {

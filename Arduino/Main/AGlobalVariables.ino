@@ -72,7 +72,7 @@ long lastRightBlackTime = 0;
 
 boolean isMoving;
 
-long TURN_START_REVERSE_DURATION = 75;// To counter the momentum that could send us over the line if we started turning as soon as we found a line
+long TURN_START_REVERSE_DURATION = 120;// To counter the momentum that could send us over the line if we started turning as soon as we found a line
 long MINIMUM_TURN_DURATION = 150; // So that we dont immediately trigger on the sensor again after turning, this makes us commit to a turn for a bit for better allignment
 const long STOP_TIME_AT_INTERSECTION = 500;
 long JUNCTION_TIME_DELTA = 200;  

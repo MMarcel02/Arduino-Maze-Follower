@@ -77,12 +77,12 @@ void leftHandMazeWithoutLoops() {
       if (!isMoving) {
         stopAllMotors();
         targetAngleStart = radToDeg(robotAngle); 
+        mazeState = SCAN_LEFT_FOR_LINE;
         
-        if (consecutive90Left >= 3) {
-             mazeState = SCAN_RIGHT_FOR_LINE; 
-        } else {
-             mazeState = SCAN_LEFT_FOR_LINE;
-        }
+        // if (consecutive90Left >= 3) {
+        //      mazeState = SCAN_RIGHT_FOR_LINE; 
+        // } else {
+        // }
       }
     } break;
 

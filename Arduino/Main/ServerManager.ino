@@ -397,7 +397,7 @@ void manageRobotMovementState() {
       break;
 
     case (SOLVE_MAZE_2):
-      depthFirstSearch();
+      leftHandWithCounting();
       break;
     
     case (LOST_ROBOT):
