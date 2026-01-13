@@ -58,16 +58,16 @@ public class DashboardView {
     @FXML void bigIncreaseRotationSpeed() { robotController.setRotationSpeed(robotModel.getRotationSpeed() + 20); }
 
     // Reverse Duration
-    @FXML void decreaseReverseDuration() { robotController.setReverseDuration(robotModel.getReverseDuration() - 5); }
-    @FXML void increaseReverseDuration() { robotController.setReverseDuration(robotModel.getReverseDuration() + 5); }
+    @FXML void decreaseReverseDuration() { robotController.setReverseDuration(robotModel.getReverseDuration() - 10); }
+    @FXML void increaseReverseDuration() { robotController.setReverseDuration(robotModel.getReverseDuration() + 10); }
 
     // Turn Duration
-    @FXML void decreaseTurnDuration() { robotController.setTurnDuration(robotModel.getTurnDuration() - 5); }
-    @FXML void increaseTurnDuration() { robotController.setTurnDuration(robotModel.getTurnDuration() + 5); }
+    @FXML void decreaseTurnDuration() { robotController.setTurnDuration(robotModel.getTurnDuration() - 10); }
+    @FXML void increaseTurnDuration() { robotController.setTurnDuration(robotModel.getTurnDuration() + 10); }
 
     // Junction Detection
-    @FXML void decreaseJunctionDetection() { robotController.setJunctionDuration(robotModel.getJunctionDuration() - 5); }
-    @FXML void increaseJunctionDetection() { robotController.setJunctionDuration(robotModel.getJunctionDuration() + 5); }
+    @FXML void decreaseJunctionDetection() { robotController.setJunctionDuration(robotModel.getJunctionDuration() - 10); }
+    @FXML void increaseJunctionDetection() { robotController.setJunctionDuration(robotModel.getJunctionDuration() + 10); }
 
     // Odometry Fudge
     @FXML void decreaseOdometryFudge() { robotController.setOdometryFudge(robotModel.getOdometryFudge() - 0.05); }
