@@ -120,6 +120,30 @@ boolean turnToAbsoluteAngle(float targetAngle) {
   return isTurning;
 }
 
+boolean turnToAbsoluteAngleRad(float targetAngleRad) {
+  boolean isTurning = false;
+  
+  float tolerance = degToRad(1.0); 
+
+  if (robotAngle < (targetAngleRad - tolerance)) {
+    motorSpeed = 100;
+    turnOnSpotLeft();
+    isTurning = true;
+  } 
+  else if (robotAngle > (targetAngleRad + tolerance)) {
+    motorSpeed = 100;
+    turnOnSpotRight();
+    isTurning = true;
+  } 
+  else {
+    motorSpeed = motorSpeedOutsideLineFollow;
+    stopAllMotors();
+    isTurning = false;
+  }
+  
+  return isTurning;
+}
+
 // totalTargetDistance should be calculated in the earlier state before this state
 boolean moveToDistance(float totalTargetDistance) {
   boolean isMoving = false;

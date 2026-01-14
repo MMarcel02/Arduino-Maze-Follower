@@ -85,6 +85,7 @@ public class RobotController {
             case LINE_FOLLOW_BANGBANG:   endpoint = ArduinoEndpoints.LINE_FOLLOW_BANGBANG; break;
             case SOLVE_MAZE_1:           endpoint = ArduinoEndpoints.SOLVE_MAZE_1;         break;
             case SOLVE_MAZE_2:           endpoint = ArduinoEndpoints.SOLVE_MAZE_2;         break;
+            case SOLVE_MAZE_3:           endpoint = ArduinoEndpoints.SOLVE_MAZE_3;         break;
             case LOST_ROBOT:             endpoint = ArduinoEndpoints.LOST_ROBOT;           break;
             case EMERGENCY_STOP:         endpoint = ArduinoEndpoints.EMERGENCY_STOP;       break;
             case U_TURN:                 endpoint = ArduinoEndpoints.U_TURN;               break;

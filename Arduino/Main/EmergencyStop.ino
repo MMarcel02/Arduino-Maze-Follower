@@ -6,7 +6,7 @@ void emergencyStop() {
   case (BANG_LINE_FOLLOWING):
     bangLineFollow();
 
-    if (obstacleFound()) {
+    if (0 < ultrasonicDistance && ultrasonicDistance < emergencyStopDistance) {
       stopAllMotors();
       emergencyStopState = EMERGENCY_STOPPED;
     }

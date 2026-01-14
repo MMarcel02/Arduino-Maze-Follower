@@ -1,4 +1,3 @@
-bool uTurnCompleted = false;
 
 void resetUTurn() {
   uTurnCompleted = false;

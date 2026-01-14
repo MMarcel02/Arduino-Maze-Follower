@@ -104,6 +104,7 @@ void route(WiFiClient& c, const String& path, const String& q) {
     
     if (path == "/solveMaze1") { handleSolveMaze1(c); return; }
     if (path == "/solveMaze2") { handleSolveMaze2(c); return; }
+    if (path == "/solveMaze3") { handleSolveMaze3(c); return; }
     if (path == "/lostRobot") { handleLostRobot(c); return; }
     
     if (path == "/emergencyStop") { handleEmergencyStop(c); return; }
@@ -147,12 +148,12 @@ void route(WiFiClient& c, const String& path, const String& q) {
       int val = parseIntEndpoint(q);
       handleSetJunctionDuration(c, val);
       return;
+    }
 
     if (path.startsWith("/setOdometryFudge")) {
       double val = parseDoubleEndpoint(q);
       handleSetOdometryFudge(c, val);
       return;
-    }
     }
 }
 
@@ -185,9 +186,11 @@ void changeControlState(RobotControlState newState) {
   emergencyStopState = BANG_LINE_FOLLOWING;
   parkingBoxState = APPROACHING_PARKING_BOX;
 
+  resetUTurn();
   targetAngleStart = 0;
   targetAngleEnd = 0;
   targetTotalDistance = 0;
+  motorSpeed = motorSpeedOutsideLineFollow;
 
   stateStartTime = currentTime;
   lastLeftBlackTime = 0;
@@ -315,6 +318,11 @@ void handleSolveMaze2(WiFiClient& client) {
     sendHttpResponse(client, "Control State set to SOLVE_MAZE_2");
 }
 
+void handleSolveMaze3(WiFiClient& client) {
+    changeControlState(SOLVE_MAZE_3);
+    sendHttpResponse(client, "Control State set to SOLVE_MAZE_3");
+}
+
 void handleLostRobot(WiFiClient& client) {
     changeControlState(LOST_ROBOT);
     sendHttpResponse(client, "Control State set to LOST_ROBOT");
@@ -351,14 +359,12 @@ void handleHTTPCommands() {
 }
 
 void handleTCPData() {
-  // If we're not connected to the old streamingClient we make sure we disconnect
+  // Check if we need to stop the old client
   if (streamingClient && !streamingClient.connected()) {
       streamingClient.stop();
   }
   
-  // Here we check if we have a new tcpServer to connect
-  // If we do we overwrite the current streamingClient
-  // This is so we can reconnect if we restart our program while connected, or the connection drops
+  // Check for new clients
   WiFiClient tcpClient = tcpServer.available();
   if (tcpClient) {
     if (streamingClient && streamingClient.connected()) {
@@ -369,7 +375,6 @@ void handleTCPData() {
   }
   
   if (streamingClient && streamingClient.connected()) {
-    // We check if 50ms has elapsed yet, if it has we send a packet with data
     if (currentTime - lastSensorSendTime >= SENSOR_SEND_INTERVAL) {
 
       // Creates String with data separated by commas
@@ -398,6 +403,10 @@ void manageRobotMovementState() {
 
     case (SOLVE_MAZE_2):
       leftHandWithCounting();
+      break;
+
+    case (SOLVE_MAZE_3):
+      leftHandWithDegrees();
       break;
     
     case (LOST_ROBOT):

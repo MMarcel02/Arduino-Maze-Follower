@@ -80,9 +80,9 @@ public class DashboardView {
 
     // Control State
     @FXML void handleBangLineFollow() { robotController.setControlState(RobotControlState.LINE_FOLLOW_BANGBANG); }
-    @FXML void handleBlindedBang() { robotController.setControlState(RobotControlState.LINE_FOLLOW_BANGBANG); }
     @FXML void handleSolveMaze1() { robotController.setControlState(RobotControlState.SOLVE_MAZE_1); }
     @FXML void handleSolveMaze2() { robotController.setControlState(RobotControlState.SOLVE_MAZE_2); }
+    @FXML void handleLeftHandDegrees() { robotController.setControlState(RobotControlState.SOLVE_MAZE_3); }
     @FXML void handleLostRobot() { robotController.setControlState(RobotControlState.LOST_ROBOT); }
     @FXML void handleEmergencyStop() { robotController.setControlState(RobotControlState.EMERGENCY_STOP); }
     @FXML void handleUTurn() { robotController.setControlState(RobotControlState.U_TURN); }

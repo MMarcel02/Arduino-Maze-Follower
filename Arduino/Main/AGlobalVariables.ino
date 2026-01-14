@@ -32,9 +32,9 @@ const int ECHO_PIN = 1;
 const float WHEEL_RADIUS = 3.25;   // 3.25 cm 
 const float TRACK_WIDTH  = 22; // 22 cm in real life (multiplied later by odometryFudge to account for slippage)
 const float ROBOT_LENGTH = 30;
-const int TICKS_PER_REV  = 225;    // Ticks for one full spin
+const float TICKS_PER_REV  = 224.5;    // Ticks for one full spin
 const float DISTANCE_PER_TICK = (2 * PI * WHEEL_RADIUS) / TICKS_PER_REV;
-double odometryFudge = 1.5;
+double odometryFudge = 1.75;
 
 
 // Robot Position and Speed
@@ -45,8 +45,7 @@ int rotationSpeed = 100;
 
 
 float robotAngle = PI/2; // angle in Radians (initial is 90 degrees for facing up on the map)
-float totalDistance = 0;
-// in centimetres
+float totalDistance = 0;// in centimetres
 float robotX = 0;
 float robotY = 0;
 
@@ -76,8 +75,10 @@ long MINIMUM_TURN_DURATION = 150; // So that we dont immediately trigger on the 
 const long STOP_TIME_AT_INTERSECTION = 500;
 long JUNCTION_TIME_DELTA = 200;  
 
-int emergencyStopDistance = 20;
+int emergencyStopDistance = 30;
 const int MAZE_OBSTACLE_DISTANCE = 13;
+bool uTurnCompleted = false;
+
 
 RobotMovementState currentMovementState = STOPPED;
 RobotControlState currentControlState = MANUAL;

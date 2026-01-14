@@ -6,6 +6,7 @@ public enum RobotControlState {
   LINE_FOLLOW_BANGBANG,
   SOLVE_MAZE_1,
   SOLVE_MAZE_2,
+  SOLVE_MAZE_3,
   LOST_ROBOT,
   EMERGENCY_STOP,
   U_TURN,

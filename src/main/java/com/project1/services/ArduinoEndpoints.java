@@ -18,6 +18,7 @@ public final class ArduinoEndpoints {
     public static final String LINE_FOLLOW_BANGBANG = "/lineFollowBangBang";
     public static final String SOLVE_MAZE_1         = "/solveMaze1";
     public static final String SOLVE_MAZE_2         = "/solveMaze2";
+    public static final String SOLVE_MAZE_3         = "/solveMaze3";
     public static final String LOST_ROBOT           = "/lostRobot";
     public static final String EMERGENCY_STOP       = "/emergencyStop";
     public static final String U_TURN               = "/uTurn";

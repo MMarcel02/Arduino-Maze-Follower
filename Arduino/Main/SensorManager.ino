@@ -77,15 +77,20 @@ boolean obstacleFound(){
 
 #pragma region END_OF_LINE_DETECTION
 
-const unsigned long MIN_STRAIGHT_TIME = 500; // 500ms
-// e.g. compare against last 10 bounces
-const int AVERAGE_BOUNCE_COUNT = 50;
+// e.g. compare against last N bounces
+const int AVERAGE_BOUNCE_COUNT = 5;
 unsigned long bounceTimes[AVERAGE_BOUNCE_COUNT];
 int bounceIndex = 0;
 int bounceFilled = 0;
 
 unsigned long lastBounceTime = 0;
 unsigned long straightStartTime = 0;
+
+float initialAngle = 0;
+float angleScanOffset = degToRad(10);
+bool lostLine = false;
+
+elostLineState lostLineState = SCANNING_LEFT_U;
 
 unsigned long getAvgBounceTime() {
   unsigned long sum = 0;
@@ -97,6 +102,62 @@ unsigned long getAvgBounceTime() {
 
 bool detectEndOfLine() {
   unsigned long now = millis();
+  
+  if (lostLine) {
+    bool noLine;
+    switch (lostLineState) {
+      case SCANNING_LEFT_U:
+        if(!turnToAbsoluteAngleRad(initialAngle + angleScanOffset)) {
+          // Didn't find the line, return to original angle
+          lostLineState = SCANNING_RIGHT_U;  
+        }
+        
+        noLine = (leftDigitalIRReading == 0 && rightDigitalIRReading == 0);
+        if (noLine) break;
+        
+        // Found the line
+        lostLine = false;
+        lastBounceTime = now;
+        
+        break;
+        
+      case SCANNING_RIGHT_U:
+        if(!turnToAbsoluteAngleRad(initialAngle - angleScanOffset)) {
+          // Didn't find the line, lets go right
+          lostLineState = RETURNING;  
+        }
+        
+        noLine = (leftDigitalIRReading == 0 && rightDigitalIRReading == 0);
+        if (noLine) break;
+        
+        // Found the line
+        lostLine = false;
+        lastBounceTime = now;
+        
+        break;
+        
+      case RETURNING:
+        if(!turnToAbsoluteAngleRad(initialAngle)) {
+          // Didn't find the line, reached end
+          lostLineState = REACHED_END;  
+        }
+        
+        // In case the sweep missed the line, lets check it in returning as well
+        noLine = (leftDigitalIRReading == 0 && rightDigitalIRReading == 0);
+        if (noLine) break;
+        
+        // Found the line
+        lostLine = false;
+        lastBounceTime = now;
+        
+        break;
+        
+      case REACHED_END:
+        return true;
+    }
+    
+    return false;
+  }
 
   bool isStraight = (leftDigitalIRReading == 0 && rightDigitalIRReading == 0);
   bool isBounce   = !isStraight;
@@ -130,12 +191,18 @@ bool detectEndOfLine() {
 
     unsigned long avgBounceTime = getAvgBounceTime();
       
-    // require at least 5 bounces for now
-    if (bounceFilled >= 5 && avgBounceTime > 0) {
+    // require at least 2 bounces for now
+    if (bounceFilled >= 2 && avgBounceTime > 0) {
       // we check if the current time without bouncing
-      // is more than 15 times the calculated average
-      if ((now - straightStartTime) > (avgBounceTime * 3)) {
-        return true;
+      // is more than N times the calculated average
+      if ((now - straightStartTime) > (avgBounceTime * 1.5)) {
+        
+        // start scanning with turning left
+        lostLineState = SCANNING_LEFT_U;
+        lostLine = true;
+        initialAngle = robotAngle;
+        
+        return false;
       }
     }
   }
@@ -149,6 +216,10 @@ void resetEndOfLineDetection() {
 
   bounceIndex = 0;
   bounceFilled = 0;
+  lostLine = false; 
+  
+  initialAngle = 0;
+  lostLineState = SCANNING_LEFT_U;
 }
 
 #pragma endregion
