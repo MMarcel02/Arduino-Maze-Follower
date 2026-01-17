@@ -14,10 +14,10 @@ public class RobotModel {
     private final IntegerProperty emergencyStopDistance = new SimpleIntegerProperty(30);
     
     private final IntegerProperty rotationSpeed = new SimpleIntegerProperty(100);
-    private final IntegerProperty reverseDuration = new SimpleIntegerProperty(75);
+    private final IntegerProperty reverseDuration = new SimpleIntegerProperty(120);
     private final IntegerProperty turnDuration = new SimpleIntegerProperty(150);
     private final IntegerProperty junctionDuration = new SimpleIntegerProperty(200);
-    private final DoubleProperty odometryFudge = new SimpleDoubleProperty(1.5);
+    private final DoubleProperty odometryFudge = new SimpleDoubleProperty(1.75);
 
     // State
     private final ObjectProperty<RobotMovementState> movementState = new SimpleObjectProperty<>(RobotMovementState.STOPPED);
