@@ -1,12 +1,12 @@
-/home/marci/projects/CS Bachelor - Year 1/Project 1-1/src/main/java/com/project1/services/ArduinoHTTPClient.java
-/home/marci/projects/CS Bachelor - Year 1/Project 1-1/src/main/java/module-info.java
-/home/marci/projects/CS Bachelor - Year 1/Project 1-1/src/main/java/com/project1/services/ArduinoTCPClient.java
-/home/marci/projects/CS Bachelor - Year 1/Project 1-1/src/main/java/com/project1/services/ArduinoEndpoints.java
-/home/marci/projects/CS Bachelor - Year 1/Project 1-1/src/main/java/com/project1/model/RobotMovementState.java
-/home/marci/projects/CS Bachelor - Year 1/Project 1-1/src/main/java/com/project1/model/RobotModel.java
-/home/marci/projects/CS Bachelor - Year 1/Project 1-1/src/main/java/com/project1/controller/RobotController.java
-/home/marci/projects/CS Bachelor - Year 1/Project 1-1/src/main/java/com/project1/view/MapView.java
-/home/marci/projects/CS Bachelor - Year 1/Project 1-1/src/main/java/com/project1/App.java
-/home/marci/projects/CS Bachelor - Year 1/Project 1-1/src/main/java/com/project1/model/RobotControlState.java
-/home/marci/projects/CS Bachelor - Year 1/Project 1-1/src/main/java/com/project1/view/DashboardView.java
-/home/marci/projects/CS Bachelor - Year 1/Project 1-1/src/main/java/com/project1/controller/InputHandler.java
+/home/marcel/Projects/School/CS-Bachelor-Year-1/Period 3/Project-1.1/src/main/java/com/project1/model/RobotControlState.java
+/home/marcel/Projects/School/CS-Bachelor-Year-1/Period 3/Project-1.1/src/main/java/com/project1/services/ArduinoTCPClient.java
+/home/marcel/Projects/School/CS-Bachelor-Year-1/Period 3/Project-1.1/src/main/java/com/project1/controller/RobotController.java
+/home/marcel/Projects/School/CS-Bachelor-Year-1/Period 3/Project-1.1/src/main/java/com/project1/model/RobotMovementState.java
+/home/marcel/Projects/School/CS-Bachelor-Year-1/Period 3/Project-1.1/src/main/java/module-info.java
+/home/marcel/Projects/School/CS-Bachelor-Year-1/Period 3/Project-1.1/src/main/java/com/project1/App.java
+/home/marcel/Projects/School/CS-Bachelor-Year-1/Period 3/Project-1.1/src/main/java/com/project1/view/DashboardView.java
+/home/marcel/Projects/School/CS-Bachelor-Year-1/Period 3/Project-1.1/src/main/java/com/project1/services/ArduinoEndpoints.java
+/home/marcel/Projects/School/CS-Bachelor-Year-1/Period 3/Project-1.1/src/main/java/com/project1/controller/InputHandler.java
+/home/marcel/Projects/School/CS-Bachelor-Year-1/Period 3/Project-1.1/src/main/java/com/project1/view/MapView.java
+/home/marcel/Projects/School/CS-Bachelor-Year-1/Period 3/Project-1.1/src/main/java/com/project1/model/RobotModel.java
+/home/marcel/Projects/School/CS-Bachelor-Year-1/Period 3/Project-1.1/src/main/java/com/project1/services/ArduinoHTTPClient.java
