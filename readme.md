@@ -1,4 +1,8 @@
-# RobotCar - 
+# Year 1 Project 2
+
+Goal: program robot and GUI to communicate over a network and perform simple maneuvers
+
+# RobotCar
 
 ### JavaFX GUI
 
